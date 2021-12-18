@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Before(ValueAnnotationProcess.class)
-@MutexAnn({Autowired.class, ValueEntity.class})
+@MutexAnnotation({Autowired.class, ValueEntity.class})
 public @interface Value {
     String value() default "";
     String key() default "";

@@ -2,7 +2,7 @@ package org.fastest.core.internal.enhance.fieldhelper;
 
 import org.fastest.core.annotations.Before;
 import org.fastest.core.annotations.Component;
-import org.fastest.core.annotations.MutexAnn;
+import org.fastest.core.annotations.MutexAnnotation;
 import org.fastest.core.internal.ReflectTool;
 import org.fastest.core.internal.enhance.AnnotationGardener;
 import org.fastest.core.internal.enhance.EnhanceFactory;
@@ -49,9 +49,9 @@ class FieldProcess {
             Class<?> processType = (Class<?>) ReflectTool.get(hockAnnotation, "value");
             FieldAnnotationProcessable process = (FieldAnnotationProcessable) EnhanceFactory.origin(processType);
             if (AnnotationTool.hasAnnotation(field.getDeclaringClass(), Component.class)) {
-                MutexAnn mutexAnn = annotation.annotationType().getDeclaredAnnotation(MutexAnn.class);
-                if(Objects.nonNull(mutexAnn)){
-                    AnnotationTool.checkIsOnly(field, annotation.getClass(), mutexAnn.value());
+                MutexAnnotation mutexAnnotation = annotation.annotationType().getDeclaredAnnotation(MutexAnnotation.class);
+                if(Objects.nonNull(mutexAnnotation)){
+                    AnnotationTool.checkIsOnly(field, annotation.getClass(), mutexAnnotation.value());
                 }
                 process.process(new JoinPointImpl(annotation, field, target, process));
             }

@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Before(RestMetadataProcess.class)
-@MutexAnn({RestTemp.class})
+@MutexAnnotation({RestTemp.class})
 public @interface RestMetadata {
     String serverName() default "";
     String apiName();

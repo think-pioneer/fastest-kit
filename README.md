@@ -707,14 +707,14 @@ public @interface RestMetadata {
 | ----- | ----- | ------ | ---------------- |
 | value | Class | 必填   | 注解的功能实现类 |
 
-1.2.15 @MutexAnn
+### 1.2.15 @MutexAnnotation
 
 #### 使用说明
 
 定义注解的互斥注解，即表示被注解的注解和哪些注解互斥
 
 ```java
-@MutexAnn({B.class, C.class})
+@MutexAnnotation({B.class, C.class})
 public @interface A{} //注解A和注解B、C互斥，不能同时存在
 
 public @interface B{}

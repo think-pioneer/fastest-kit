@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Before(RestTempProcess.class)
-@MutexAnn(RestMetadata.class)
+@MutexAnnotation(RestMetadata.class)
 public @interface RestTemp {
     String name() default "";
     String host();

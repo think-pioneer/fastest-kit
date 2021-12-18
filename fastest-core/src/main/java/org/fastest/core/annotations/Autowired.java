@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Before(AutowireAnnotationProcess.class)
-@MutexAnn({Value.class, ValueEntity.class})
+@MutexAnnotation({Value.class, ValueEntity.class})
 public @interface Autowired {
     Class<?> targetClass() default Autowired.class;
     String method() default "";

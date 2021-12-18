@@ -1,7 +1,7 @@
 package org.fastest.core.internal.enhance.methodhelper;
 
 import org.fastest.core.annotations.Component;
-import org.fastest.core.annotations.MutexAnn;
+import org.fastest.core.annotations.MutexAnnotation;
 import org.fastest.core.internal.ReflectTool;
 import org.fastest.core.internal.enhance.AnnotationGardener;
 import org.fastest.core.internal.enhance.EnhanceFactory;
@@ -30,9 +30,9 @@ public class MethodProcess {
             processType = (Class<?>) ReflectTool.get(hockAnnotation, "value");
             MethodAnnotationProcessable process = (MethodAnnotationProcessable) EnhanceFactory.origin(processType);
             if(AnnotationTool.hasAnnotation(method.getDeclaringClass(), Component.class)) {
-                MutexAnn mutexAnn = annotation.annotationType().getDeclaredAnnotation(MutexAnn.class);
-                if(Objects.nonNull(mutexAnn)) {
-                    AnnotationTool.checkIsOnly(method, annotation.getClass(), mutexAnn.value());
+                MutexAnnotation mutexAnnotation = annotation.annotationType().getDeclaredAnnotation(MutexAnnotation.class);
+                if(Objects.nonNull(mutexAnnotation)) {
+                    AnnotationTool.checkIsOnly(method, annotation.getClass(), mutexAnnotation.value());
                 }
                 process.process(new JoinPointImpl(annotation, method, args, target, process));
             }
