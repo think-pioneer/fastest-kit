@@ -1,0 +1,17 @@
+package org.fastest.http.metadata;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import org.fastest.common.json.JSONFactory;
+
+import java.io.Serializable;
+import java.util.Map;
+
+/**
+ * @Date: 2021/10/30
+ */
+public class BasicVo<T> implements Serializable {
+
+    public Map<?, ?> toMap(){
+        return JSONFactory.stringToObject(JSONFactory.objectToString(this), new TypeReference<Map<?, ?>>() {});
+    }
+}
