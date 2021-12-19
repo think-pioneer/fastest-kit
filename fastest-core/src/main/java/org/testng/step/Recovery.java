@@ -1,14 +1,19 @@
 package org.testng.step;
 
 /**
- * @Date: 2021/10/30
+ * @Date: 2020/12/19
  */
-@FunctionalInterface
-interface Recovery {
+public interface Recovery {
 
     /**
-     * recovery the test environment data when the test case is executed
-     * @return recovery result
+     *Restore the test environment or data and provide the user-defined restorer
+     * @return
      */
-    boolean recovery();
+    boolean recovery(Step step);
+
+    /**
+     *Restore the test environment or data and provide the user-defined restorer
+     * @return
+     */
+    boolean recovery(Step step, long timeOut);
 }

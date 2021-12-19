@@ -6,25 +6,25 @@ import org.slf4j.LoggerFactory;
 /**
  * @Date: 2021/10/30
  */
-public class RecoveryStep {
+public class RecoveryStep implements Recovery{
     private static final Logger logger = LoggerFactory.getLogger(RecoveryStep.class);
 
-    public static void recovery(Step step, long timeOutMilli){
+    public boolean recovery(Step step, long timeOutMilli){
         long startTime = System.currentTimeMillis();
         while (true) {
             long endTime = System.currentTimeMillis();
             if((endTime - startTime) > timeOutMilli){
                 logger.warn("the test data is recovery for more than {} millisecond, the amount of data may be too large", timeOutMilli);
-                break;
+                return false;
             }
-            Recovery recovery = step::recovery;
-            if(!recovery.recovery()){
-                return;
+            Restorer restorer = step::recovery;
+            if(!restorer.recovery()){
+                return true;
             }
         }
     }
 
-    public static void recovery(Step step){
-        recovery(step, 60 * 1000);
+    public boolean recovery(Step step){
+        return recovery(step, 60 * 1000);
     }
 }

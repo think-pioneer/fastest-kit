@@ -124,7 +124,7 @@ public class MyStep implements Step {
         controller.testRestMetadata(requester);
     }
 
-    public boolean recovery() {
+    public boolean restorer() {
         return false;
     }
 }
@@ -153,7 +153,7 @@ public class MyStep implements Step {
         return controller.testRestMetadata(requester);
     }
 
-    public boolean recovery() {
+    public boolean restorer() {
         return false;
     }
 }
@@ -229,7 +229,7 @@ public class MyStep implements Step {
         params.add(new ConstructorProperty(Auth.class, auth));//多个构造参数，请以此添加
         return params;
     }
-    public boolean recovery() {
+    public boolean restorer() {
         return false;
     }
 }
@@ -356,7 +356,7 @@ public class MyStep implements Step {
         System.out.println(1/0); //异常
     }
 
-    public boolean recovery() {
+    public boolean restorer() {
         return false;
     }
 }
@@ -380,7 +380,7 @@ public class MyStep implements Step {
         System.out.println(1/0);
     }
 
-    public boolean recovery() {
+    public boolean restorer() {
         return false;
     }
 }
@@ -727,6 +727,18 @@ public @interface C{}
 | 参数  | 类型  | 默认值 | 说明         |
 | ----- | ----- | ------ | ------------ |
 | value | Class | 必填   | 标明互斥注解 |
+
+### 1.2.16 @Recovery
+
+#### 使用说明
+
+用于控制每次测试结束后执行Step.recovery方法，进行数据或场景恢复
+
+#### 参数说明
+
+| 参数     | 类型  | 默认值       | 说明             |
+| -------- | ----- | ------------ | ---------------- |
+| executor | Class | RecoveryStep | 恢复操作的执行者 |
 
 ## 1.3 自定义注解
 
