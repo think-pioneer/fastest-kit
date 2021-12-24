@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
  */
 public class Parameters extends MetaMap {
 
+    private static final long serialVersionUID = 4426487049324045664L;
+
     public Parameters write(Object key, Object value){
         this.put(key, new Parameter(key, value));
         return this;

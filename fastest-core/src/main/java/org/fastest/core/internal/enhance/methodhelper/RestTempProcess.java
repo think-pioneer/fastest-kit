@@ -5,7 +5,6 @@ import org.fastest.common.exceptions.EnhanceException;
 import org.fastest.common.json.JSONFactory;
 import org.fastest.core.annotations.RestTemp;
 import org.fastest.core.aspect.method.JoinPoint;
-import org.fastest.core.internal.tool.AnnotationTool;
 import org.fastest.http.metadata.HttpMethod;
 import org.fastest.utils.ObjectUtil;
 import org.fastest.utils.PropertyUtil;
@@ -36,19 +35,19 @@ public class RestTempProcess extends AbstractRestAnnotationProcess {
         }
         String api = restTemp.api().trim();
         String host = restTemp.host().trim();
-        HttpMethod httpMethod = restTemp.method();
+        HttpMethod httpMethodType = restTemp.method();
         boolean isAuto = restTemp.auto();
         boolean isSync = restTemp.sync();
         String url = host+api;
         if(args.length == 0){
             throw  new EnhanceException(ObjectUtil.format("method:[{}] haven't no parameters.", method.getName()));
         }
-        buildMetadata(method, args, url, httpMethod, isAuto, isSync);
+        buildMetadata(method, args, url, httpMethodType, isAuto, isSync);
         if(globalIsSave){
             apiNode.put("apiName", restTemp.name());
             apiNode.put("host", host);
             apiNode.put("api", api);
-            apiNode.put("method", httpMethod.getName());
+            apiNode.put("method", httpMethodType.getMethodName());
             apiNode.put("desc", restTemp.desc());
         }
         RestTempWrite.add(apiNode);

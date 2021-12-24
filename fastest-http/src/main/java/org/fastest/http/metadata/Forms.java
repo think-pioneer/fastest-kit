@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
  */
 public class Forms extends MetaMap {
 
+    private static final long serialVersionUID = 3728255718906321593L;
+
     /**
      * write form key-value to Forms
      * @param key form key

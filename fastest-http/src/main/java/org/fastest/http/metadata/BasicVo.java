@@ -11,6 +11,8 @@ import java.util.Map;
  */
 public class BasicVo<T> implements Serializable {
 
+    private static final long serialVersionUID = -5886543239057370030L;
+
     public Map<?, ?> toMap(){
         return JSONFactory.stringToObject(JSONFactory.objectToString(this), new TypeReference<Map<?, ?>>() {});
     }

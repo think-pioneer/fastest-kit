@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
  */
 public class Headers extends MetaList {
 
+    private static final long serialVersionUID = 7863193005200041573L;
+
     public Headers write(Header header){
         super.add(header);
         return this;

@@ -9,6 +9,8 @@ import java.util.stream.Collectors;
 
 public class Restfuls extends MetaMap {
 
+    private static final long serialVersionUID = -2859922274054222800L;
+
     public Restfuls write(String key, String value) {
         this.put(key, new Restful(key, value));
         return this;

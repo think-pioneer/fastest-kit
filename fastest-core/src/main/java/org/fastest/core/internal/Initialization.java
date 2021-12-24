@@ -15,7 +15,6 @@ public class Initialization {
     }
 
     private static void realInit(){
-        System.setProperty("java.vendor.url", "android");
     }
 
 }

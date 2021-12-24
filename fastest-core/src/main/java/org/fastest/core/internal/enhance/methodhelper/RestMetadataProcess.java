@@ -9,6 +9,7 @@ import org.fastest.core.aspect.method.JoinPoint;
 import org.fastest.http.Metadata;
 import org.fastest.http.Requester;
 import org.fastest.http.metadata.HttpMethod;
+import org.fastest.http.metadata.HttpMethodBuilder;
 import org.fastest.http.metadata.ReadApiConfig;
 import org.fastest.utils.ObjectUtil;
 
@@ -64,10 +65,10 @@ public class RestMetadataProcess extends AbstractRestAnnotationProcess {
             throw new JsonException(ObjectUtil.format("form api conf not fount {}.{}", serverName, apiName));
         }
         String url = apiObj.getUrl();
-        HttpMethod httpMethod = HttpMethod.getMethod(apiObj.getMethod().trim().toUpperCase());
+        HttpMethod httpMethodType = HttpMethodBuilder.build(apiObj.getMethod().trim().toUpperCase());
         if(StringUtils.isEmpty(url)){
             throw new EnhanceException(ObjectUtil.format("Class={}, method={} url is empty", clazz.getName(), method.getName()));
         }
-        buildMetadata(method, args, url, httpMethod, isAuto, isSync);
+        buildMetadata(method, args, url, httpMethodType, isAuto, isSync);
     }
 }

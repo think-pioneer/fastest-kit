@@ -8,8 +8,9 @@ import org.fastest.core.annotations.After;
 import org.fastest.core.annotations.Before;
 import org.fastest.core.annotations.Capture;
 import org.fastest.core.internal.enhance.methodhelper.MethodProcess;
+import org.fastest.logger.FastLogger;
+import org.fastest.logger.FastLoggerFactory;
 import org.fastest.utils.ObjectUtil;
-import org.slf4j.Logger;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -30,7 +31,7 @@ public class EasyHandler implements EasyEnhancerable {
         }catch (Throwable c){
             CaptureException cause = new CaptureException(c);
             Class<?> clazz = method.getDeclaringClass();
-            Logger logger = LogFactory.getLogger(clazz.getSimpleName());
+            FastLogger logger = FastLoggerFactory.getLogger(clazz.getSimpleName());
             if(Objects.nonNull(capture)){
                 String message = capture.message();
                 message = "".equals(message.trim()) ? cause.getMessage() : message;

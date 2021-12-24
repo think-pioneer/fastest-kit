@@ -148,8 +148,8 @@ class Sender {
                     "Http Header:{}\n" +
                     "Http QueryParameters:{}\n" +
                     "Http Forms:{}\n" +
-                    "Http Json:{}", this.httpUrl, method.getName(), this.metadata.getHeaders(), this.metadata.getParameters(), this.metadata.getForms(), this.metadata.getJson());
-            method.getMethod().run(this.builder, this.requestBody);
+                    "Http Json:{}", this.httpUrl, method.getMethodName(), this.metadata.getHeaders(), this.metadata.getParameters(), this.metadata.getForms(), this.metadata.getJson());
+            method.execute(this.builder, this.requestBody);
             return this.builder.build();
         }
     }

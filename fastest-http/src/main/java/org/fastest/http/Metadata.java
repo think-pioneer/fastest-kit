@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.fastest.http.metadata.*;
-import org.fastest.utils.ObjectUtil;
 
 import java.net.URI;
 import java.net.URL;

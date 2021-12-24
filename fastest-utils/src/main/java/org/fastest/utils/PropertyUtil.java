@@ -34,7 +34,7 @@ public final class PropertyUtil {
         try {
             for (File file : fileList) {
                 String name = file.getAbsolutePath();
-                if (!name.endsWith("log4j.properties") && !name.contains("log4j") && !name.endsWith("pom.properties")) {
+                if (!name.endsWith("log4j2.properties") && !name.contains("log4j") && !name.endsWith("pom.properties")) {
                     Properties properties = new Properties();
                     properties.load(FileUtil.read(file.getAbsolutePath()));
                     this.properties.putAll(properties);
