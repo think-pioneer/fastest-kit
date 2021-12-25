@@ -1,7 +1,5 @@
 package org.fastest.common.cache;
 
-import lombok.Getter;
-
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -74,7 +72,6 @@ public class CacheManager<T> {
         return v.getDuration() != Cache.FOREVER_FLAG && (System.currentTimeMillis() > v.getDuration() + v.getTimestamp());
     }
 
-    @Getter
     private static class Cache<T> {
         static final long FOREVER_FLAG = -1;
 
@@ -91,6 +88,27 @@ public class CacheManager<T> {
         public Cache(T data) {
             this.data = data;
             this.duration = FOREVER_FLAG;
+        }
+
+        public T getData() {
+            return data;
+        }
+
+        public long getTimestamp() {
+            return timestamp;
+        }
+
+        public long getDuration() {
+            return duration;
+        }
+
+        @Override
+        public String toString() {
+            return "Cache{" +
+                    "data=" + data +
+                    ", timestamp=" + timestamp +
+                    ", duration=" + duration +
+                    '}';
         }
     }
 }

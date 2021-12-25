@@ -5,11 +5,14 @@ import org.fastest.common.exceptions.EnhanceException;
 import org.fastest.common.json.JSONFactory;
 import org.fastest.core.annotations.RestTemp;
 import org.fastest.core.aspect.method.JoinPoint;
+import org.fastest.core.rest.http.metadata.ReadApiConfig;
 import org.fastest.http.metadata.HttpMethod;
 import org.fastest.utils.ObjectUtil;
 import org.fastest.utils.PropertyUtil;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Objects;
 
 /**
@@ -26,7 +29,6 @@ public class RestTempProcess extends AbstractRestAnnotationProcess {
         Method method = joinPoint.getMethod();
         RestTemp restTemp = (RestTemp) joinPoint.getAnnotation();
 
-        ObjectNode apiNode = JSONFactory.createObjectNode();
         Object[] args = joinPoint.getArgs();
         boolean isSave = restTemp.save();
         Boolean globalIsSave = (Boolean) PropertyUtil.get("rest.temp.save");;
@@ -43,13 +45,18 @@ public class RestTempProcess extends AbstractRestAnnotationProcess {
             throw  new EnhanceException(ObjectUtil.format("method:[{}] haven't no parameters.", method.getName()));
         }
         buildMetadata(method, args, url, httpMethodType, isAuto, isSync);
+        ReadApiConfig.Server server = ReadApiConfig.Server.init();
+        server.setHost(host);
         if(globalIsSave){
-            apiNode.put("apiName", restTemp.name());
-            apiNode.put("host", host);
-            apiNode.put("api", api);
-            apiNode.put("method", httpMethodType.getMethodName());
-            apiNode.put("desc", restTemp.desc());
+            ReadApiConfig.Uri uri = ReadApiConfig.Uri.init();
+            uri.setUri(api);
+            uri.setMethod(httpMethodType.getMethodName());
+            uri.setUriName(restTemp.name());
+            uri.setDesc(restTemp.desc());
+            uri.setHost(host);
+            uri.setUrl(url);
+            server.setUris(new ArrayList<ReadApiConfig.Uri>(){{add(uri);}});
         }
-        RestTempWrite.add(apiNode);
+        RestTempWrite.add(server);
     }
 }

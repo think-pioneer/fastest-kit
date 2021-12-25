@@ -1,6 +1,5 @@
 package org.testng.listener;
 
-import lombok.SneakyThrows;
 import org.fastest.core.internal.Initialization;
 import org.fastest.core.internal.enhance.ShutdownHook;
 import org.fastest.core.internal.enhance.fieldhelper.Target;
@@ -26,7 +25,6 @@ public class TestCaseListener implements ITestListener {
         testFinish.runStepRecovery(result);
     }
 
-    @SneakyThrows
     @Override
     public void onStart(ITestContext context){
         Initialization.init();

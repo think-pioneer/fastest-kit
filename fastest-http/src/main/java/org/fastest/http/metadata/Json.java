@@ -48,4 +48,14 @@ public class Json extends Meta {
     public String toString(){
         return Objects.isNull(this.jsonNode) ? "" : this.jsonNode.toString();
     }
+
+    @Override
+    public Object getKey() {
+        return jsonNode;
+    }
+
+    @Override
+    public Object getValue() {
+        return jsonNode;
+    }
 }

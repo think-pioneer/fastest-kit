@@ -1,38 +1,50 @@
 package org.fastest.core.internal.enhance.methodhelper;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.fastest.common.json.JSONFactory;
+import org.fastest.core.rest.http.metadata.ReadApiConfig;
+import org.fastest.utils.BeanUtil;
+import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.Yaml;
 
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.StringWriter;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * @Date: 2021/10/29
  */
 public final class RestTempWrite {
-    private static final ArrayNode arrayNode = JSONFactory.createArrayNode();
+    private static final ConcurrentLinkedQueue<ReadApiConfig.Server> list = new ConcurrentLinkedQueue<>();
+    private static final ConcurrentHashMap<String, ReadApiConfig.Server> map = new ConcurrentHashMap<>();
 
     private RestTempWrite(){}
 
-    public static void add(ObjectNode apiNode){
-        if(Objects.nonNull(apiNode) && !apiNode.isEmpty()){
-            arrayNode.add(apiNode);
+    public static synchronized void add(ReadApiConfig.Server server){
+        if(Objects.nonNull(server)){
+            String key = server.getHost();
+            if(map.containsKey(key)){
+                map.get(key).getUris().addAll(server.getUris());
+            }else{
+                map.put(key, server);
+            }
         }
     }
 
-    public static ArrayNode getAllApi(){
-        return arrayNode;
+    public static ConcurrentLinkedQueue<ReadApiConfig.Server> getAllApi(){
+        list.addAll(map.values());
+        return list;
     }
 
-    public static String pretty(){
-        StringBuilder sb = new StringBuilder();
-        sb.append("[\n");
-        if(Objects.nonNull(arrayNode) && arrayNode.size() > 0){
-            arrayNode.forEach(node -> sb.append("\t").append(node.toString()).append(",").append("\n"));
-            sb.deleteCharAt(sb.length() - 2);
-
-        }
-        sb.append("]");
-        return sb.toString();
+    public static synchronized void save(OutputStreamWriter writer) throws IOException {
+        DumperOptions options = new DumperOptions();
+        options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+        options.setDefaultScalarStyle(DumperOptions.ScalarStyle.PLAIN);
+        options.setPrettyFlow(false);
+        Yaml yaml = new Yaml(options);
+        StringWriter sw = new StringWriter();
+        yaml.dumpAll(list.iterator(), sw);
+        writer.write(String.valueOf(sw).replace("!!org.fastest.core.rest.http.metadata.ReadApiConfig$Server", "").trim());
     }
 }

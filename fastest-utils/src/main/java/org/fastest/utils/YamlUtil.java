@@ -64,6 +64,9 @@ public final class YamlUtil<T> {
             }catch (ComposerException e){
                 continue;
             }
+            if(Objects.isNull(map)){
+                continue;
+            }
             HashMap<Object, Object> tmpMap = new HashMap<>(map);
             //没有key直接返回yaml对象
             if (keys.length == 0) {

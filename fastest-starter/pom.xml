@@ -9,16 +9,36 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>fastest-core</artifactId>
+    <artifactId>fastest-starter</artifactId>
+
     <dependencies>
+        <dependency>
+            <groupId>org.fastest</groupId>
+            <artifactId>fastest-core</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.fastest</groupId>
             <artifactId>fastest-common</artifactId>
             <version>${revision}</version>
         </dependency>
+
         <dependency>
             <groupId>org.fastest</groupId>
             <artifactId>fastest-http</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.fastest</groupId>
+            <artifactId>fastest-utils</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.fastest</groupId>
+            <artifactId>fastest-logger</artifactId>
             <version>${revision}</version>
         </dependency>
     </dependencies>

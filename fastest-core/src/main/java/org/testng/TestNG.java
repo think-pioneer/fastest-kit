@@ -1907,5 +1907,4 @@ public class TestNG {
     public void setInjectorFactory(IInjectorFactory factory) {
         this.m_configuration.setInjectorFactory(factory);
     }
-
 }

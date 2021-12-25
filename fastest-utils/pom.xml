@@ -5,7 +5,7 @@
     <parent>
         <artifactId>fastest</artifactId>
         <groupId>org.fastest</groupId>
-        <version>${application.version}</version>
+        <version>${revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -14,21 +14,7 @@
         <dependency>
             <groupId>org.fastest</groupId>
             <artifactId>fastest-common</artifactId>
-            <version>${application.version}</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.yaml/snakeyaml -->
-        <dependency>
-            <groupId>org.yaml</groupId>
-            <artifactId>snakeyaml</artifactId>
-            <version>1.29</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/commons-beanutils/commons-beanutils -->
-        <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>1.9.4</version>
+            <version>${revision}</version>
         </dependency>
     </dependencies>
 

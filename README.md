@@ -422,30 +422,27 @@ public class CaseTest {
 
 #### 用法说明
 
-自动装载api配置文件中的host、api，httpmethod信息
+自动装载api配置文件中的host、uri，httpmethod信息
 
-配置文件的位置默认在resources/apiconf下，会读取该目录下(包括子目录)所有的json文件，所以该目录请只放api配置文件.。如需自定义apiconf目录的路径，则在配置文件（yaml）中加入节点apiconfig.folderpath=YOURPATH
+配置文件的位置默认在resources/apiconfig下，会读取该目录下(包括子目录)所有的json文件，所以该目录请只放api配置文件(yaml格式)。如需自定义apiconf目录的路径，则在配置文件（yaml）中加入节点api.config.folder.path=YOURPATH
 
 api配置文件模板可通过"ReadApiConfig.printTemplate();"查看，该方法也会返回该模板
 
-api.json
+uri.yaml
 
-```json
-[
-  {"serverName": "user_system", "desc": "用户系统服务", "host": "http://user.testdemo.com",
-    "apis": [
-      {"apiName":"get_userinfo_by_id","api": "/api/userinfo", "method": "get", "desc": "通过id获取用户信息"},
-      {"apiName":"get_userinfo_by_id_restful","api": "/api/{id}/userinfo", "method": "get", "desc": "通过id获取用户信息(restful)"}
-    ]
-  },
-
-  {"serverName": "manager_system", "desc": "管理员系统服务", "host": "http://manager.testdemo.com",
-    "apis": [
-      {"apiName":"get_manager_info_by_id","api": "/api/managerInfo", "method": "get", "desc": "通过id获取管理员信息"},
-      {"apiName":"get_manager_info_by_id_restful","api": "/api/{id}/managerInfo", "method": "get", "desc": "通过id获取管理员信息(restful)"}
-    ]
-  }
-]
+```yaml
+- serverName: user_system
+  desc: 用户系统服务
+  host: 'http://user.testdemo.com'
+  uris:
+    - uriName: get_userinfo_by_id
+      uri: /api/userinfo
+      method: get
+      desc: 通过id获取用户信息
+    - uriName: get_userinfo_by_id_restful
+      uri: '/api/{id}/userinfo'
+      method: get
+      desc: 通过id获取用户信息(restful)
 ```
 
 ```java
@@ -465,13 +462,13 @@ public class HelloController {
 
 ```
 2021-11-07 15:57:41,687 - [ INFO ] - [ Sender:144 ] **********HTTP REQUEST**********
-Http Url:http://user.testdemo.com/api/userinfo
+Http Url:http://user.testdemo.com/uri/userinfo
 Http Method:GET
 Http Header:[]
 Http QueryParameters:{}
 Http Forms:{}
 Http Json:
-Metadata{url=http://user.testdemo.com/api/userinfo, method=GET, headers=[], parameters={}, forms={}, json={}}
+Metadata{url=http://user.testdemo.com/uri/userinfo, method=GET, headers=[], parameters={}, forms={}, json={}}
 ```
 
 #### 参数说明
@@ -519,7 +516,7 @@ public class HelloController {
 
 #### 使用说明
 
-直接在注解中配置host，api，httpmethod等信息
+直接在注解中配置host，uri，httpmethod等信息
 
 ```java
 @Component
@@ -527,7 +524,7 @@ public class HelloController {
 @RestServer("manager_system")
 public class HelloController {
 
-    @RestTemp(host = "http://test.com", api = "/usr/{id}", method = HttpMethod.GET)
+    @RestTemp(host = "http://test.com", uri = "/usr/{id}", method = HttpMethod.GET)
     public Responder testRestTemp(Requester requester, Restfuls restfuls){
         requester.sync();
         return requester.getResponse();
@@ -541,7 +538,7 @@ public class HelloController {
 | ------ | ---------- | ------ | ------------------------------------------------------------ |
 | name   | string     | ""     | 接口名                                                       |
 | host   | string     | 必填   | 域名                                                         |
-| api    | string     | 必填   | 接口                                                         |
+| uri    | string     | 必填   | 接口                                                         |
 | method | HttpMethod | 必填   | 接口方法                                                     |
 | desc   | string     | ""     | 接口描述                                                     |
 | save   | boolean    | false  | 是否保存，默认不保存。如果设置全局参数rest.temp.save则忽略该参数的值。rest.temp.save可通过在properties文件中配置或者java启动参数中配置 |
@@ -613,7 +610,7 @@ public class MyStep implements Step {
 
 ### 1.2.11 @PostMethod
 
-在方法之后执行，可以打印执行结果等一系列后置操作。用法参考[@PreMethod](# 1.2.10 @PreMethod)
+在方法之后执行，可以打印执行结果等一系列后置操作。参考[@PreMethod](# 1.2.10 @PreMethod)
 
 ### 1.2.12 @ValueEntity
 
@@ -784,9 +781,9 @@ pom.xml
 ```xml
     <dependencies>
         <dependency>
-            <groupId>org.easy</groupId>
-            <artifactId>fastest</artifactId>
-            <version>2.0-SNAPSHOT</version>
+            <groupId>org.fastest</groupId>
+            <artifactId>fastest-starter</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
         <plugins>
@@ -902,6 +899,6 @@ java -cp fastest-test-1.0-SNAPSHOT.jar:fastest-test-1.0-SNAPSHOT-tests.jar org.T
 
 ## 其他说明
 
-1、默认从resources目录下读取文件，如果有其他路径的需要自行在assmebly.xml配置源路径和目标路径。如果使用resources目录作为各种文件的根目录，则向项目中可以使用FileUtil.RESOURCES_PATH，如果不适用resources目录，则需要使用FileUtil.PROJECT_ROOT拼接路径，或使用其他可识别的路径。
+1、默认从resources目录下读取文件，如果有其他路径的需要自行在assmebly.xml配置源路径和目标路径。如果使用resources目录作为各种文件的根目录，则向项目中可以使用FileUtil.RESOURCES_PATH，如果不使用resources目录，则需要使用FileUtil.PROJECT_ROOT拼接路径，或使用其他可识别的路径。
 
 2、resources读取的是src/main/resources目录，这是为了照顾大家的使用习惯

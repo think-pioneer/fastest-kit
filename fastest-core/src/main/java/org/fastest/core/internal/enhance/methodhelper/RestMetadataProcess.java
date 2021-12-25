@@ -10,7 +10,7 @@ import org.fastest.http.Metadata;
 import org.fastest.http.Requester;
 import org.fastest.http.metadata.HttpMethod;
 import org.fastest.http.metadata.HttpMethodBuilder;
-import org.fastest.http.metadata.ReadApiConfig;
+import org.fastest.core.rest.http.metadata.ReadApiConfig;
 import org.fastest.utils.ObjectUtil;
 
 import java.lang.reflect.Method;
@@ -57,15 +57,15 @@ public class RestMetadataProcess extends AbstractRestAnnotationProcess {
         if("".equals(serverName) || "".equals(apiName)){
             throw new EnhanceException("server name or api name can't empty");
         }
-        ReadApiConfig.Api apiObj = ReadApiConfig.getApi(serverName, apiName, file);
-        if(Objects.isNull(apiObj)){
+        ReadApiConfig.Uri uriObj = ReadApiConfig.getApi(serverName, apiName, file);
+        if(Objects.isNull(uriObj)){
             if(Objects.nonNull(file)) {
                 throw new JsonException(ObjectUtil.format("form api conf not fount {}.{} from {}", serverName, apiName, file));
             }
             throw new JsonException(ObjectUtil.format("form api conf not fount {}.{}", serverName, apiName));
         }
-        String url = apiObj.getUrl();
-        HttpMethod httpMethodType = HttpMethodBuilder.build(apiObj.getMethod().trim().toUpperCase());
+        String url = uriObj.getUrl();
+        HttpMethod httpMethodType = HttpMethodBuilder.build(uriObj.getMethod().trim().toUpperCase());
         if(StringUtils.isEmpty(url)){
             throw new EnhanceException(ObjectUtil.format("Class={}, method={} url is empty", clazz.getName(), method.getName()));
         }

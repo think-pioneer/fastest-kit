@@ -1,0 +1,1 @@
+mvn clean package && mvn install:install-file -Dfile=fastest-starter/target/fastest-starter-1.0-SNAPSHOT.jar -DgroupId=org.fastest -DartifactId=fastest-starter -Dversion=1.0-SNAPSHOT -Dpackaging=jar

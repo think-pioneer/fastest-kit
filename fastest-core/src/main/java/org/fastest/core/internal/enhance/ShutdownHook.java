@@ -2,16 +2,14 @@ package org.fastest.core.internal.enhance;
 
 import org.fastest.common.exceptions.FileException;
 import org.fastest.core.internal.enhance.methodhelper.RestTempWrite;
-import org.fastest.utils.FileUtil;
-import org.fastest.utils.PropertyUtil;
+import org.fastest.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.*;
+import java.util.Date;
 import java.util.Objects;
+import java.util.Random;
 
 /**
  * @Date: 2021/10/31
@@ -28,16 +26,16 @@ public final class ShutdownHook {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             String defaultPath = PropertyUtil.getProperty("rest.temp.api");
             if(Objects.isNull(defaultPath)){
-                defaultPath = "conf/APIConfTemp.json";
+                defaultPath = ObjectUtil.format("apiconfig_custom/APIConfTemp_{}_{}.yaml", DateUtil.dateToString(new Date(), "yyyy_MM_dd_HH_mm_ss"), new Random().nextInt(10000));
             }
             File file = FileUtil.createFile(defaultPath);
-            if(Objects.isNull(file)){
+            if(Objects.isNull(file) || !file.exists()){
                 throw new FileException("create rest temp api json file of fail:" + defaultPath);
             }
             OutputStreamWriter writer = null;
             try{
                 writer = new OutputStreamWriter(new FileOutputStream(file));
-                writer.write(RestTempWrite.pretty());
+                RestTempWrite.save(writer);
             }catch (IOException e){
                 throw new FileException("write rest temp api json file of fail:" + file.getAbsolutePath());
             }finally {

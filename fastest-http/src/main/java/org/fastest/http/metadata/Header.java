@@ -1,13 +1,8 @@
 package org.fastest.http.metadata;
 
-import lombok.Getter;
-import lombok.ToString;
-
 /**
  * @Date: 2020/10/16
  */
-@Getter
-@ToString
 public class Header extends Meta {
     private final String key;
     private final String value;
@@ -15,5 +10,21 @@ public class Header extends Meta {
     public Header(String key, String value){
         this.key = key;
         this.value = value;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    @Override
+    public String toString() {
+        return "Header{" +
+                "key='" + key + '\'' +
+                ", value='" + value + '\'' +
+                '}';
     }
 }

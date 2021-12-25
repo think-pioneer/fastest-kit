@@ -14,12 +14,11 @@ public class FastLogger {
     final boolean traceCapable;
 
     private FastLogger(String name){
-        Configure.initialization();
         this.logger = LogManager.getLogger(name);
         this.traceCapable =this.isTraceCapable();
     }
 
-    public static FastLogger getLogger(String name){
+    public static synchronized FastLogger getLogger(String name){
         if(Objects.isNull(instance)){
             synchronized (FastLogger.class){
                 if(Objects.isNull(instance)){
@@ -30,7 +29,7 @@ public class FastLogger {
         return instance;
     }
 
-    public static FastLogger getLogger(Class<?> clazz){
+    public static synchronized FastLogger getLogger(Class<?> clazz){
         return getLogger(clazz.getName());
     }
 
