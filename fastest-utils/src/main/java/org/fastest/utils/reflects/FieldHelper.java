@@ -1,8 +1,9 @@
 package org.fastest.utils.reflects;
 
 import org.fastest.common.exceptions.ReflectionException;
+import org.fastest.utils.ObjectUtil;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Field;
 import java.util.Objects;
 
 /**
@@ -168,6 +169,17 @@ public final class FieldHelper<T> {
     }
 
     public static <T> FieldHelper<T> getInstance(Object instance, Field field){
+        return new FieldHelper<>(instance, field);
+    }
+
+    public static <T> FieldHelper<T> getInstance(Object instance, String fieldName){
+        Field field;
+        Class<?> instanceType = instance.getClass();
+        try{
+            field = instanceType.getField(fieldName);
+        }catch (NoSuchFieldException e){
+            throw new ReflectionException(ObjectUtil.format("not found filed\"{}\" from \"{}\"", fieldName, instanceType.getName()));
+        }
         return new FieldHelper<>(instance, field);
     }
 }

@@ -3,10 +3,10 @@ package org.fastest.core.internal.enhance.fieldhelper;
 import org.fastest.core.annotations.Before;
 import org.fastest.core.annotations.Component;
 import org.fastest.core.annotations.MutexAnnotation;
+import org.fastest.core.cnhance.field.FieldAnnotationProcessable;
 import org.fastest.core.internal.enhance.AnnotationGardener;
 import org.fastest.core.internal.enhance.EnhanceFactory;
 import org.fastest.core.internal.tool.AnnotationTool;
-import org.fastest.utils.reflects.FieldHelper;
 import org.fastest.utils.reflects.ReflectUtil;
 
 import java.lang.annotation.Annotation;

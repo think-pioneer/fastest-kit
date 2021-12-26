@@ -5,7 +5,7 @@ import org.fastest.common.exceptions.EnhanceException;
 import org.fastest.common.exceptions.JsonException;
 import org.fastest.core.annotations.RestMetadata;
 import org.fastest.core.annotations.RestServer;
-import org.fastest.core.aspect.method.JoinPoint;
+import org.fastest.core.cnhance.method.JoinPoint;
 import org.fastest.http.Metadata;
 import org.fastest.http.Requester;
 import org.fastest.http.metadata.HttpMethod;

@@ -7,6 +7,7 @@ import org.fastest.utils.ObjectUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.Objects;
 
 /**
@@ -38,9 +39,21 @@ public class MethodHelper<T> {
             } else {
                 this.method = this.instanceType.getMethod(methodName, argTypes);
             }
+            this.method.setAccessible(true);
         }catch (NoSuchMethodException e) {
             throw new EnhanceException(ObjectUtil.format("not found method:{} in class:{}", methodName, this.instanceType.getName()), e);
         }
+    }
+
+    private MethodHelper(Object instance, Method method){
+        if(Objects.isNull(instance) || Objects.isNull(method)){
+            throw new ReflectionException("The instance where the method is located cannot be null");
+        }
+        this.instance = instance;
+        this.methodName = method.getName();
+        this.instanceType = instance.getClass();
+        this.method = method;
+        this.method.setAccessible(true);
     }
 
     public T invoke(Object[] args){
@@ -55,7 +68,21 @@ public class MethodHelper<T> {
         }
     }
 
+    public boolean hasParameter(T expect){
+        Type[] parameterTypes = this.method.getParameterTypes();
+        for(Type type:parameterTypes){
+            if (type.getTypeName().equals(expect.getClass().getName())){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static <T> MethodHelper<T> getInstance(Object instance, String methodName, Class<?>[] argTypes){
         return new MethodHelper<>(instance, methodName, argTypes);
+    }
+
+    public static <T> MethodHelper<T> getInstance(Object instance, Method method){
+        return new MethodHelper<>(instance, method);
     }
 }

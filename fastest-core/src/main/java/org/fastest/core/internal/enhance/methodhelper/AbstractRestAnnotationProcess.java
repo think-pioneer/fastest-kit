@@ -34,9 +34,7 @@ public abstract class AbstractRestAnnotationProcess extends AbstractMethodProces
                     throw new EnhanceException(ObjectUtil.format("url:[{}] not restful url", url));
                 }
                 String finalUrl = url;
-                restfuls.forEach((key, value) -> {
-                    newUrl.set(finalUrl.replace(restParams.get(key), String.valueOf(value.getValue())));
-                });
+                restfuls.forEach((key, value) -> newUrl.set(finalUrl.replace(restParams.get(key), String.valueOf(value.getValue()))));
                 url = newUrl.get();
                 break;
             }

@@ -1,6 +1,6 @@
 package org.fastest.core.internal.enhance.methodhelper;
 
-import org.fastest.core.aspect.method.JoinPoint;
+import org.fastest.core.cnhance.method.JoinPoint;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -14,6 +14,7 @@ class JoinPointImpl implements JoinPoint {
     private final Object[] args;
     private final Object target;
     private final Object self;
+    private Object returnValue;
 
     public JoinPointImpl(Annotation annotation, Method method, Object[] args, Object target, Object self){
         this.annotation = annotation;
@@ -41,6 +42,15 @@ class JoinPointImpl implements JoinPoint {
     @Override
     public Object getTarget() {
         return this.target;
+    }
+
+    @Override
+    public void setReturn(Object value) {
+        this.returnValue = value;
+    }
+
+    public Object getReturnValue(){
+        return returnValue;
     }
 
     @Override

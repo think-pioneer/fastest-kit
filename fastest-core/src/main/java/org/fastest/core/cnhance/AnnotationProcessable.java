@@ -1,4 +1,4 @@
-package org.fastest.core.internal.enhance;
+package org.fastest.core.cnhance;
 
 /**
  * @Date: 2021/11/30

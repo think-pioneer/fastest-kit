@@ -745,6 +745,8 @@ public @interface C{}
 
 字段注解的功能实现类必须继承FieldAnnotationProcessable类
 
+JoinPoint是被拦截字段的一些信息，包含注解对象、被拦截字段、被拦截字段所在的对象、以及当前实现类对象
+
 ```java
 public class MyCustomFieldAnnotation implements FieldAnnotationProcessable {
     @Override
@@ -754,23 +756,38 @@ public class MyCustomFieldAnnotation implements FieldAnnotationProcessable {
 }
 ```
 
-JoinPoint是被拦截字段的一些信息，包含注解对象、被拦截字段、被拦截字段所在的对象、以及当前实现类对象
-
 ### 1.3.2 方法注解
 
 方法注解的功能实现类必须继承MethodAnnotationProcessable类
+
+JoinPoint是被拦截方法的信息，包含注解对象、被拦截方法、被拦截方法的参数、被代理的对象、实现类的对象、返回给被注解方法的返回值
 
 ```java
 public class MyCustomMethodAnnotation implements MethodAnnotationProcessable {
 
     @Override
     public void process(JoinPoint joinPoint) {
-        //do something
+        System.out.println("MyCustomMethodAnnotation");
+        System.out.println(joinPoint.getMethod().getName());
+        System.out.println(Arrays.toString(joinPoint.getArgs()));
+        joinPoint.setReturn("MyCustomMethodAnnotation");
     }
 }
 ```
 
-JoinPoint是被拦截方法的信息，包含注解对象、被拦截方法、被拦截方法的参数、被代理的对象、实现类的对象
+```java
+	@LogPrint//MyCustomMethodAnnotation实现
+    public Responder test1(MethodReturn methodReturn, String name){
+        System.out.println("MethodReturn返回值:");
+        System.out.println(methodReturn.getReturnValue());
+        //输出
+        //MethodReturn返回值:
+	    //[MyCustomMethodAnnotation]，(多个)注解的(如果有)返回值为list
+        return controller.testRestTemp(requester);
+    }
+```
+
+
 
 # 2. 项目使用方法
 

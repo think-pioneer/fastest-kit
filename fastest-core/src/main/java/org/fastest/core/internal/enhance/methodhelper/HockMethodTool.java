@@ -9,15 +9,27 @@ import java.lang.reflect.InvocationTargetException;
  */
 class HockMethodTool {
 
-    public static void invoke(Class<?> targetClass, String targetMethod, Object[] actualArgs, int[] argsIndex) throws
+    public static <T> T invoke(Class<?> targetClass, String targetMethod, Object[] actualArgs, int[] argsIndex) throws
             NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        Class<?>[] realArgsType = new Class[argsIndex.length];
-        Object[] realArgs = new Object[argsIndex.length];
-        for(int i = 0;i < argsIndex.length;i++){
-            Object actualArg = actualArgs[argsIndex[i]];
+        int actualArgsLen = actualArgs.length;
+        int[] _argsIndex;
+        if(argsIndex.length == 0){
+            _argsIndex = new int[actualArgsLen];
+            for(int i = 0;i < actualArgsLen; i++){
+                _argsIndex[i] = i+1;
+            }
+        }else{
+            _argsIndex = argsIndex;
+        }
+        int argsIndexLen = _argsIndex.length;
+        Class<?>[] realArgsType = new Class[argsIndexLen];
+        Object[] realArgs = new Object[argsIndexLen];
+        for (int i = 0; i < argsIndexLen; i++) {
+            Object actualArg = actualArgs[_argsIndex[i] - 1];//argsIndex中标识的下表的起始为1，所以需要-1才是真实小标
             realArgs[i] = actualArg;
             realArgsType[i] = actualArg.getClass();
         }
-        MethodHelper.getInstance(targetClass.getDeclaredConstructor().newInstance(), targetMethod, realArgsType).invoke(realArgs);
+        MethodHelper<T> methodHelper = MethodHelper.getInstance(targetClass.getDeclaredConstructor().newInstance(), targetMethod, realArgsType);
+        return methodHelper.invoke(realArgs);
     }
 }

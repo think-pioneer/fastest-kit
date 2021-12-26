@@ -2,7 +2,8 @@ package org.fastest.core.internal.enhance.fieldhelper;
 
 import org.fastest.core.annotations.Component;
 import org.fastest.core.annotations.Singleton;
-import org.fastest.core.aspect.field.JoinPoint;
+import org.fastest.core.cnhance.field.JoinPoint;
+import org.fastest.core.cnhance.field.FieldAnnotationProcessable;
 import org.fastest.core.internal.enhance.EasyHandler;
 import org.fastest.core.internal.enhance.EnhanceFactory;
 

@@ -1,4 +1,4 @@
-package org.fastest.core.internal.constructor;
+package org.fastest.core.cnhance.constructor;
 
 /**
  * @Date: 2021/11/7

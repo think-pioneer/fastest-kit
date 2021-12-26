@@ -3,7 +3,7 @@ package org.fastest.core.internal.enhance.fieldhelper;
 import org.apache.commons.lang3.StringUtils;
 import org.fastest.common.exceptions.EnhanceException;
 import org.fastest.core.annotations.LoggerSlf4j;
-import org.fastest.core.aspect.field.JoinPoint;
+import org.fastest.core.cnhance.field.JoinPoint;
 import org.fastest.core.internal.enhance.LogFactory;
 import org.fastest.utils.ObjectUtil;
 import org.fastest.utils.reflects.FieldHelper;

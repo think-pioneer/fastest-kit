@@ -15,4 +15,12 @@ public final class ApplicationBean {
     public static Object enhance(Class<?> clazz, Class<?>[] argumentTypes, Object[] arguments, Class<?> callbackType){
         return EnhanceFactory.enhance(clazz, argumentTypes, arguments, callbackType);
     }
+
+    public static Object origin(Class<?> clazz){
+        return EnhanceFactory.origin(clazz);
+    }
+
+    public static Object origin(Class<?> clazz, Class<?>[] argumentTypes, Object[] arguments){
+        return EnhanceFactory.origin(clazz, argumentTypes, arguments);
+    }
 }

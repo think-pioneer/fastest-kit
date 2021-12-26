@@ -2,8 +2,8 @@ package org.fastest.core.internal.enhance.fieldhelper;
 
 import org.fastest.common.exceptions.EnhanceException;
 import org.fastest.core.annotations.Autowired;
-import org.fastest.core.aspect.field.JoinPoint;
-import org.fastest.core.internal.constructor.ConstructorProperty;
+import org.fastest.core.cnhance.field.JoinPoint;
+import org.fastest.core.cnhance.constructor.ConstructorProperty;
 import org.fastest.core.internal.enhance.EnhanceFactory;
 import org.fastest.utils.ObjectUtil;
 import org.fastest.utils.reflects.FieldHelper;
@@ -69,7 +69,6 @@ public class AutowireAnnotationProcess extends AbstractFieldProcess {
             }
             Object fieldInstance = fieldTargetManger.getInstance();
             FieldHelper.getInstance(instance, field).set(fieldInstance);
-//            FieldTool.set(field, instance, fieldInstance);
         }catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e){
             throw new EnhanceException(ObjectUtil.format("Autowired error: {}.{} build instance error", instance.getClass().getName(), field.getName()), e);
         }

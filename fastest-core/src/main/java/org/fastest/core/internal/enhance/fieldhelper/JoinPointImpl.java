@@ -1,6 +1,6 @@
 package org.fastest.core.internal.enhance.fieldhelper;
 
-import org.fastest.core.aspect.field.JoinPoint;
+import org.fastest.core.cnhance.field.JoinPoint;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;

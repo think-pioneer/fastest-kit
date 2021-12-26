@@ -3,7 +3,7 @@ package org.fastest.core.internal.enhance.fieldhelper;
 import org.apache.commons.lang3.StringUtils;
 import org.fastest.common.exceptions.ValueException;
 import org.fastest.core.annotations.Value;
-import org.fastest.core.aspect.field.JoinPoint;
+import org.fastest.core.cnhance.field.JoinPoint;
 import org.fastest.utils.ObjectUtil;
 import org.fastest.utils.files.YamlUtil;
 import org.fastest.utils.reflects.FieldHelper;

@@ -1,4 +1,4 @@
-package org.fastest.core.aspect.method;
+package org.fastest.core.cnhance.method;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -27,6 +27,11 @@ public interface JoinPoint {
      *Represented object
      */
     Object getTarget();
+
+    /**
+     * The value returned to the proxied method
+     */
+    void setReturn(Object value);
 
     /**
      *feature realization object

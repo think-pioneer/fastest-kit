@@ -5,7 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.fastest.common.exceptions.EnhanceException;
 import org.fastest.common.json.JSONFactory;
 import org.fastest.core.annotations.ValueEntity;
-import org.fastest.core.aspect.field.JoinPoint;
+import org.fastest.core.cnhance.field.JoinPoint;
 import org.fastest.core.internal.enhance.EnhanceFactory;
 import org.fastest.utils.files.YamlUtil;
 import org.fastest.utils.reflects.ReflectUtil;
