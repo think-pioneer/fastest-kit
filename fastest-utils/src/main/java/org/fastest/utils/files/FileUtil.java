@@ -1,6 +1,7 @@
-package org.fastest.utils;
+package org.fastest.utils.files;
 
 import org.fastest.common.exceptions.FileException;
+import org.fastest.utils.ObjectUtil;
 
 import java.io.*;
 import java.net.URL;

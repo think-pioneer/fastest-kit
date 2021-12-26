@@ -1,4 +1,4 @@
-package org.fastest.utils.iostream;
+package org.fastest.utils.files.iostream;
 
 import java.util.Objects;
 

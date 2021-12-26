@@ -1,4 +1,4 @@
-package org.fastest.utils;
+package org.fastest.utils.files;
 
 import org.apache.commons.lang3.StringUtils;
 import org.fastest.common.exceptions.FileException;

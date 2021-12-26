@@ -6,9 +6,9 @@ import org.fastest.common.exceptions.EnhanceException;
 import org.fastest.common.json.JSONFactory;
 import org.fastest.core.annotations.ValueEntity;
 import org.fastest.core.aspect.field.JoinPoint;
-import org.fastest.core.internal.ReflectTool;
 import org.fastest.core.internal.enhance.EnhanceFactory;
-import org.fastest.utils.YamlUtil;
+import org.fastest.utils.files.YamlUtil;
+import org.fastest.utils.reflects.ReflectUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -41,7 +41,7 @@ public class ValueEntityAnnotationProcess extends AbstractFieldProcess {
                     throw new EnhanceException("List mode need file name");
                 }
                 List<Object> list = YamlUtil.getAll(fileName, key);
-                Class<?> eleType = ReflectTool.getCollectionGenericRealType(entityType);
+                Class<?> eleType = ReflectUtil.getCollectionGenericRealType(entityType);
                 obj = JSONFactory.stringToObject(JSONFactory.objectToJson(list).toString(), List.class, eleType);
             }else {
                 HashMap<String, ?> hashMap = (HashMap<String, ?>) YamlUtil.get(fileName, key);

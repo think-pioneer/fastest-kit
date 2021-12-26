@@ -1,9 +1,9 @@
 package org.testng.listener;
 
 import org.fastest.core.internal.enhance.EnhanceFactory;
-import org.fastest.core.internal.enhance.FieldTool;
 import org.fastest.logger.FastLogger;
 import org.fastest.logger.FastLoggerFactory;
+import org.fastest.utils.reflects.FieldHelper;
 import org.testng.ITestResult;
 import org.testng.annotations.Recovery;
 import org.testng.step.Step;
@@ -24,7 +24,7 @@ class TestFinish{
             if(Objects.nonNull(recovery)){
                 Field[] fields = testInstance.getClass().getDeclaredFields();
                 for (Field field : fields) {
-                    Object object = FieldTool.get(testInstance, field.getName());
+                    Object object = FieldHelper.getInstance(testInstance, field).get();
                     if (object instanceof Step) {
                         Step step = (Step) object;
                         org.testng.step.Recovery recovery1 = (org.testng.step.Recovery) EnhanceFactory.origin(recovery.executor());

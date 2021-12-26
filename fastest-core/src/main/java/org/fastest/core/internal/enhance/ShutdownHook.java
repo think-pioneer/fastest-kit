@@ -2,9 +2,12 @@ package org.fastest.core.internal.enhance;
 
 import org.fastest.common.exceptions.FileException;
 import org.fastest.core.internal.enhance.methodhelper.RestTempWrite;
+import org.fastest.logger.FastLogger;
+import org.fastest.logger.FastLoggerFactory;
 import org.fastest.utils.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.fastest.utils.dates.DateUtil;
+import org.fastest.utils.files.FileUtil;
+import org.fastest.utils.files.PropertyUtil;
 
 import java.io.*;
 import java.util.Date;
@@ -15,7 +18,7 @@ import java.util.Random;
  * @Date: 2021/10/31
  */
 public final class ShutdownHook {
-    private static final Logger logger = LoggerFactory.getLogger(ShutdownHook.class);
+    private static final FastLogger logger = FastLoggerFactory.getLogger(ShutdownHook.class);
 
     private ShutdownHook(){}
 

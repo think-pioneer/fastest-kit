@@ -1,9 +1,9 @@
-package org.fastest.utils;
+package org.fastest.utils.files;
 
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.fastest.common.json.JSONFactory;
-import org.fastest.utils.iostream.InputStreamOptional;
+import org.fastest.utils.files.iostream.InputStreamOptional;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.composer.ComposerException;
 import org.yaml.snakeyaml.constructor.Constructor;

@@ -1,8 +1,8 @@
 package org.fastest.core.internal.enhance;
 
+import org.fastest.logger.FastLogger;
+import org.fastest.logger.FastLoggerFactory;
 import org.fastest.utils.ObjectUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -12,14 +12,14 @@ import java.util.Objects;
  */
 public class LogFactory {
     private static final int thisHash = LogFactory.class.hashCode();
-    private static final HashMap<String, Object> cache = new HashMap<>();
+    private static final HashMap<String, FastLogger> cache = new HashMap<>();
 
-    public static Logger getLogger(String name){
+    public static FastLogger getLogger(String name){
         int nameHash = name.hashCode();
         String key = ObjectUtil.format("{}-{}-{}", thisHash, nameHash, name);
-        Logger logger = (Logger) cache.get(key);
+        FastLogger logger = cache.get(key);
         if(Objects.isNull(logger)) {
-            logger = LoggerFactory.getLogger(name);
+            logger = FastLoggerFactory.getLogger(name);
             cache.put(key, logger);
             return logger;
         }

@@ -1,4 +1,4 @@
-package org.fastest.utils.iostream;
+package org.fastest.utils.files.iostream;
 
 import org.fastest.common.exceptions.FastestBasicException;
 import org.fastest.common.exceptions.FileException;

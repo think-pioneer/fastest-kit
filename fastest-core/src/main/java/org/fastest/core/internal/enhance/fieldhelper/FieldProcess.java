@@ -3,10 +3,11 @@ package org.fastest.core.internal.enhance.fieldhelper;
 import org.fastest.core.annotations.Before;
 import org.fastest.core.annotations.Component;
 import org.fastest.core.annotations.MutexAnnotation;
-import org.fastest.core.internal.ReflectTool;
 import org.fastest.core.internal.enhance.AnnotationGardener;
 import org.fastest.core.internal.enhance.EnhanceFactory;
 import org.fastest.core.internal.tool.AnnotationTool;
+import org.fastest.utils.reflects.FieldHelper;
+import org.fastest.utils.reflects.ReflectUtil;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -46,8 +47,7 @@ class FieldProcess {
         for (AnnotationGardener gardener : annotationGardenerList) {
             Annotation hockAnnotation = gardener.getHockAnnotation();
             Annotation annotation = gardener.getAnnotation();
-            Class<?> processType = (Class<?>) ReflectTool.get(hockAnnotation, "value");
-            FieldAnnotationProcessable process = (FieldAnnotationProcessable) EnhanceFactory.origin(processType);
+            FieldAnnotationProcessable process = (FieldAnnotationProcessable) EnhanceFactory.origin(ReflectUtil.get(hockAnnotation, "value"));
             if (AnnotationTool.hasAnnotation(field.getDeclaringClass(), Component.class)) {
                 MutexAnnotation mutexAnnotation = annotation.annotationType().getDeclaredAnnotation(MutexAnnotation.class);
                 if(Objects.nonNull(mutexAnnotation)){

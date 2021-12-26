@@ -1,4 +1,4 @@
-package org.fastest.utils;
+package org.fastest.utils.dates;
 
 import org.fastest.common.exceptions.FastestBasicException;
 

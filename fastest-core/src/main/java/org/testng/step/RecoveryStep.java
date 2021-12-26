@@ -1,13 +1,13 @@
 package org.testng.step;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.fastest.logger.FastLogger;
+import org.fastest.logger.FastLoggerFactory;
 
 /**
  * @Date: 2021/10/30
  */
 public class RecoveryStep implements Recovery{
-    private static final Logger logger = LoggerFactory.getLogger(RecoveryStep.class);
+    private static final FastLogger logger = FastLoggerFactory.getLogger(RecoveryStep.class);
 
     public boolean recovery(Step step, long timeOutMilli){
         long startTime = System.currentTimeMillis();

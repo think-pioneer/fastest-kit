@@ -4,10 +4,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.fastest.common.exceptions.ValueException;
 import org.fastest.core.annotations.Value;
 import org.fastest.core.aspect.field.JoinPoint;
-import org.fastest.core.internal.ReflectTool;
-import org.fastest.core.internal.enhance.FieldTool;
 import org.fastest.utils.ObjectUtil;
-import org.fastest.utils.YamlUtil;
+import org.fastest.utils.files.YamlUtil;
+import org.fastest.utils.reflects.FieldHelper;
+import org.fastest.utils.reflects.ReflectUtil;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -67,7 +67,7 @@ public class ValueAnnotationProcess extends AbstractFieldProcess {
                     array.parseBaseArray();
                 }
             } else if(fieldType.getName().endsWith("List")){
-                Class<?> elementType = ReflectTool.getCollectionGenericRealType(field.getGenericType());
+                Class<?> elementType = ReflectUtil.getCollectionGenericRealType(field.getGenericType());
                 Array array = Array.create(elementType.getName(), value.split(","), target.getInstance(), field);
                 array.parseWrapperList();
             }
@@ -83,35 +83,34 @@ public class ValueAnnotationProcess extends AbstractFieldProcess {
     static class Parse{
         private final String type;
         private final String value;
-        private final Field field;
-        private final Object instance;
+        private final FieldHelper<?> fieldHelper;
 
         private Parse(String type, String value, Object instance, Field field){
             this.type = type;
             this.value = value;
-            this.instance = instance;
-            this.field = field;
+            this.fieldHelper = FieldHelper.getInstance(instance, field);
         }
 
         public void parse(){
-
+            Object _value;
             if("java.lang.Integer".equals(type) || "int".equals(type)) {
-                FieldTool.set(field, instance, Integer.parseInt(value));
+                _value = Integer.parseInt(value);
             } else if ("java.lang.Long".equals(type) || "long".equals(type)) {
-                FieldTool.set(field, instance, Long.parseLong(value));
+                _value = Long.parseLong(value);
             } else if ("java.lang.Float".equals(type) || "float".equals(type)) {
-                FieldTool.set(field, instance, Float.parseFloat(value));
+                _value = Float.parseFloat(value);
             } else if ("java.lang.Double".equals(type) || "double".equals(type)) {
-                FieldTool.set(field, instance, Double.parseDouble(value));
+                _value = Double.parseDouble(value);
             } else if ("java.lang.Boolean".equals(type) || "boolean".equals(type)) {
-                FieldTool.set(field, instance, Boolean.parseBoolean(value));
+                _value = Boolean.parseBoolean(value);
             } else if ("java.lang.Short".equals(type) || "short".equals(type)) {
-                FieldTool.set(field, instance, Short.parseShort(value));
+                _value = Short.parseShort(value);
             } else if ("java.lang.Byte".equals(type) || "byte".equals(type)) {
-                FieldTool.set(field, instance, Byte.parseByte(value));
+                _value = Byte.parseByte(value);
             } else {
-                FieldTool.set(field, instance, value);
+                _value = value;
             }
+            this.fieldHelper.set(_value);
         }
 
         public static Parse create(String type, String value, Object instance, Field field){
@@ -122,16 +121,14 @@ public class ValueAnnotationProcess extends AbstractFieldProcess {
     static class Array{
         private final String type;
         private final int length;
-        private final Object instance;
-        private final Field field;
         private final String[] value;
+        private final FieldHelper<?> fieldHelper;
 
         public Array(String type, String[] value, Object instance, Field field){
             this.type = type;
             this.length = value.length;
             this.value = value;
-            this.instance = instance;
-            this.field = field;
+            this.fieldHelper = FieldHelper.getInstance(instance, field);
         }
 
         public static Array create(String type, String[] value, Object instance, Field field){
@@ -139,116 +136,99 @@ public class ValueAnnotationProcess extends AbstractFieldProcess {
         }
 
         public void parseWrapperArray(){
+            Object[] _value;
             switch (type){
                 case ("java.lang.Integer[]"):
-                    Integer[] integers = new Integer[length];
+                    _value = new Integer[length];
                     for(int i=0; i < length;i++){
-                        integers[i] = Integer.parseInt(value[i]);
+                        _value[i] = Integer.parseInt(value[i]);
                     }
-                    FieldTool.set(field, instance, integers);
                     break;
                 case "java.lang.Long[]":
-                    Long[] longs = new Long[length];
+                    _value= new Long[length];
                     for(int i=0;i < length;i++){
-                        longs[i] = Long.parseLong(value[i]);
+                        _value[i] = Long.parseLong(value[i]);
                     }
-                    FieldTool.set(field, instance, longs);
                     break;
                 case "java.lang.Float[]":
-                    Float[] floats = new Float[length];
+                    _value = new Float[length];
                     for(int i=0; i<length;i++){
-                        floats[i] = Float.parseFloat(value[i]);
+                        _value[i] = Float.parseFloat(value[i]);
                     }
-                    FieldTool.set(field, instance, floats);
                     break;
                 case "java.lang.Double[]":
-                    Double[] doubles = new Double[length];
+                    _value = new Double[length];
                     for(int i=0; i<length;i++){
-                        doubles[i] = Double.parseDouble(value[i]);
+                        _value[i] = Double.parseDouble(value[i]);
                     }
-                    FieldTool.set(field, instance, doubles);
                     break;
                 case "java.lang.Boolean[]":
-                    Boolean[] booleans = new Boolean[length];
+                    _value = new Boolean[length];
                     for(int i = 0;i < length;i++){
-                        booleans[i] = Boolean.parseBoolean(value[i]);
+                        _value[i] = Boolean.parseBoolean(value[i]);
                     }
-                    FieldTool.set(field, instance, booleans);
                     break;
                 case "java.lang.Short[]":
-                    Short[] shorts = new Short[length];
+                    _value = new Short[length];
                     for(int i=0;i<length;i++){
-                        shorts[i] = Short.parseShort(value[i]);
+                        _value[i] = Short.parseShort(value[i]);
                     }
-                    FieldTool.set(field, instance, shorts);
                     break;
                 case "java.lang.Byte[]":
-                    Byte[] bytes = new Byte[length];
+                    _value = new Byte[length];
                     for(int i=0;i<length;i++){
-                        bytes[i] = Byte.parseByte(value[i]);
+                        _value[i] = Byte.parseByte(value[i]);
                     }
-                    FieldTool.set(field, instance, bytes);
                     break;
                 default:
-                    FieldTool.set(field, instance, value);
-
+                    _value = value;
+                    break;
             }
+            this.fieldHelper.set(_value);
         }
 
         public void parseWrapperList(){
+            List<Object> _value = new ArrayList<>();
             switch (type){
                 case ("java.lang.Integer"):
-                    List<Integer> integerList = new ArrayList<>();
                     for(int i=0; i < length;i++){
-                        integerList.add(Integer.parseInt(value[i]));
+                        _value.add(Integer.parseInt(value[i]));
                     }
-                    FieldTool.set(field, instance, integerList);
                     break;
                 case "java.lang.Long":
-                    List<Long> longList = new ArrayList<>();
                     for(int i=0;i < length;i++){
-                        longList.add(Long.parseLong(value[i]));
+                        _value.add(Long.parseLong(value[i]));
                     }
-                    FieldTool.set(field, instance, longList);
                     break;
                 case "java.lang.Float":
-                    List<Float> floatList = new ArrayList<>();
                     for(int i=0; i<length;i++){
-                        floatList.add(Float.parseFloat(value[i]));
+                        _value.add(Float.parseFloat(value[i]));
                     }
-                    FieldTool.set(field, instance, floatList);
                     break;
                 case "java.lang.Double[]":
-                    List<Double> doubleList = new ArrayList<>();
                     for(int i=0; i<length;i++){
-                        doubleList.add(Double.parseDouble(value[i]));
+                        _value.add(Double.parseDouble(value[i]));
                     }
-                    FieldTool.set(field, instance, doubleList);
                     break;
                 case "java.lang.Boolean":
-                    List<Boolean> booleanList = new ArrayList<>();
                     for(int i = 0;i < length;i++){
-                        booleanList.add(Boolean.parseBoolean(value[i]));
+                        _value.add(Boolean.parseBoolean(value[i]));
                     }
-                    FieldTool.set(field, instance, booleanList);
                     break;
                 case "java.lang.Short[]":
-                    List<Short> shortList = new ArrayList<>();
                     for(int i=0;i<length;i++){
-                        shortList.add(Short.parseShort(value[i]));
+                        _value.add(Short.parseShort(value[i]));
                     }
-                    FieldTool.set(field, instance, shortList);
                     break;
                 case "java.lang.Byte":
-                    List<Byte> byteList = new ArrayList<>();
                     for(int i=0;i<length;i++){
-                        byteList.add(Byte.parseByte(value[i]));
+                        _value.add(Byte.parseByte(value[i]));
                     }
-                    FieldTool.set(field, instance, byteList);
                     break;
                 default:
-                    FieldTool.set(field, instance, new ArrayList<>(Arrays.asList(value)));
+                    _value.add(new ArrayList<>(Arrays.asList(value)));
             }
+            this.fieldHelper.set(_value);
         }
 
         public void parseBaseArray(){
@@ -258,52 +238,52 @@ public class ValueAnnotationProcess extends AbstractFieldProcess {
                     for(int i=0; i < length;i++){
                         integers[i] = Integer.parseInt(value[i]);
                     }
-                    FieldTool.set(field, instance, integers);
+                    this.fieldHelper.set(integers);
                     break;
                 case "long[]":
                     long[] longs = new long[length];
                     for(int i=0;i < length;i++){
                         longs[i] = Long.parseLong(value[i]);
                     }
-                    FieldTool.set(field, instance, longs);
+                    this.fieldHelper.set(longs);
                     break;
                 case "float[]":
                     float[] floats = new float[length];
                     for(int i=0; i<length;i++){
                         floats[i] = Float.parseFloat(value[i]);
                     }
-                    FieldTool.set(field, instance, floats);
+                    this.fieldHelper.set(floats);
                     break;
                 case "java.lang.Double[]":
                     double[] doubles = new double[length];
                     for(int i=0; i<length;i++){
                         doubles[i] = Double.parseDouble(value[i]);
                     }
-                    FieldTool.set(field, instance, doubles);
+                    this.fieldHelper.set(doubles);
                     break;
                 case "java.lang.Boolean[]":
                     boolean[] booleans = new boolean[length];
                     for(int i = 0;i < length;i++){
                         booleans[i] = Boolean.parseBoolean(value[i]);
                     }
-                    FieldTool.set(field, instance, booleans);
+                    this.fieldHelper.set(booleans);
                     break;
                 case "java.lang.Short[]":
                     short[] shorts = new short[length];
                     for(int i=0;i<length;i++){
                         shorts[i] = Short.parseShort(value[i]);
                     }
-                    FieldTool.set(field, instance, shorts);
+                    this.fieldHelper.set(shorts);
                     break;
                 case "java.lang.Byte[]":
                     byte[] bytes = new byte[length];
                     for(int i=0;i<length;i++){
                         bytes[i] = Byte.parseByte(value[i]);
                     }
-                    FieldTool.set(field, instance, bytes);
+                    this.fieldHelper.set(bytes);
                     break;
                 default:
-                    FieldTool.set(field, instance, value);
+                    this.fieldHelper.set(value);
             }
         }
     }
