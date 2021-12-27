@@ -99,6 +99,8 @@ public final class ReadApiConfig {
      * @return api config object
      */
     private static List<Server> init(){
+        System.out.println("我是path");
+        System.out.println(FileUtil.getResourcesPath());
         String apiConfName = YamlUtil.getString("api.config.folder.path");
         if(Objects.nonNull(apiConfName)){
             folderName = apiConfName;

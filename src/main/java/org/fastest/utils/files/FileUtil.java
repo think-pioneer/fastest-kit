@@ -31,15 +31,15 @@ public final class FileUtil {
 
     private void init(){
         URL url = FileUtil.class.getResource("/");
-        File file;
         if(Objects.isNull(url)){
             //jar包模式
-            file = new File(resourcePath, "resources");
+            String path = FileUtil.class.getResource("").getPath();
+            path = path.replace("file:/", "").split("!")[0];
+            resourcePath = new File(new File(path).getParent(), "resources");
         }else{
             //非jar模式
-            file = new File(new File(url.getFile()).getParentFile(), "classes");
+            resourcePath = new File(new File(url.getFile()).getParentFile(), "classes");
         }
-        resourcePath = file;
     }
 
     private File createFileInternal(String path){

@@ -911,7 +911,7 @@ mvn clean package -DskipTests -Dmaven.skip.test.exec
 执行测试
 
 ```shell
-java -cp fastest-test-1.0-SNAPSHOT.jar:fastest-test-1.0-SNAPSHOT-tests.jar org.TestNG [testng xml path]
+java -cp fastest-test-1.0-SNAPSHOT.jar:fastest-test-1.0-SNAPSHOT-tests.jar org.testng.TestNG [testng xml path]
 ```
 
 ## 其他说明
