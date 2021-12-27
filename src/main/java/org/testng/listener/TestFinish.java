@@ -1,9 +1,9 @@
 package org.testng.listener;
 
-import org.fastest.core.internal.enhance.EnhanceFactory;
-import org.fastest.logger.FastLogger;
-import org.fastest.logger.FastLoggerFactory;
-import org.fastest.utils.reflects.FieldHelper;
+import xyz.thinktest.fastest.core.internal.enhance.EnhanceFactory;
+import xyz.thinktest.fastest.logger.FastLogger;
+import xyz.thinktest.fastest.logger.FastLoggerFactory;
+import xyz.thinktest.fastest.utils.reflects.FieldHelper;
 import org.testng.ITestResult;
 import org.testng.annotations.Recovery;
 import org.testng.step.Step;

@@ -1,9 +1,9 @@
 package org.testng.listener;
 
-import org.fastest.core.internal.Initialization;
-import org.fastest.core.internal.enhance.ShutdownHook;
-import org.fastest.core.internal.enhance.fieldhelper.Target;
-import org.fastest.core.internal.enhance.fieldhelper.TestNGProcess;
+import xyz.thinktest.fastest.core.internal.Initialization;
+import xyz.thinktest.fastest.core.internal.enhance.ShutdownHook;
+import xyz.thinktest.fastest.core.internal.enhance.fieldhelper.Target;
+import xyz.thinktest.fastest.core.internal.enhance.fieldhelper.TestNGProcess;
 import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestNGMethod;
