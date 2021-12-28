@@ -5,6 +5,7 @@ import xyz.thinktest.fastest.utils.ObjectUtil;
 
 import java.io.*;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -30,15 +31,20 @@ public final class FileUtil {
     }
 
     private void init(){
-        URL url = FileUtil.class.getResource("/");
-        if(Objects.isNull(url)){
-            //jar包模式
-            String path = FileUtil.class.getResource("").getPath();
-            path = path.replace("file:/", "").split("!")[0];
-            resourcePath = new File(new File(path).getParent(), "resources");
-        }else{
-            //非jar模式
-            resourcePath = new File(new File(url.getFile()).getParentFile(), "classes");
+        try {
+            URL url = FileUtil.class.getResource("/");
+            if (Objects.isNull(url)) {
+                //jar包模式
+                String path = FileUtil.class.getResource("").getPath();
+                path = path.replace("file:/", "").split("!")[0];
+                path = URLDecoder.decode(path, "UTF-8");
+                resourcePath = new File(new File(path).getParent(), "resources");
+            } else {
+                //非jar模式
+                resourcePath = new File(new File(url.getFile()).getParentFile(), "classes");
+            }
+        }catch (UnsupportedEncodingException e){
+            throw new FileException("initialization path fail", e);
         }
     }
 
