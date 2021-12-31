@@ -13,24 +13,11 @@ import java.util.Objects;
 /**
  * @Date: 2020/10/21
  */
-public final class FileUtil {
-    public static final File PROJECT_ROOT = new File(System.getProperty("user.dir"));
-    private File resourcePath;
-    private volatile static FileUtil instance = null;
+public enum  FileUtil {
+    INSTANCE;
 
-    public static FileUtil getInstance(){
-        if(Objects.isNull(FileUtil.instance)){
-            synchronized (FileUtil.class){
-                if(Objects.isNull(FileUtil.instance)){
-                    instance = new FileUtil();
-                    instance.init();
-                }
-            }
-        }
-        return instance;
-    }
-
-    private void init(){
+    private final File resourcePath;
+    FileUtil(){
         try {
             URL url = FileUtil.class.getResource("/");
             if (Objects.isNull(url)) {
@@ -46,6 +33,9 @@ public final class FileUtil {
         }catch (UnsupportedEncodingException e){
             throw new FileException("initialization path fail", e);
         }
+    }
+    public File projectRootPath(){
+        return new File(System.getProperty("user.dir"));
     }
 
     private File createFileInternal(String path){
@@ -141,7 +131,7 @@ public final class FileUtil {
      * @return if success return file,else return null;
      */
     public static File createFile(String path){
-        return getInstance().createFileInternal(path);
+        return FileUtil.INSTANCE.createFileInternal(path);
     }
 
     /**
@@ -150,7 +140,7 @@ public final class FileUtil {
      * @return if success return file,else return null;
      */
     public static File createFile(File file, String path){
-        return getInstance().createFileInternal(new File(file, path));
+        return FileUtil.INSTANCE.createFileInternal(new File(file, path));
     }
 
     /**
@@ -159,7 +149,7 @@ public final class FileUtil {
      * @return if success return file,else return null;
      */
     public static File createFolder(String path){
-        return getInstance().createFolderInternal(path);
+        return FileUtil.INSTANCE.createFolderInternal(path);
     }
 
     /**
@@ -169,7 +159,7 @@ public final class FileUtil {
      */
     public static File createFolder(File file, String path){
 
-        return getInstance().createFolderInternal(new File(file, path));
+        return FileUtil.INSTANCE.createFolderInternal(new File(file, path));
     }
 
     /**
@@ -178,7 +168,7 @@ public final class FileUtil {
      * @return InputStream
      */
     public static InputStream read(String path){
-        return getInstance().readInternal(path);
+        return FileUtil.INSTANCE.readInternal(path);
     }
 
     /**
@@ -187,7 +177,7 @@ public final class FileUtil {
      * @return InputStream
      */
     public static InputStream read(File path){
-        return getInstance().readInternal(path.getAbsolutePath());
+        return FileUtil.INSTANCE.readInternal(path.getAbsolutePath());
     }
 
     /**
@@ -197,7 +187,7 @@ public final class FileUtil {
      * @param suffixes filter file by suffix
      */
     public static void collect(File path, List<File> fileList, String[] suffixes){
-        getInstance().collectInternal(path, fileList, suffixes);
+        FileUtil.INSTANCE.collectInternal(path, fileList, suffixes);
     }
 
     /**
@@ -206,11 +196,15 @@ public final class FileUtil {
      * @param fileList file collection container
      */
     public static void collect(File path, List<File> fileList){
-        getInstance().collectInternal(path, fileList);
+        FileUtil.INSTANCE.collectInternal(path, fileList);
     }
 
     public static File getResourcesPath(){
-        return getInstance().resourcePath;
+        return FileUtil.INSTANCE.resourcePath;
+    }
+
+    public static File getProjectRoot(){
+        return FileUtil.INSTANCE.projectRootPath();
     }
 
     public static boolean isSuffix(File file, String[] suffixes){

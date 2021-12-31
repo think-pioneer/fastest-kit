@@ -6,29 +6,19 @@ import xyz.thinktest.fastest.common.exceptions.FileException;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @Date: 2020/10/24
  */
-public final class PropertyUtil {
-    private final Properties properties = new Properties();
-    private static volatile PropertyUtil instance = null;
-    private final Map<String, Properties> propertiesMap = new HashMap<>();
-
-    private static PropertyUtil getInstance(){
-        if(Objects.isNull(instance)){
-            synchronized (PropertyUtil.class){
-                if(Objects.isNull(instance)){
-                    instance = new PropertyUtil();
-                    instance.init();
-                }
-            }
-        }
-        return instance;
-    }
-
-    private void init(){
-        properties.putAll(System.getProperties());
+public enum  PropertyUtil {
+    INSTANCE;
+    private final Properties properties;
+    private final ConcurrentHashMap<String, Properties> propertiesMap;
+    PropertyUtil(){
+        this.properties = new Properties();
+        this.propertiesMap = new ConcurrentHashMap<>();
+        this.properties.putAll(System.getProperties());
         List<File> fileList = new ArrayList<>();
         FileUtil.collect(FileUtil.getResourcesPath(), fileList, new String[]{"properties"});
         try {
@@ -214,30 +204,30 @@ public final class PropertyUtil {
     }
 
     public static String getProperty(String key){
-        return getInstance().getPropertyInternal(key);
+        return PropertyUtil.INSTANCE.getPropertyInternal(key);
     }
 
     public static String getProperty(String key, String path){
-        return getInstance().getPropertyInternal(key, path);
+        return PropertyUtil.INSTANCE.getPropertyInternal(key, path);
     }
 
     public static Object get(String key){
-        return getInstance().getInternal(key);
+        return PropertyUtil.INSTANCE.getInternal(key);
     }
 
     public static Object get(String key, String path){
-        return getInstance().getInternal(key, path);
+        return PropertyUtil.INSTANCE.getInternal(key, path);
     }
 
     public static Properties getProperties(String path){
-        return getInstance().getPropertiesInternal(path);
+        return PropertyUtil.INSTANCE.getPropertiesInternal(path);
     }
 
     public static Object getOrDefault(String key, Object defaultValue){
-        return getInstance().getOrDefaultInternal(key, defaultValue);
+        return PropertyUtil.INSTANCE.getOrDefaultInternal(key, defaultValue);
     }
 
     public static Object getOrDefault(String key, Object defaultValue, String path){
-        return getInstance().getOrDefaultInternal(key, defaultValue,path);
+        return PropertyUtil.INSTANCE.getOrDefaultInternal(key, defaultValue,path);
     }
 }

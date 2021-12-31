@@ -13,6 +13,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @Date: 2021/12/7
@@ -20,23 +21,24 @@ import java.util.*;
 @SuppressWarnings("unchecked")
 public final class YamlUtil<T> {
     private static volatile YamlUtil instance = null;
-    private final List<File> fileList = new ArrayList<>();
-    private final Map<String, ByteArrayOutputStream> isCache = new HashMap<>();
+    private final List<File> fileList;
+    private final ConcurrentHashMap<String, ByteArrayOutputStream> cacheMap;
 
-    private static <T> YamlUtil<T> getInstance(){
-        if(Objects.isNull(instance)){
-            synchronized (YamlUtil.class){
-                if(Objects.isNull(instance)){
+    private YamlUtil(){
+        this.fileList = new ArrayList<>();
+        this.cacheMap = new ConcurrentHashMap<>();
+        FileUtil.collect(FileUtil.getResourcesPath(), fileList, new String[]{".yml", ".yaml"});
+    }
+
+    private static <T> YamlUtil<T> getInstance() {
+        if (Objects.isNull(instance)) {
+            synchronized (YamlUtil.class) {
+                if (Objects.isNull(instance)) {
                     instance = new YamlUtil<T>();
-                    instance.init();
                 }
             }
         }
         return instance;
-    }
-
-    private void init(){
-        FileUtil.collect(FileUtil.getResourcesPath(), fileList, new String[]{".yml", ".yaml"});
     }
 
     /**
@@ -51,12 +53,12 @@ public final class YamlUtil<T> {
         }
         for (File file : fileList) {
             String filePath = file.getAbsolutePath();
-            ByteArrayOutputStream baost = isCache.get(filePath);
+            ByteArrayOutputStream baost = cacheMap.get(filePath);
             InputStream is;
             if (Objects.isNull(baost)) {
                 is = FileUtil.read(filePath);
                 baost = InputStreamOptional.ofNullable(is).ifPresent().get();
-                isCache.put(filePath, baost);
+                cacheMap.put(filePath, baost);
             }
             Map<?, ?> map;
             try {
@@ -113,12 +115,12 @@ public final class YamlUtil<T> {
     public List<Object> getAllInternal(String path, String key){
         String[] keys = StringUtils.isEmpty(key) ? new String[]{} : key.split("\\.");
         path = path.replace("/", File.separator).replace("\\", File.separator);
-        ByteArrayOutputStream baost = isCache.get(path);
+        ByteArrayOutputStream baost = cacheMap.get(path);
         InputStream is;
         if(Objects.isNull(baost)){
             is = FileUtil.read(path);
             baost = InputStreamOptional.ofNullable(is).ifPresent().get();
-            isCache.put(path, baost);
+            cacheMap.put(path, baost);
         }
         Iterable<Object> iterables = new Yaml(new Constructor(HashMap.class)).loadAll(new ByteArrayInputStream(baost.toByteArray()));
         if(keys.length == 0){
@@ -153,10 +155,10 @@ public final class YamlUtil<T> {
 
     private T toEntityInternal(String path, Constructor constructor){
         path = path.replace("/", File.separator).replace("\\", File.separator);
-        ByteArrayOutputStream baos = isCache.get(path);
+        ByteArrayOutputStream baos = cacheMap.get(path);
         if(Objects.isNull(baos)){
             baos = InputStreamOptional.ofNullable(FileUtil.read(path)).ifPresent().get();
-            isCache.put(path, baos);
+            cacheMap.put(path, baos);
         }
         Yaml yaml = new Yaml(constructor);
         return yaml.load(new ByteArrayInputStream(baos.toByteArray()));

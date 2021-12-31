@@ -8,28 +8,20 @@ import java.util.Objects;
 /**
  * @Date: 2021/12/18
  */
-public class FastLogger {
-    private static volatile FastLogger instance = null;
+public final class   FastLogger {
     private final Logger logger;
-    final boolean traceCapable;
+    private final boolean traceCapable;
 
     private FastLogger(String name){
         this.logger = LogManager.getLogger(name);
         this.traceCapable =this.isTraceCapable();
     }
 
-    public static synchronized FastLogger getLogger(String name){
-        if(Objects.isNull(instance)){
-            synchronized (FastLogger.class){
-                if(Objects.isNull(instance)){
-                    instance = new FastLogger(name);
-                }
-            }
-        }
-        return instance;
+    public static FastLogger getLogger(String name){
+        return new FastLogger(name);
     }
 
-    public static synchronized FastLogger getLogger(Class<?> clazz){
+    public static FastLogger getLogger(Class<?> clazz){
         return getLogger(clazz.getName());
     }
 

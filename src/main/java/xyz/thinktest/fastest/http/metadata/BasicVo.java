@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * @Date: 2021/10/30
  */
-public class BasicVo<T> implements Serializable {
+public class BasicVo implements Serializable {
 
     private static final long serialVersionUID = -5886543239057370030L;
 
