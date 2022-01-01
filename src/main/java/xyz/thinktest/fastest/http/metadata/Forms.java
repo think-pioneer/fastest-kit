@@ -10,6 +10,12 @@ public class Forms extends MetaMap {
 
     private static final long serialVersionUID = 3728255718906321593L;
 
+    private Forms(){}
+
+    public static Forms newEmptyInstance(){
+        return new Forms();
+    }
+
     /**
      * write form key-value to Forms
      * @param key form key
@@ -46,7 +52,7 @@ public class Forms extends MetaMap {
      * Get all the elements of the form
      */
     public MetaList readAllForm(){
-        MetaList list = new MetaList();
+        MetaList list = MetaList.newEmptyInstance();
         list.addAll(this.values());
         return list;
     }

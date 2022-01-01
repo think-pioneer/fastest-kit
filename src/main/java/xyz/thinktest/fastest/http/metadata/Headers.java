@@ -10,6 +10,12 @@ public class Headers extends MetaList {
 
     private static final long serialVersionUID = 7863193005200041573L;
 
+    private Headers(){}
+
+    public static Headers newEmptyInstance(){
+        return new Headers();
+    }
+
     public Headers write(Header header){
         super.add(header);
         return this;

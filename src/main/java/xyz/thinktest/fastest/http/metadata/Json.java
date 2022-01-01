@@ -13,6 +13,12 @@ import java.util.Objects;
 public class Json extends Meta {
     private JsonNode jsonNode;
 
+    private Json(){}
+
+    public static Json newEmptyInstance(){
+        return new Json();
+    }
+
     public void append(ObjectNode json){
         this.jsonNode = json;
     }

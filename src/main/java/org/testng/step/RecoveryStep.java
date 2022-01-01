@@ -1,15 +1,15 @@
 package org.testng.step;
 
-import xyz.thinktest.fastest.logger.FastLogger;
-import xyz.thinktest.fastest.logger.FastLoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @Date: 2021/10/30
  */
-public class RecoveryStep implements Recovery{
-    private static final FastLogger logger = FastLoggerFactory.getLogger(RecoveryStep.class);
+public class RecoveryStep extends AbstractRecovery{
+    private static final Logger logger = LogManager.getLogger(RecoveryStep.class);
 
-    public boolean recovery(Step step, long timeOutMilli){
+    public boolean recovery(long timeOutMilli, Step step){
         long startTime = System.currentTimeMillis();
         while (true) {
             long endTime = System.currentTimeMillis();
@@ -25,6 +25,6 @@ public class RecoveryStep implements Recovery{
     }
 
     public boolean recovery(Step step){
-        return recovery(step, 60 * 1000);
+        return recovery(60 * 1000, step);
     }
 }

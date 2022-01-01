@@ -25,7 +25,7 @@ public class EnhanceFactory {
 
     public static Object origin(Class<?> clazz, Class<?>[] argumentTypes, Object[] arguments){
         try{
-            Constructor<?> constructor = clazz.getConstructor(argumentTypes);
+            Constructor<?> constructor = clazz.getDeclaredConstructor(argumentTypes);
             return constructor.newInstance(arguments);
         } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
             throw new FastestBasicException(ObjectUtil.format("create {} instance error", clazz.getName()), e);

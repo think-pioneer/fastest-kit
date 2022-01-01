@@ -24,10 +24,10 @@ public class Metadata {
     private final Json json;
 
     public Metadata(){
-        this.headers = new Headers();
-        this.parameters = new Parameters();
-        this.forms = new Forms();
-        this.json = new Json();
+        this.headers = Headers.newEmptyInstance();
+        this.parameters = Parameters.newEmptyInstance();
+        this.forms = Forms.newEmptyInstance();
+        this.json = Json.newEmptyInstance();
     }
 
     public Metadata setUrl(Url url){

@@ -176,7 +176,8 @@ public final class FieldHelper<T> {
         Field field;
         Class<?> instanceType = instance.getClass();
         try{
-            field = instanceType.getField(fieldName);
+            field = instanceType.getDeclaredField(fieldName);
+            field.setAccessible(true);
         }catch (NoSuchFieldException e){
             throw new ReflectionException(ObjectUtil.format("not found filed\"{}\" from \"{}\"", fieldName, instanceType.getName()));
         }

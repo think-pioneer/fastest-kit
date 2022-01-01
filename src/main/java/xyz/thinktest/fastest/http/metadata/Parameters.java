@@ -10,6 +10,12 @@ public class Parameters extends MetaMap {
 
     private static final long serialVersionUID = 4426487049324045664L;
 
+    private Parameters(){}
+
+    public static Parameters newEmptyInstance(){
+        return new Parameters();
+    }
+
     public Parameters write(Object key, Object value){
         this.put(key, new Parameter(key, value));
         return this;
@@ -29,7 +35,7 @@ public class Parameters extends MetaMap {
     }
 
     public MetaList readAllParameter(){
-        MetaList list = new MetaList();
+        MetaList list = MetaList.newEmptyInstance();
         list.addAll(this.values());
         return list;
     }

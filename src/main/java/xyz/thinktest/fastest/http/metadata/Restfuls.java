@@ -11,6 +11,12 @@ public class Restfuls extends MetaMap {
 
     private static final long serialVersionUID = -2859922274054222800L;
 
+    private Restfuls(){}
+
+    public static Restfuls newEmptyInstance(){
+        return new Restfuls();
+    }
+
     public Restfuls write(String key, String value) {
         this.put(key, new Restful(key, value));
         return this;
@@ -25,7 +31,7 @@ public class Restfuls extends MetaMap {
     }
 
     public MetaList readAllRestful(){
-        MetaList list = new MetaList();
+        MetaList list = MetaList.newEmptyInstance();
         list.addAll(this.values());
         return list;
     }
