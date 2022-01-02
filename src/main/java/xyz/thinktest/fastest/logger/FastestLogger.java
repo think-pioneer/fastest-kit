@@ -146,7 +146,6 @@ public class FastestLogger implements FastLog{
      * @param record
      */
     private void log(LogRecord record){
-        this.loggerLevel = record.getLevel();
         // ReentrantLock可以替代synchronized，不过当前场景下synchronized已经足够
         synchronized (this.records){  // TODO 如果用的是LinkedBlockingQueue是不需要这个的
             this.records.offer(record);
@@ -158,8 +157,9 @@ public class FastestLogger implements FastLog{
     // TODO 类似Redis的那个单线程，用于读取命令对象，而这里则是用于读取LogRecord并通过appender将数据写到相应位置
     private class LogDaemon extends Thread{
         private volatile boolean valid = true;
+        private final Map<LogLevel, BufferedWriter> appenderMap = FastestAppender.INSTANCE.getWriterList();
         private final ExecutorService threadPool = new ThreadPoolExecutor(1, 3
-                , 180000, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(1024));
+                , 180000, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(1024));
 
         @Override
         public void run() {
@@ -173,9 +173,7 @@ public class FastestLogger implements FastLog{
                         final LogRecord firstRecord = FastestLogger.this.records.poll();
                         FastestLogger.this.consumeCount.incrementAndGet();
                         threadPool.execute(() -> {
-                            assert firstRecord != null;
-                            FastestLogger.this.notifyAppender(getWriter(FastestLogger.this.loggerLevel), firstRecord);
-                        });
+                            FastestLogger.this.notifyAppender(appenderMap, firstRecord);});
                     }
                 }catch (InterruptedException ex){
                     this.valid = false;
@@ -185,26 +183,9 @@ public class FastestLogger implements FastLog{
                 }
             }
         }
-
-        private List<BufferedWriter> getWriter(LogLevel logLevel){
-            String path = "logs/fastestlogger_"+logLevel.name()+"_"+DateUtil.INSTANCE.getDate()+".log";
-            File file;
-            if(FileUtil.getClassPath().equals(FileUtil.getProjectRoot())){
-                file = FileUtil.createFile(path);
-            }else{
-                file = FileUtil.createFile(FileUtil.getProjectRoot(), path);
-            }
-            try {
-                FileWriter fw = new FileWriter(file);
-                return new ArrayList<BufferedWriter>(){{add(new BufferedWriter(fw));}};
-            }catch (IOException e){
-                System.err.println("read file "+file.getAbsolutePath()+" error");
-                return Collections.emptyList();
-            }
-        }
     }
 
-    private void notifyAppender(final List<BufferedWriter> appenders, final LogRecord record) {
+    private void notifyAppender(final Map<LogLevel, BufferedWriter> appenderMap, final LogRecord record) {
         try {
             PrintWriter writer = new PrintWriter(record.level == LogLevel.ERROR ? System.err : System.out);
             BufferedWriter bw = new BufferedWriter(writer);
@@ -212,10 +193,15 @@ public class FastestLogger implements FastLog{
             bw.newLine();
             bw.flush();
             // TODO 这种是同步的方式，如果是异步的方式可以将每个appender的执行都由一个Runnable对象包装，然后submit给线程池（或者中间加个中间件）
-            for (BufferedWriter _writer : appenders) {
-                _writer.write(record.toString());
-                _writer.newLine();
-                _writer.flush();
+            for (Map.Entry<LogLevel, BufferedWriter> entry : appenderMap.entrySet()) {
+                if(entry.getKey().id <= record.level.id){
+                    BufferedWriter _bw = entry.getValue();
+                    _bw.write(record.toString());
+                    _bw.newLine();
+                }
+            }
+            for(Map.Entry<LogLevel, BufferedWriter> entry : appenderMap.entrySet()){
+                entry.getValue().flush();
             }
         }catch (IOException e){
             e.printStackTrace();
@@ -279,11 +265,17 @@ public class FastestLogger implements FastLog{
     }
 
     public enum LogLevel{  // TODO 内部enum默认就是static
-        INFO,
-        DEBUG,
-        ERROR,
-        TRACE,
-        WARN
+        INFO(3, "INFO"),
+        DEBUG(2, "DEBUG"),
+        ERROR(5, "ERROR"),
+        TRACE(1, "TRACE"),
+        WARN(4, "WARN");
+        protected final int id;
+        protected final String type;
+        LogLevel(int id, String type){
+            this.id = id;
+            this.type = type;
+        }
     }
 
     public LogLevel getLoggerLevel() {

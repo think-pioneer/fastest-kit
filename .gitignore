@@ -1,4 +1,4 @@
 **/logs/
 .idea/
 **/target/
-fastest.iml
+*.iml
