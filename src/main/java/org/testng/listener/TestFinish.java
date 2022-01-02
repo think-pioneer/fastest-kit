@@ -1,12 +1,12 @@
 package org.testng.listener;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.testng.ITestNGMethod;
 import org.testng.annotations.Test;
 import org.testng.step.Recovery;
 import xyz.thinktest.fastest.common.exceptions.FastestBasicException;
 import xyz.thinktest.fastest.core.internal.enhance.EnhanceFactory;
+import xyz.thinktest.fastest.logger.FastestLogger;
+import xyz.thinktest.fastest.logger.FastestLoggerFactory;
 import xyz.thinktest.fastest.utils.ObjectUtil;
 import xyz.thinktest.fastest.utils.reflects.FieldHelper;
 import org.testng.ITestResult;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  * @Date: 2020/12/19
  */
 class TestFinish{
-    private static final Logger logger = LogManager.getLogger(TestFinish.class);
+    private static final FastestLogger logger = FastestLoggerFactory.getLogger(TestFinish.class);
 
     public void runStepRecovery(ITestResult result){
         try {

@@ -20,7 +20,7 @@ public enum  PropertyUtil {
         this.propertiesMap = new ConcurrentHashMap<>();
         this.properties.putAll(System.getProperties());
         List<File> fileList = new ArrayList<>();
-        FileUtil.collect(FileUtil.getResourcesPath(), fileList, new String[]{"properties"});
+        FileUtil.collect(FileUtil.getClassPath(), fileList, new String[]{"properties"});
         try {
             for (File file : fileList) {
                 String name = file.getAbsolutePath();
@@ -66,7 +66,7 @@ public enum  PropertyUtil {
         }
         File file = new File(path);
         if(!file.isAbsolute()){
-            path = new File(FileUtil.getResourcesPath(), path).getAbsolutePath();
+            path = new File(FileUtil.getClassPath(), path).getAbsolutePath();
             for(Map.Entry<String, Properties> entry:propertiesMap.entrySet()){
                 String fileName = entry.getKey();
                 if(fileName.equals(path)){
@@ -117,7 +117,7 @@ public enum  PropertyUtil {
         }
         File file = new File(path);
         if(!file.isAbsolute()){
-            path = new File(FileUtil.getResourcesPath(), path).getAbsolutePath();
+            path = new File(FileUtil.getClassPath(), path).getAbsolutePath();
             for(Map.Entry<String, Properties> entry:propertiesMap.entrySet()){
                 String fileName = entry.getKey();
                 if(fileName.equals(path)){
@@ -140,7 +140,7 @@ public enum  PropertyUtil {
         }
         File file = new File(path);
         if(!file.isAbsolute()){
-            path = new File(FileUtil.getResourcesPath(), path).getAbsolutePath();
+            path = new File(FileUtil.getClassPath(), path).getAbsolutePath();
             for(Map.Entry<String, Properties> entry:propertiesMap.entrySet()){
                 String fileName = entry.getKey();
                 if(fileName.equals(path)){
@@ -191,7 +191,7 @@ public enum  PropertyUtil {
         }
         File file = new File(path);
         if(!file.isAbsolute()){
-            path = new File(FileUtil.getResourcesPath(), path).getAbsolutePath();
+            path = new File(FileUtil.getClassPath(), path).getAbsolutePath();
             for(Map.Entry<String, Properties> entry:propertiesMap.entrySet()){
                 String fileName = entry.getKey();
                 if(fileName.equals(path)){

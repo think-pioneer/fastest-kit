@@ -11,6 +11,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Before(LoggerAnnotationProcess.class)
-public @interface LoggerSlf4j {
+public @interface LoggerJoin {
     String value() default "";
 }

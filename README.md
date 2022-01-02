@@ -394,16 +394,16 @@ public class MyStep implements Step {
 | message   | string | ""              | 重新抛出的异常信息         |
 | exception | Class  | Throwable.class | 捕获该类及其子类异常       |
 
-### 1.2.6 @LoggerSlf4j
+### 1.2.6 @LoggerJoin
 
 #### 用法说明
 
-自动注入Logger对象到变量中。log类型为org.slf4j.Logger
+自动注入FastestLogger对象到变量中。log类型为xyz.thinktest.fastest.logger.FastestLogger
 
 ```java
 public class CaseTest {
-    @LoggerSlf4j
-    static Logger logger;
+    @LoggerJoin
+    static FastestLogger logger;
 
     @Test
     public void case1() {
@@ -411,6 +411,10 @@ public class CaseTest {
     }
 }
 ```
+
+特别说明一下，本框架的log都是采用FastestLogger，此logger仅仅满足基本的log输出。如需其他功能，请使用基于log4j2的Logger(框架已集成)。
+
+FastestLogger开箱即用无需配置。
 
 #### 参数说明
 

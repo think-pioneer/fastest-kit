@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @Date: 2020/10/26
  */
 public final class ReadApiConfig {
-    private static final File root = FileUtil.getResourcesPath();
+    private static final File root = FileUtil.getClassPath();
     private static String folderName = "apiconfig";
     private static final ConcurrentHashMap<String, Map<String, Uri>> serverMap = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<String, Map<String, Map<String, Uri>>> serverMapByFile = new ConcurrentHashMap<>();
@@ -100,7 +100,7 @@ public final class ReadApiConfig {
      */
     private static List<Server> init(){
         System.out.println("我是path");
-        System.out.println(FileUtil.getResourcesPath());
+        System.out.println(FileUtil.getClassPath());
         String apiConfName = YamlUtil.getString("api.config.folder.path");
         if(Objects.nonNull(apiConfName)){
             folderName = apiConfName;

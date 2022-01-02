@@ -27,7 +27,7 @@ public final class YamlUtil<T> {
     private YamlUtil(){
         this.fileList = new ArrayList<>();
         this.cacheMap = new ConcurrentHashMap<>();
-        FileUtil.collect(FileUtil.getResourcesPath(), fileList, new String[]{".yml", ".yaml"});
+        FileUtil.collect(FileUtil.getClassPath(), fileList, new String[]{".yml", ".yaml"});
     }
 
     private static <T> YamlUtil<T> getInstance() {

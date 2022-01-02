@@ -2,11 +2,11 @@ package xyz.thinktest.fastest.http;
 
 import okhttp3.*;
 import org.apache.commons.collections4.MapUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import xyz.thinktest.fastest.common.exceptions.HttpException;
 import xyz.thinktest.fastest.http.metadata.*;
 import xyz.thinktest.fastest.http.metadata.Headers;
+import xyz.thinktest.fastest.logger.FastestLogger;
+import xyz.thinktest.fastest.logger.FastestLoggerFactory;
 import xyz.thinktest.fastest.utils.ObjectUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,7 +20,7 @@ import java.util.Objects;
  */
 
 class Sender {
-    private static final Logger logger = LogManager.getLogger(Sender.class);
+    private static final FastestLogger logger = FastestLoggerFactory.getLogger(Sender.class);
     private final OkHttpClient client;
     private final Request request;
     private Responder responder;

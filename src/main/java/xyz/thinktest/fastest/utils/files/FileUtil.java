@@ -86,7 +86,7 @@ public enum  FileUtil {
     private InputStream readInternal(String path){
         File file = new File(path);
         if(!file.isAbsolute()){
-            file = new File(getResourcesPath(), path);
+            file = new File(getClassPath(), path);
         }
         try {
             return new FileInputStream(file);
@@ -199,7 +199,7 @@ public enum  FileUtil {
         FileUtil.INSTANCE.collectInternal(path, fileList);
     }
 
-    public static File getResourcesPath(){
+    public static File getClassPath(){
         return FileUtil.INSTANCE.resourcePath;
     }
 

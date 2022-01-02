@@ -1,9 +1,9 @@
 package xyz.thinktest.fastest.core.internal.enhance;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import xyz.thinktest.fastest.common.exceptions.FileException;
 import xyz.thinktest.fastest.core.internal.enhance.methodhelper.RestTempWrite;
+import xyz.thinktest.fastest.logger.FastestLogger;
+import xyz.thinktest.fastest.logger.FastestLoggerFactory;
 import xyz.thinktest.fastest.utils.dates.DateUtil;
 import xyz.thinktest.fastest.utils.files.FileUtil;
 import xyz.thinktest.fastest.utils.files.PropertyUtil;
@@ -18,7 +18,7 @@ import java.util.Random;
  * @Date: 2021/10/31
  */
 public final class ShutdownHook {
-    private static final Logger logger = LogManager.getLogger(ShutdownHook.class);
+    private static final FastestLogger logger = FastestLoggerFactory.getLogger(ShutdownHook.class);
 
     private ShutdownHook(){}
 

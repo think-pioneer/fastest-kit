@@ -1,7 +1,7 @@
 package xyz.thinktest.fastest.core.internal.enhance;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import xyz.thinktest.fastest.logger.FastestLogger;
+import xyz.thinktest.fastest.logger.FastestLoggerFactory;
 import xyz.thinktest.fastest.utils.ObjectUtil;
 
 import java.util.HashMap;
@@ -12,14 +12,14 @@ import java.util.Objects;
  */
 public class LogFactory {
     private static final int thisHash = LogFactory.class.hashCode();
-    private static final HashMap<String, Logger> cache = new HashMap<>();
+    private static final HashMap<String, FastestLogger> cache = new HashMap<>();
 
-    public static Logger getLogger(String name){
+    public static FastestLogger getLogger(String name){
         int nameHash = name.hashCode();
         String key = ObjectUtil.format("{}-{}-{}", thisHash, nameHash, name);
-        Logger logger = cache.get(key);
+        FastestLogger logger = cache.get(key);
         if(Objects.isNull(logger)) {
-            logger = LogManager.getLogger(name);
+            logger = FastestLoggerFactory.getLogger(name);
             cache.put(key, logger);
             return logger;
         }

@@ -1,13 +1,13 @@
 package org.testng.step;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import xyz.thinktest.fastest.logger.FastestLogger;
+import xyz.thinktest.fastest.logger.FastestLoggerFactory;
 
 /**
  * @Date: 2021/10/30
  */
 public class RecoveryStep extends AbstractRecovery{
-    private static final Logger logger = LogManager.getLogger(RecoveryStep.class);
+    private static final FastestLogger logger = FastestLoggerFactory.getLogger(RecoveryStep.class);
 
     public boolean recovery(long timeOutMilli, Step step){
         long startTime = System.currentTimeMillis();

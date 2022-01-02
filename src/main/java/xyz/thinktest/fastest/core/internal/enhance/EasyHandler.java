@@ -2,14 +2,14 @@ package xyz.thinktest.fastest.core.internal.enhance;
 
 import net.sf.cglib.proxy.MethodProxy;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import xyz.thinktest.fastest.common.exceptions.CaptureException;
 import xyz.thinktest.fastest.common.exceptions.EnhanceException;
 import xyz.thinktest.fastest.core.annotations.After;
 import xyz.thinktest.fastest.core.annotations.Before;
 import xyz.thinktest.fastest.core.annotations.Capture;
 import xyz.thinktest.fastest.core.internal.enhance.methodhelper.MethodProcess;
+import xyz.thinktest.fastest.logger.FastestLogger;
+import xyz.thinktest.fastest.logger.FastestLoggerFactory;
 import xyz.thinktest.fastest.utils.ObjectUtil;
 
 import java.lang.annotation.Annotation;
@@ -31,7 +31,7 @@ public class EasyHandler implements EasyEnhancerable {
         }catch (Throwable c){
             CaptureException cause = new CaptureException(c);
             Class<?> clazz = method.getDeclaringClass();
-            Logger logger = LogManager.getLogger(clazz.getSimpleName());
+            FastestLogger logger = FastestLoggerFactory.getLogger(clazz.getSimpleName());
             if(Objects.nonNull(capture)){
                 String message = capture.message();
                 message = "".equals(message.trim()) ? cause.getMessage() : message;

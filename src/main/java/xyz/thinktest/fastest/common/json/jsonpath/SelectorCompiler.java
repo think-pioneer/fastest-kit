@@ -4,8 +4,8 @@ import com.jayway.jsonpath.InvalidPathException;
 import com.jayway.jsonpath.Predicate;
 import com.jayway.jsonpath.internal.CharacterIndex;
 import com.jayway.jsonpath.internal.filter.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import xyz.thinktest.fastest.logger.FastestLogger;
+import xyz.thinktest.fastest.logger.FastestLoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +14,7 @@ import java.util.List;
  * @Date: 2020/10/21
  */
 class SelectorCompiler {
-    private static final Logger logger = LogManager.getLogger(FilterCompiler.class);
+    private static final FastestLogger logger = FastestLoggerFactory.getLogger(FilterCompiler.class);
 
     private static final char DOC_CONTEXT = '$';
     private static final char EVAL_CONTEXT = '@';

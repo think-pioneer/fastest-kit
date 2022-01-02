@@ -2,13 +2,13 @@ package xyz.thinktest.fastest.http;
 
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import xyz.thinktest.fastest.common.exceptions.HttpException;
 import xyz.thinktest.fastest.common.json.JSONFactory;
 import xyz.thinktest.fastest.http.metadata.Header;
 import xyz.thinktest.fastest.http.metadata.Headers;
 import xyz.thinktest.fastest.http.metadata.Json;
+import xyz.thinktest.fastest.logger.FastestLogger;
+import xyz.thinktest.fastest.logger.FastestLoggerFactory;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
  */
 
 public class Responder {
-    private static final Logger logger = LogManager.getLogger(Responder.class);
+    private static final FastestLogger logger = FastestLoggerFactory.getLogger(Responder.class);
     private final Response response;
     private final int httpCode;
     private final ResponseBody body;

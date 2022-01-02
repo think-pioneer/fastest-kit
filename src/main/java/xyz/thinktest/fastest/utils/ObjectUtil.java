@@ -5,10 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.ObjectUtils;
 import xyz.thinktest.fastest.common.exceptions.FastestBasicException;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,9 +29,16 @@ public final class ObjectUtil {
         Matcher matcher = pattern.matcher(format);
         String tmp = null;
         while (matcher.find()){
-            tmp = matcher.replaceFirst(String.valueOf(contentList.get(0)));
+            String value = String.valueOf(contentList.get(0));
+            if("{}".equals(value)){
+                value = "{;SEAT;}";
+            }
+            tmp = matcher.replaceFirst(value);
             matcher = pattern.matcher(tmp);
             contentList.remove(0);
+        }
+        if(Objects.nonNull(tmp)){
+            tmp = tmp.replace("{;SEAT;}", "{}");
         }
         return tmp;
     }
