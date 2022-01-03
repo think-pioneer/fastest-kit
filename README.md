@@ -1,12 +1,64 @@
-<h1 align="center">EASY-TEST</h1>
+<h1 align="center">Fastest</h1>
 
 # 0、前言
 
-EASY-TEST一个基于注解的快速(HTTP)测试框架。HTTP实现使用OKHTTP。
+Fastest一个基于注解思想的快速(HTTP)测试框架。所有常用的操作都有对应的注解来实现。
 
-# 1、模块介绍
+优势：
+
+- 通过注解可以去掉30%-40%的冗余代码。
+- 扩展注解，满足业务测试的定制化需求。
+- 通过测试三层思想，优化用例，提升用例的稳定性和健壮性
+- 让测试人员能够把精力集中到用例场景的优化的组织上
+
+# 1、框架介绍
+
+## 1.0 用例分层思想
+
+框架对API测试定义三层：
+
+api层，即每一个http请求，为用例的最小单元。
+
+step层，将一个或多个api组装成一个step。
+
+case层，将一个或多个step组装成一个case。
+
+以删除用户为例
+
+手工用例：
+
+1. 删除用户
+
+转换为自动化用例：
+
+1. 找到用户 ----> getAllUser
+2. 删除用户 ----> deleteUser
+
+但是上面用例明显健壮性不足，极易可能失败，并且容易漏测，优化一下
+
+1. 找到用例 ----> getAllUser
+2. 判断第一步是否有找到至少一个用户，如果没有创建 ----> createUser
+3. 重新获取用户(不管第二步创建接口有没有返回用户信息，我们都重新请求查询接口) ----> getAllUser
+4. 删除用户 ----> deleteUser
+5. 重新获取用户(不管第四步删除时有没有返回用户信息，我们都重新请求查询接口) ----> getAllUser
+
+这里我们共使用了三个接口（api层），分别是getAllUser（api1），createUser（api2），deleteUser（api3）。对应的用例步骤（step层）实际只有两个，分别是1、2、3找到用例（step1），4、5删除用户（step2）。最终将组装成了我的一条用例case1（case层）
+
+优点：
+
+1. 用例组织结构更清晰
+2. 基于第一点，能够明显提升用例的健壮性和稳定性
+3. 通过独立出api层，每一条用例都能单独执行，完全不依赖其他用例。甚至可以达到一次编写处处执行。
+
+缺点：
+
+1. 优点即缺点，那就是运行时间会特别长，原因也是也为独立出来的api层导致接口会被请求多次，导致执行时间特别长
+
+测试三层只是理想，大家也不用完全按照三层来做，框架也未限制必须按照测试三层来组织测试用例、测试代码。
 
 ## 1.1 HTTP模块
+
+HTTP模块基于OkHttp。基本思想为将每个请求对象映射为一个客户端实体，即每个客户端的cookie在实例化时一经确认便不可修改。切换用户只需要切换客户端。
 
 ### 1.1.1 Requester
 
@@ -153,7 +205,7 @@ public class MyStep implements Step {
         return controller.testRestMetadata(requester);
     }
 
-    public boolean restorer() {
+    public boolean recovery() {
         return false;
     }
 }
@@ -423,6 +475,8 @@ public class CaseTest {
 ### 1.2.7 @RestMetadata
 
 #### 用法说明
+
+该注解为该模块定义的[测试三层](# 1.0 用例分层思想)中的api层
 
 自动装载api配置文件中的host、uri，httpmethod信息
 
@@ -727,17 +781,19 @@ public @interface C{}
 | ----- | ----- | ------ | ------------ |
 | value | Class | 必填   | 标明互斥注解 |
 
-### 1.2.16 @Recovery
+### 1.2.16 @Test
 
 #### 使用说明
 
-用于控制每次测试结束后执行Step.recovery方法，进行数据或场景恢复
+基于TestNG的@Test注解增加了用于控制每次测试结束后执行Step.recovery方法，进行数据或场景恢复
 
 #### 参数说明
 
-| 参数     | 类型  | 默认值       | 说明             |
-| -------- | ----- | ------------ | ---------------- |
-| executor | Class | RecoveryStep | 恢复操作的执行者 |
+| 参数     | 类型    | 默认值       | 说明                                                         |
+| -------- | ------- | ------------ | ------------------------------------------------------------ |
+| recovery | boolean | true         | 是否对step进行恢复操作                                       |
+| executor | Class   | RecoveryStep | 执行恢复操作的类                                             |
+| stepType | Class[] | Step.class   | 需要进行恢复操作的step类，如果为Step.class则对测试类下的所有step进行恢复操作。通常用例下面会有很多step，可能在执行用例后不需要将所有step都执行恢复操作，可通过该参数指定需要恢复的step |
 
 ## 1.3 自定义注解
 
@@ -808,6 +864,29 @@ public class CaseTest {
         logger.info("测试日志info");
         logger.warn("测试日志warn");
         logger.error("测试日志error")
+    }
+}
+```
+
+## 1.5 Step
+
+Step为该模块定义的[测试三层](# 1.0 用例分层思想)中的step层，所有step需要继承并实现Step类
+
+```java
+import org.testng.step.Step;
+
+public class MyStep implements Step {
+    
+    public void getAllUsers(){
+        //查找用户
+        //首先从列表找，没有在创建
+    }
+    
+    @Override
+    public boolean recovery() {
+        //删除用户列表的用户
+        //全部删除返回true，否则返回false
+        return false;
     }
 }
 ```
