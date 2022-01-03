@@ -1,6 +1,6 @@
 package xyz.thinktest.fastest.core.internal.enhance.methodhelper;
 
-import xyz.thinktest.fastest.core.cnhance.method.JoinPoint;
+import xyz.thinktest.fastest.core.enhance.method.JoinPoint;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;

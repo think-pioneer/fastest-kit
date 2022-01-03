@@ -1,6 +1,6 @@
 package xyz.thinktest.fastest.core.internal.enhance.fieldhelper;
 
-import xyz.thinktest.fastest.core.cnhance.field.JoinPoint;
+import xyz.thinktest.fastest.core.enhance.field.JoinPoint;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;

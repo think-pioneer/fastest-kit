@@ -5,7 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import xyz.thinktest.fastest.common.exceptions.EnhanceException;
 import xyz.thinktest.fastest.common.json.JSONFactory;
 import xyz.thinktest.fastest.core.annotations.ValueEntity;
-import xyz.thinktest.fastest.core.cnhance.field.JoinPoint;
+import xyz.thinktest.fastest.core.enhance.field.JoinPoint;
 import xyz.thinktest.fastest.core.internal.enhance.EnhanceFactory;
 import xyz.thinktest.fastest.utils.files.YamlUtil;
 import xyz.thinktest.fastest.utils.reflects.ReflectUtil;

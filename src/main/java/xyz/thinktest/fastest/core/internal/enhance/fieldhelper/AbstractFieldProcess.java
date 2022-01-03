@@ -1,7 +1,7 @@
 package xyz.thinktest.fastest.core.internal.enhance.fieldhelper;
 
-import xyz.thinktest.fastest.core.cnhance.field.JoinPoint;
-import xyz.thinktest.fastest.core.cnhance.field.FieldAnnotationProcessable;
+import xyz.thinktest.fastest.core.enhance.field.JoinPoint;
+import xyz.thinktest.fastest.core.enhance.field.FieldAnnotationProcessable;
 
 /**
  * @Date: 2021/11/3

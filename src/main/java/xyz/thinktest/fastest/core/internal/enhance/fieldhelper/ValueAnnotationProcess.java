@@ -3,7 +3,7 @@ package xyz.thinktest.fastest.core.internal.enhance.fieldhelper;
 import org.apache.commons.lang3.StringUtils;
 import xyz.thinktest.fastest.common.exceptions.ValueException;
 import xyz.thinktest.fastest.core.annotations.Value;
-import xyz.thinktest.fastest.core.cnhance.field.JoinPoint;
+import xyz.thinktest.fastest.core.enhance.field.JoinPoint;
 import xyz.thinktest.fastest.utils.ObjectUtil;
 import xyz.thinktest.fastest.utils.files.YamlUtil;
 import xyz.thinktest.fastest.utils.reflects.FieldHelper;

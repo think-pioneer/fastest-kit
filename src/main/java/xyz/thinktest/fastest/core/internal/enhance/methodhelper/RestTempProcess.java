@@ -2,7 +2,7 @@ package xyz.thinktest.fastest.core.internal.enhance.methodhelper;
 
 import xyz.thinktest.fastest.common.exceptions.EnhanceException;
 import xyz.thinktest.fastest.core.annotations.RestTemp;
-import xyz.thinktest.fastest.core.cnhance.method.JoinPoint;
+import xyz.thinktest.fastest.core.enhance.method.JoinPoint;
 import xyz.thinktest.fastest.core.rest.http.metadata.ReadApiConfig;
 import xyz.thinktest.fastest.http.metadata.HttpMethod;
 import xyz.thinktest.fastest.utils.ObjectUtil;

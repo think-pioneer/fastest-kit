@@ -2,8 +2,8 @@ package xyz.thinktest.fastest.core.internal.enhance.methodhelper;
 
 import xyz.thinktest.fastest.core.annotations.Component;
 import xyz.thinktest.fastest.core.annotations.MutexAnnotation;
-import xyz.thinktest.fastest.core.cnhance.method.MethodAnnotationProcessable;
-import xyz.thinktest.fastest.core.cnhance.method.MethodReturn;
+import xyz.thinktest.fastest.core.enhance.method.MethodAnnotationProcessable;
+import xyz.thinktest.fastest.core.enhance.method.MethodReturn;
 import xyz.thinktest.fastest.core.internal.enhance.AnnotationGardener;
 import xyz.thinktest.fastest.core.internal.enhance.EnhanceFactory;
 import xyz.thinktest.fastest.core.internal.tool.AnnotationTool;

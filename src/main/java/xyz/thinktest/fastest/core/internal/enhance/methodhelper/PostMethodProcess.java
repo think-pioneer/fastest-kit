@@ -3,7 +3,7 @@ package xyz.thinktest.fastest.core.internal.enhance.methodhelper;
 import xyz.thinktest.fastest.common.exceptions.FastestBasicException;
 import xyz.thinktest.fastest.common.exceptions.ReflectionException;
 import xyz.thinktest.fastest.core.annotations.PostMethod;
-import xyz.thinktest.fastest.core.cnhance.method.JoinPoint;
+import xyz.thinktest.fastest.core.enhance.method.JoinPoint;
 import xyz.thinktest.fastest.utils.ObjectUtil;
 
 import java.lang.reflect.InvocationTargetException;

@@ -10,10 +10,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public enum FastestAppender {
+enum LogAppender {
     INSTANCE;
 
-    public BufferedWriter getWriter(String path){
+    private final Map<LogLevel, BufferedWriter> bufferWriterMap;
+
+    LogAppender(){
+        this.bufferWriterMap = new HashMap<>();
+        this.buildWriterMap();
+    }
+
+    private BufferedWriter buildWriter(String path){
         File file;
         if(FileUtil.getClassPath().equals(FileUtil.getProjectRoot())){
             file = FileUtil.createFile(FileUtil.getClassPath(), path);
@@ -33,16 +40,18 @@ public enum FastestAppender {
         }
     }
 
-    public Map<FastestLogger.LogLevel, BufferedWriter> getWriterList(){
+    private void buildWriterMap(){
         String path = "logs/fastestlogger_"+"{type}_"+DateUtil.INSTANCE.getDate()+".log";
-        Map<FastestLogger.LogLevel, BufferedWriter> bwMap = new HashMap<>();
-        for(FastestLogger.LogLevel level: FastestLogger.LogLevel.values()){
+        for(LogLevel level: LogLevel.values()){
             String _path = path.replace("{type}", level.type.toLowerCase());
-            BufferedWriter bw = getWriter(_path);
+            BufferedWriter bw = buildWriter(_path);
             if(Objects.nonNull(bw)){
-                bwMap.put(level, bw);
+                bufferWriterMap.put(level, bw);
             }
         }
-        return bwMap;
+    }
+
+    public Map<LogLevel, BufferedWriter> getBufferWriterMap() {
+        return bufferWriterMap;
     }
 }

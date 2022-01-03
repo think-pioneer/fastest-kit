@@ -5,7 +5,7 @@ import xyz.thinktest.fastest.common.exceptions.EnhanceException;
 import xyz.thinktest.fastest.common.exceptions.JsonException;
 import xyz.thinktest.fastest.core.annotations.RestMetadata;
 import xyz.thinktest.fastest.core.annotations.RestServer;
-import xyz.thinktest.fastest.core.cnhance.method.JoinPoint;
+import xyz.thinktest.fastest.core.enhance.method.JoinPoint;
 import xyz.thinktest.fastest.http.Metadata;
 import xyz.thinktest.fastest.http.Requester;
 import xyz.thinktest.fastest.http.metadata.HttpMethod;

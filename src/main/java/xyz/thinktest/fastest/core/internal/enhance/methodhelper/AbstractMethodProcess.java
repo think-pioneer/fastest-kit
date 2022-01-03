@@ -1,7 +1,7 @@
 package xyz.thinktest.fastest.core.internal.enhance.methodhelper;
 
-import xyz.thinktest.fastest.core.cnhance.method.JoinPoint;
-import xyz.thinktest.fastest.core.cnhance.method.MethodAnnotationProcessable;
+import xyz.thinktest.fastest.core.enhance.method.JoinPoint;
+import xyz.thinktest.fastest.core.enhance.method.MethodAnnotationProcessable;
 
 /**
  * @Date: 2021/11/28

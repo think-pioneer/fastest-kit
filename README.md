@@ -346,7 +346,7 @@ public class HelloController {
 
 #### 用法说明
 
-在代码运行中可能出现unchecked exception，但是又不想写try{}catch{}。可以使用该注解做用到方法上。捕获代码运行中的异常，并输出到日志。默认会重新抛出异常
+在代码运行中可能出现unchecked exception，但是又不想写try{}catch{}。可以使用该注解做用到方法上。捕获代码运行中的异常，并输出到日志(使用[FastestLogger](# 1.4 Fastestlogger))。默认会重新抛出异常
 
 ```java
 @Component
@@ -412,9 +412,7 @@ public class CaseTest {
 }
 ```
 
-特别说明一下，本框架的log都是采用FastestLogger，此logger仅仅满足基本的log输出。如需其他功能，请使用基于log4j2的Logger(框架已集成)。
-
-FastestLogger开箱即用无需配置。
+[FastestLogger参考](# 1.4 Fastestlogger)
 
 #### 参数说明
 
@@ -789,6 +787,29 @@ public class MyCustomMethodAnnotation implements MethodAnnotationProcessable {
 	    //[MyCustomMethodAnnotation]，(多个)注解的(如果有)返回值为list
         return controller.testRestTemp(requester);
     }
+```
+
+## 1.4 Fastestlogger
+
+框架内部使用的log模块，也是框架默认提供的log模块。***主要为解决部分新人不会使用和配置log4j、logback等框架，FastestLogger开箱即用无需配置***，可满足基本的log需求。如果有其他无法满足业务的log需求，可使用log4j、logback等框架。
+
+### 用法
+
+```java
+public class CaseTest {
+    FastestLogger logger = FastestLoggerFactory.getLogger(CaseTest.class);
+    @Autowired
+    MyStep myStep;
+
+    @Test
+    public void logTestCase(){
+		logger.trace("测试日志trace");
+        logger.debug("测试日志debug");
+        logger.info("测试日志info");
+        logger.warn("测试日志warn");
+        logger.error("测试日志error")
+    }
+}
 ```
 
 

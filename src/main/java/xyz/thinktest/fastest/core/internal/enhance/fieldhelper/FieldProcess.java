@@ -3,7 +3,7 @@ package xyz.thinktest.fastest.core.internal.enhance.fieldhelper;
 import xyz.thinktest.fastest.core.annotations.Before;
 import xyz.thinktest.fastest.core.annotations.Component;
 import xyz.thinktest.fastest.core.annotations.MutexAnnotation;
-import xyz.thinktest.fastest.core.cnhance.field.FieldAnnotationProcessable;
+import xyz.thinktest.fastest.core.enhance.field.FieldAnnotationProcessable;
 import xyz.thinktest.fastest.core.internal.enhance.AnnotationGardener;
 import xyz.thinktest.fastest.core.internal.enhance.EnhanceFactory;
 import xyz.thinktest.fastest.core.internal.tool.AnnotationTool;

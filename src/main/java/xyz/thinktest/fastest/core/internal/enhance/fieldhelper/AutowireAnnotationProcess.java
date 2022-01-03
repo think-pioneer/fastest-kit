@@ -2,8 +2,8 @@ package xyz.thinktest.fastest.core.internal.enhance.fieldhelper;
 
 import xyz.thinktest.fastest.common.exceptions.EnhanceException;
 import xyz.thinktest.fastest.core.annotations.Autowired;
-import xyz.thinktest.fastest.core.cnhance.field.JoinPoint;
-import xyz.thinktest.fastest.core.cnhance.constructor.ConstructorProperty;
+import xyz.thinktest.fastest.core.enhance.field.JoinPoint;
+import xyz.thinktest.fastest.core.enhance.constructor.ConstructorProperty;
 import xyz.thinktest.fastest.core.internal.enhance.EnhanceFactory;
 import xyz.thinktest.fastest.utils.ObjectUtil;
 import xyz.thinktest.fastest.utils.reflects.FieldHelper;

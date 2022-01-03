@@ -2,8 +2,8 @@ package xyz.thinktest.fastest.core.internal.enhance.fieldhelper;
 
 import xyz.thinktest.fastest.core.annotations.Component;
 import xyz.thinktest.fastest.core.annotations.Singleton;
-import xyz.thinktest.fastest.core.cnhance.field.JoinPoint;
-import xyz.thinktest.fastest.core.cnhance.field.FieldAnnotationProcessable;
+import xyz.thinktest.fastest.core.enhance.field.JoinPoint;
+import xyz.thinktest.fastest.core.enhance.field.FieldAnnotationProcessable;
 import xyz.thinktest.fastest.core.internal.enhance.EasyHandler;
 import xyz.thinktest.fastest.core.internal.enhance.EnhanceFactory;
 
