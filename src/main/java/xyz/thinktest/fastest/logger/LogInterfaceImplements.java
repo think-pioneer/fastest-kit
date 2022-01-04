@@ -103,6 +103,7 @@ abstract class LogInterfaceImplements implements LogInterface {
             return new LogRecord(logLevel, format, null, curr, getTargetStackTraceElement());
         }else {
             Object exception = objects[objects.length-1];
+            exception = Objects.isNull(exception) ? "" : exception;
             if(Throwable.class.isAssignableFrom(exception.getClass())){
                 Throwable e = (Throwable)exception;
                 if(Objects.isNull(format)){

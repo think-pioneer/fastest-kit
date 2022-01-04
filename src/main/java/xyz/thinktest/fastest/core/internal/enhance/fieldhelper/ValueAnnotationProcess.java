@@ -3,7 +3,8 @@ package xyz.thinktest.fastest.core.internal.enhance.fieldhelper;
 import org.apache.commons.lang3.StringUtils;
 import xyz.thinktest.fastest.common.exceptions.ValueException;
 import xyz.thinktest.fastest.core.annotations.Value;
-import xyz.thinktest.fastest.core.enhance.field.JoinPoint;
+import xyz.thinktest.fastest.core.enhance.joinpoint.Target;
+import xyz.thinktest.fastest.core.enhance.joinpoint.field.JoinPoint;
 import xyz.thinktest.fastest.utils.ObjectUtil;
 import xyz.thinktest.fastest.utils.files.YamlUtil;
 import xyz.thinktest.fastest.utils.reflects.FieldHelper;
@@ -18,14 +19,14 @@ import java.util.Objects;
 /**
  * @Date: 2021/10/31
  */
-public class ValueAnnotationProcess extends AbstractFieldProcess {
+public class ValueAnnotationProcess<T> extends AbstractFieldProcess<T> {
 
     @Override
-    public void process(JoinPoint joinPoint) {
+    public void process(JoinPoint<T> joinPoint) {
         this.exec(joinPoint);
     }
 
-    private void exec(JoinPoint joinPoint){
+    private void exec(JoinPoint<T> joinPoint){
         Field field = joinPoint.getField();
         Value value = (Value) joinPoint.getAnnotation();
         Class<?> fieldType = field.getType();
@@ -56,7 +57,7 @@ public class ValueAnnotationProcess extends AbstractFieldProcess {
         }
     }
 
-    public static void setField(Field field, Class<?> fieldType, String value, Target target){
+    public static <T> void setField(Field field, Class<?> fieldType, String value, Target<T> target){
         try {
             String canonicalName = fieldType.getCanonicalName();
             if (fieldType.isArray()) {

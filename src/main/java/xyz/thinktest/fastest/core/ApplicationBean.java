@@ -1,34 +1,25 @@
 package xyz.thinktest.fastest.core;
 
+import xyz.thinktest.fastest.core.internal.enhance.EasyHandler;
 import xyz.thinktest.fastest.core.internal.enhance.EnhanceFactory;
 
 /**
  * @Date: 2021/12/7
  */
-public enum ApplicationBean {
-    ENHANCE{
-        @Override
-        public Object newInstance(Class<?> clazz, Class<?> callbackType) {
-            return EnhanceFactory.enhance(clazz, callbackType);
-        }
+public final class ApplicationBean {
+    public static <T> T getEnhanceBean(Class<T> clazz){
+        return EnhanceFactory.enhance(clazz);
+    }
 
-        @Override
-        public Object newInstance(Class<?> clazz, Class<?>[] argumentTypes, Object[] arguments, Class<?> callbackType) {
-            return EnhanceFactory.enhance(clazz, argumentTypes, arguments, callbackType);
-        }
-    },
-    ORIGIN{
-        @Override
-        public Object newInstance(Class<?> clazz, Class<?> callbackType) {
-            return EnhanceFactory.origin(clazz);
-        }
+    public static <T> T getEnhanceBean(Class<T> clazz, Class<?>[] argumentTypes, Object[] arguments){
+        return EnhanceFactory.enhance(clazz, argumentTypes, arguments);
+    }
 
-        @Override
-        public Object newInstance(Class<?> clazz, Class<?>[] argumentTypes, Object[] arguments, Class<?> callbackType) {
-            return EnhanceFactory.origin(clazz, argumentTypes, arguments);
-        }
-    };
+    public static <T> T getOriginBean(Class<T> clazz){
+        return EnhanceFactory.origin(clazz);
+    }
 
-    public abstract Object newInstance(Class<?> clazz, Class<?> callbackType);
-    public abstract Object newInstance(Class<?> clazz, Class<?>[] argumentTypes, Object[] arguments, Class<?> callbackType);
+    public static <T> T getOriginBean(Class<T> clazz, Class<?>[] argumentTypes, Object[] arguments){
+        return EnhanceFactory.origin(clazz, argumentTypes, arguments);
+    }
 }

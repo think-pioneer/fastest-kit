@@ -5,7 +5,7 @@ import xyz.thinktest.fastest.common.exceptions.EnhanceException;
 import xyz.thinktest.fastest.common.exceptions.JsonException;
 import xyz.thinktest.fastest.core.annotations.RestMetadata;
 import xyz.thinktest.fastest.core.annotations.RestServer;
-import xyz.thinktest.fastest.core.enhance.method.JoinPoint;
+import xyz.thinktest.fastest.core.enhance.joinpoint.method.JoinPoint;
 import xyz.thinktest.fastest.http.Metadata;
 import xyz.thinktest.fastest.http.Requester;
 import xyz.thinktest.fastest.http.metadata.HttpMethod;
@@ -19,14 +19,14 @@ import java.util.Objects;
 /**
  * @Date: 2021/11/28
  */
-public class RestMetadataProcess extends AbstractRestAnnotationProcess {
+public class RestMetadataProcess<T> extends AbstractRestAnnotationProcess<T> {
 
     @Override
-    public void process(JoinPoint joinPoint){
+    public void process(JoinPoint<T> joinPoint){
         this.exec(joinPoint);
     }
 
-    private void exec(JoinPoint joinPoint){
+    private void exec(JoinPoint<T> joinPoint){
         Method method = joinPoint.getMethod();
         RestMetadata restMetadata = (RestMetadata) joinPoint.getAnnotation();
         Object[] args = joinPoint.getArgs();

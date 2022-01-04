@@ -1,6 +1,7 @@
 package xyz.thinktest.fastest.core.internal.enhance.methodhelper;
 
-import xyz.thinktest.fastest.core.enhance.method.JoinPoint;
+import xyz.thinktest.fastest.core.enhance.joinpoint.Target;
+import xyz.thinktest.fastest.core.enhance.joinpoint.method.JoinPoint;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -8,15 +9,15 @@ import java.lang.reflect.Method;
 /**
  * @Date: 2021/12/6
  */
-class JoinPointImpl implements JoinPoint {
+class JoinPointImpl<T> implements JoinPoint<T> {
     private final Annotation annotation;
     private final Method method;
     private final Object[] args;
-    private final Object target;
-    private final Object self;
-    private Object returnValue;
+    private final Target<T> target;
+    private final T self;
+    private T returnValue;
 
-    public JoinPointImpl(Annotation annotation, Method method, Object[] args, Object target, Object self){
+    public JoinPointImpl(Annotation annotation, Method method, Object[] args, Target<T> target, T self){
         this.annotation = annotation;
         this.method = method;
         this.args = args;
@@ -40,21 +41,21 @@ class JoinPointImpl implements JoinPoint {
     }
 
     @Override
-    public Object getTarget() {
+    public Target<T> getTarget() {
         return this.target;
     }
 
     @Override
-    public void setReturn(Object value) {
+    public void setReturn(T value) {
         this.returnValue = value;
     }
 
-    public Object getReturnValue(){
+    public T getReturnValue(){
         return returnValue;
     }
 
     @Override
-    public Object getThis() {
+    public T getThis() {
         return this.self;
     }
 }

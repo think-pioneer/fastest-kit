@@ -34,7 +34,7 @@ import org.testng.internal.Version;
 import org.testng.internal.annotations.DefaultAnnotationTransformer;
 import org.testng.internal.annotations.IAnnotationFinder;
 import org.testng.internal.annotations.JDK15AnnotationFinder;
-import org.testng.listener.TestCaseListener;
+import org.testng.listener.TestRunListener;
 import org.testng.thread.IExecutorFactory;
 import org.testng.thread.ITestNGThreadPoolExecutor;
 import org.testng.thread.IThreadWorkerFactory;
@@ -1327,7 +1327,7 @@ public class TestNG {
      * @param argv the TestNG command line parameters.
      */
     public static void main(String[] argv) {
-        TestCaseListener listener = new TestCaseListener();
+        TestRunListener listener = new TestRunListener();
         TestNG testng = privateMain(argv, listener);
         System.exit(testng.getStatus());
     }

@@ -3,7 +3,8 @@ package xyz.thinktest.fastest.core.internal.enhance.fieldhelper;
 import xyz.thinktest.fastest.core.annotations.Before;
 import xyz.thinktest.fastest.core.annotations.Component;
 import xyz.thinktest.fastest.core.annotations.MutexAnnotation;
-import xyz.thinktest.fastest.core.enhance.field.FieldAnnotationProcessable;
+import xyz.thinktest.fastest.core.enhance.joinpoint.Target;
+import xyz.thinktest.fastest.core.enhance.joinpoint.field.FieldAnnotationProcessable;
 import xyz.thinktest.fastest.core.internal.enhance.AnnotationGardener;
 import xyz.thinktest.fastest.core.internal.enhance.EnhanceFactory;
 import xyz.thinktest.fastest.core.internal.tool.AnnotationTool;
@@ -19,11 +20,11 @@ import java.util.Objects;
 /**
  * @Date: 2021/10/31
  */
-class FieldProcess {
-    private final Target target;
+class FieldProcess<T> {
+    private final Target<T> target;
     private final Field field;
 
-    protected FieldProcess(Target target, Field field){
+    protected FieldProcess(Target<T> target, Field field){
         this.target = target;
         this.field = field;
     }
@@ -47,13 +48,13 @@ class FieldProcess {
         for (AnnotationGardener gardener : annotationGardenerList) {
             Annotation hockAnnotation = gardener.getHockAnnotation();
             Annotation annotation = gardener.getAnnotation();
-            FieldAnnotationProcessable process = (FieldAnnotationProcessable) EnhanceFactory.origin(ReflectUtil.get(hockAnnotation, "value"));
+            FieldAnnotationProcessable<T> process = EnhanceFactory.origin(ReflectUtil.get(hockAnnotation, "value"));
             if (AnnotationTool.hasAnnotation(field.getDeclaringClass(), Component.class)) {
                 MutexAnnotation mutexAnnotation = annotation.annotationType().getDeclaredAnnotation(MutexAnnotation.class);
                 if(Objects.nonNull(mutexAnnotation)){
                     AnnotationTool.checkIsOnly(field, annotation.getClass(), mutexAnnotation.value());
                 }
-                process.process(new JoinPointImpl(annotation, field, target, process));
+                process.process(new JoinPointImpl<>(annotation, field, target, process));
             }
         }
     }

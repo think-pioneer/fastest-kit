@@ -7,6 +7,7 @@ import xyz.thinktest.fastest.common.exceptions.EnhanceException;
 import xyz.thinktest.fastest.core.annotations.After;
 import xyz.thinktest.fastest.core.annotations.Before;
 import xyz.thinktest.fastest.core.annotations.Capture;
+import xyz.thinktest.fastest.core.enhance.joinpoint.Target;
 import xyz.thinktest.fastest.core.internal.enhance.methodhelper.MethodProcess;
 import xyz.thinktest.fastest.logger.FastestLogger;
 import xyz.thinktest.fastest.logger.FastestLoggerFactory;
@@ -22,12 +23,14 @@ import java.util.Objects;
  * @Date: 2021/3/29
  */
 
-public class EasyHandler implements EasyEnhancerable {
+public class EasyHandler<T> implements EasyEnhancer {
     @Override
-    public Object intercept(Object self, Method method, Object[] args, MethodProxy methodProxy) {
+    public Object intercept(Object origin, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
         Capture capture = method.getAnnotation(Capture.class);
         try {
-            return proxy(self, method, args, methodProxy);
+            Target<T> target = new Target<>();
+            target.setInstance((T) origin);
+            return proxy(target, method, args, methodProxy);
         }catch (Throwable c){
             CaptureException cause = new CaptureException(c);
             Class<?> clazz = method.getDeclaringClass();
@@ -47,7 +50,7 @@ public class EasyHandler implements EasyEnhancerable {
         }
     }
 
-    private Object proxy(Object self, Method method, Object[] args, MethodProxy methodProxy){
+    private Object proxy(Target<T> target, Method method, Object[] args, MethodProxy methodProxy){
         Annotation[] allAnnotation = method.getDeclaredAnnotations();
         List<AnnotationGardener> beforeAnnotations = new ArrayList<>();
         List<AnnotationGardener> afterAnnotations = new ArrayList<>();
@@ -62,13 +65,13 @@ public class EasyHandler implements EasyEnhancerable {
             }
         }
         if(CollectionUtils.isNotEmpty(beforeAnnotations)) {
-            MethodProcess methodProcess = new MethodProcess(beforeAnnotations);
-            methodProcess.process(self, method, args);
+            MethodProcess<T> methodProcess = new MethodProcess<>(beforeAnnotations);
+            methodProcess.process(target, method, args);
         }
-        Object result = invoke(method, methodProxy, self, args);
+        Object result = invoke(method, methodProxy, target, args);
         if(CollectionUtils.isNotEmpty(afterAnnotations)){
-            MethodProcess methodProcess = new MethodProcess(afterAnnotations);
-            methodProcess.process(self, method, args);
+            MethodProcess<T> methodProcess = new MethodProcess<>(afterAnnotations);
+            methodProcess.process(target, method, args);
         }
         return result;
     }

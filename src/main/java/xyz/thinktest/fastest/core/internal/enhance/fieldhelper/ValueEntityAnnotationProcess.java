@@ -5,7 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import xyz.thinktest.fastest.common.exceptions.EnhanceException;
 import xyz.thinktest.fastest.common.json.JSONFactory;
 import xyz.thinktest.fastest.core.annotations.ValueEntity;
-import xyz.thinktest.fastest.core.enhance.field.JoinPoint;
+import xyz.thinktest.fastest.core.enhance.joinpoint.field.JoinPoint;
 import xyz.thinktest.fastest.core.internal.enhance.EnhanceFactory;
 import xyz.thinktest.fastest.utils.files.YamlUtil;
 import xyz.thinktest.fastest.utils.reflects.ReflectUtil;
@@ -20,14 +20,14 @@ import java.util.List;
  * @Date: 2021/11/27
  */
 @SuppressWarnings("unchecked")
-public class ValueEntityAnnotationProcess extends AbstractFieldProcess {
+public class ValueEntityAnnotationProcess<T> extends AbstractFieldProcess<T> {
 
     @Override
-    public void process(JoinPoint joinPoint){
+    public void process(JoinPoint<T> joinPoint){
         this.exec(joinPoint);
     }
 
-    private void exec(JoinPoint joinPoint){
+    private void exec(JoinPoint<T> joinPoint){
         Field field = joinPoint.getField();
         ValueEntity valueEntity = (ValueEntity) joinPoint.getAnnotation();
         try {

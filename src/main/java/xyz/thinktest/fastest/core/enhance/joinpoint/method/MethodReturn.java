@@ -1,4 +1,4 @@
-package xyz.thinktest.fastest.core.enhance.method;
+package xyz.thinktest.fastest.core.enhance.joinpoint.method;
 
 import java.util.ArrayList;
 import java.util.List;

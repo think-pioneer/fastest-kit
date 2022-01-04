@@ -1,4 +1,6 @@
-package xyz.thinktest.fastest.core.enhance.method;
+package xyz.thinktest.fastest.core.enhance.joinpoint.method;
+
+import xyz.thinktest.fastest.core.enhance.joinpoint.Target;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -6,7 +8,7 @@ import java.lang.reflect.Method;
 /**
  * @Date: 2021/12/6
  */
-public interface JoinPoint {
+public interface JoinPoint<T> {
 
     /**
      * annotation object
@@ -26,15 +28,15 @@ public interface JoinPoint {
     /**
      *Represented object
      */
-    Object getTarget();
+    Target<T> getTarget();
 
     /**
      * The value returned to the proxied method
      */
-    void setReturn(Object value);
+    void setReturn(T value);
 
     /**
      *feature realization object
      */
-    Object getThis();
+    T getThis();
 }

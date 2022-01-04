@@ -2,7 +2,7 @@ package xyz.thinktest.fastest.core.internal.enhance.methodhelper;
 
 import xyz.thinktest.fastest.common.exceptions.EnhanceException;
 import xyz.thinktest.fastest.core.annotations.RestTemp;
-import xyz.thinktest.fastest.core.enhance.method.JoinPoint;
+import xyz.thinktest.fastest.core.enhance.joinpoint.method.JoinPoint;
 import xyz.thinktest.fastest.core.rest.http.metadata.ReadApiConfig;
 import xyz.thinktest.fastest.http.metadata.HttpMethod;
 import xyz.thinktest.fastest.utils.ObjectUtil;
@@ -15,14 +15,14 @@ import java.util.Objects;
 /**
  * @Date: 2021/11/28
  */
-public class RestTempProcess extends AbstractRestAnnotationProcess {
+public class RestTempProcess<T> extends AbstractRestAnnotationProcess<T> {
 
     @Override
-    public void process(JoinPoint joinPoint){
+    public void process(JoinPoint<T> joinPoint){
         this.exec(joinPoint);
     }
 
-    private void exec(JoinPoint joinPoint){
+    private void exec(JoinPoint<T> joinPoint){
         Method method = joinPoint.getMethod();
         RestTemp restTemp = (RestTemp) joinPoint.getAnnotation();
 

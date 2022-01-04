@@ -1,6 +1,6 @@
-package xyz.thinktest.fastest.core.enhance.field;
+package xyz.thinktest.fastest.core.enhance.joinpoint.field;
 
-import xyz.thinktest.fastest.core.internal.enhance.fieldhelper.Target;
+import xyz.thinktest.fastest.core.enhance.joinpoint.Target;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -8,7 +8,7 @@ import java.lang.reflect.Field;
 /**
  * @Date: 2021/12/6
  */
-public interface JoinPoint {
+public interface JoinPoint<T> {
 
     /**
      *annotation object
@@ -23,7 +23,7 @@ public interface JoinPoint {
     /**
      *Intercepted field object
      */
-    Target getTarget();
+    Target<T> getTarget();
 
     /**
      * feature realization object
