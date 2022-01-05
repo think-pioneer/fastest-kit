@@ -4,6 +4,7 @@ import xyz.thinktest.fastest.common.exceptions.FastestBasicException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -26,5 +27,12 @@ public class DateUtil {
         }catch (ParseException e){
             throw new FastestBasicException("SimpleDateFormat error", e);
         }
+    }
+
+    public static Date add(Date date, int field, int diff){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(field, diff);
+        return calendar.getTime();
     }
 }

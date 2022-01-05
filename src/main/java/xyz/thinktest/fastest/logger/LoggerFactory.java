@@ -12,7 +12,7 @@ enum LoggerFactory {
         public FastestLogger getLogger(String name) {
             FastestLogger logger = this.loggerCache.get(name);
             if(Objects.isNull(logger)){
-                logger = new FastestLogger();
+                logger = new FastestLoggerImplement();
                 this.loggerCache.putIfAbsent(name, logger);
             }
             return logger;

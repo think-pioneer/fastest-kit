@@ -13,7 +13,7 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * @Date: 2022/1/2
  */
-abstract class LogInterfaceImplements implements LogInterface {
+class FastestLoggerImplement implements FastestLogger {
     private LogLevel loggerLevel = LogLevel.DEBUG;
     private String charset = "UTF-8";  // 暂且没用，但是当需要序列化时是可能用到的；
     // TODO 也可以直接用LinkedQueue，然后手动通过ReentrantLock来实现并发时的数据安全（synchronized也可）
@@ -27,8 +27,11 @@ abstract class LogInterfaceImplements implements LogInterface {
     private final ExecutorService appenderPool = new ThreadPoolExecutor(1, LogLevel.values().length
             , 180000, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(1024), new ThreadPoolExecutor.CallerRunsPolicy());
 
-    public Queue<LogRecord> getRecords(){
-        return this.records;
+    protected FastestLoggerImplement(){
+        // TODO 日志记录的Consumer
+        Thread consumer = new LogDaemon(this);
+        consumer.setDaemon(true);
+        consumer.start();
     }
 
     @Override
@@ -203,5 +206,9 @@ abstract class LogInterfaceImplements implements LogInterface {
 
     public AtomicLong getConsumeCount() {
         return consumeCount;
+    }
+
+    public Queue<LogRecord> getRecords(){
+        return this.records;
     }
 }

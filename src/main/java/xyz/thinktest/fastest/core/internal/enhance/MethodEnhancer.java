@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
 /**
  * @Date: 2021/11/3
  */
-interface EasyEnhancer extends MethodInterceptor {
+interface MethodEnhancer extends MethodInterceptor {
 
     /**
      *

@@ -22,12 +22,8 @@ public class AnnotationTool {
      * @return
      */
     public static void checkIsOnly(Field field, Class<?> expectType, Class<?>[] excludeTypes){
-        List<Class<? extends Annotation>> realAnnType = getRealDeclaredAnnotations(field.getDeclaredAnnotations());
-        for(Class<?> excludeType:excludeTypes){
-            if(realAnnType.contains(excludeType)){
-                throw new EnhanceException(ObjectUtil.format("@{} and @{} cannot annotate {}.{} at the same time", expectType.getSimpleName(), excludeType.getSimpleName(), field.getDeclaringClass().getName(), field.getName()));
-            }
-        }
+        realCheckIsOnly(field.getDeclaredAnnotations(), expectType.getName(), excludeTypes, field.getDeclaringClass().getName(), field.getName());
+
     }
 
     /**
@@ -37,19 +33,19 @@ public class AnnotationTool {
      * @return
      */
     public static void checkIsOnly(Method method, Class<?> expectType, Class<?>[] excludeTypes){
-        List<Class<? extends Annotation>> realAnnType = getRealDeclaredAnnotations(method.getDeclaredAnnotations());
-        for(Class<?> excludeType:excludeTypes){
-            if(realAnnType.contains(excludeType)){
-                throw new EnhanceException(ObjectUtil.format("@{} and @{} cannot annotate {}.{} at the same time", expectType.getSimpleName(), excludeType.getSimpleName(), method.getDeclaringClass().getName(), method.getName()));
-            }
-        }
+        realCheckIsOnly(method.getDeclaredAnnotations(), expectType.getName(), excludeTypes, method.getDeclaringClass().getName(), method.getName());
     }
 
     /**
      * get real annotation
      */
-    private static List<Class<? extends Annotation>> getRealDeclaredAnnotations(Annotation[] annotations){
-        return Arrays.stream(annotations).map(Annotation::getClass).collect(Collectors.toList());
+    private static void realCheckIsOnly(Annotation[] annotations, String expectTypeName, Class<?>[] excludeTypes, String className, String name){
+        List<Class<? extends Annotation>> realAnnType = Arrays.stream(annotations).map(Annotation::getClass).collect(Collectors.toList());
+        for(Class<?> excludeType:excludeTypes){
+            if(realAnnType.contains(excludeType)){
+                throw new EnhanceException(ObjectUtil.format("@{} and @{} cannot annotate {}.{} at the same time", expectTypeName, excludeType.getSimpleName(), className, name));
+            }
+        }
     }
 
     /**

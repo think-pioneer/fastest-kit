@@ -1,6 +1,5 @@
 package xyz.thinktest.fastest.core;
 
-import xyz.thinktest.fastest.core.internal.enhance.EasyHandler;
 import xyz.thinktest.fastest.core.internal.enhance.EnhanceFactory;
 
 /**

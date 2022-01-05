@@ -5,7 +5,6 @@ import xyz.thinktest.fastest.core.annotations.Singleton;
 import xyz.thinktest.fastest.core.enhance.joinpoint.Target;
 import xyz.thinktest.fastest.core.enhance.joinpoint.field.JoinPoint;
 import xyz.thinktest.fastest.core.enhance.joinpoint.field.FieldAnnotationProcessable;
-import xyz.thinktest.fastest.core.internal.enhance.EasyHandler;
 import xyz.thinktest.fastest.core.internal.enhance.EnhanceFactory;
 
 import java.lang.reflect.Field;
@@ -44,11 +43,10 @@ public class ComponentAnnotationProcess<T> implements FieldAnnotationProcessable
         if(Objects.isNull(instance)){
             Component component = clazz.getDeclaredAnnotation(Component.class);
             if (Objects.nonNull(component) && !isOrigin) {
-                Class<?> callBackType = EasyHandler.class;
                 if (hasArguments) {
-                    instance = EnhanceFactory.enhance(clazz, argumentTypes, arguments, callBackType);
+                    instance = EnhanceFactory.enhance(clazz, argumentTypes, arguments);
                 } else {
-                    instance = EnhanceFactory.enhance(clazz, callBackType);
+                    instance = EnhanceFactory.enhance(clazz);
                 }
             } else {
                 if (hasArguments) {
