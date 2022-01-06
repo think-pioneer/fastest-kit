@@ -1,5 +1,7 @@
 package xyz.thinktest.fastest.logger;
 
+import xyz.thinktest.fastest.common.exceptions.FileException;
+import xyz.thinktest.fastest.utils.ColorPrint;
 import xyz.thinktest.fastest.utils.dates.DateUtil;
 import xyz.thinktest.fastest.utils.files.FileUtil;
 
@@ -17,9 +19,11 @@ enum LogAppender {
     INSTANCE;
 
     private final Map<LogLevel, BufferedWriter> bufferWriterMap;
+    private final String yesterday;
 
     LogAppender(){
         this.bufferWriterMap = new HashMap<>();
+        this.yesterday = DateUtil.dateToString(DateUtil.add(new Date(), Calendar.DAY_OF_YEAR, -1), DateUtil.FORMAT_A);
         this.buildZip();
         this.buildWriterMap();
     }
@@ -45,7 +49,7 @@ enum LogAppender {
     }
 
     private void buildZip(){
-        String zipFileName = String.format("logs/fastestlog-%s.zip", DateUtil.dateToString(new Date(), DateUtil.FORMAT_A));
+        String zipFileName = String.format("logs/fastestlog-%s.zip", yesterday);
         File zipFile = new File(FileUtil.getProjectRoot(), zipFileName);
         if(zipFile.exists()){
             return;
@@ -76,19 +80,24 @@ enum LogAppender {
                         while ((read = bis.read(bufs, 0, 1024 * 10)) != -1) {
                             zos.write(bufs, 0, read);
                         }
+                        bis.close();
+                        fis.close();
+                        if(sourceFile.delete()){
+                            ColorPrint.YELLOW.println("删除log文件失败：" + sourceFile.getAbsolutePath());
+                        }
                     }
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
-            throw new RuntimeException(e);
+            throw new FileException(e);
         } finally{
             //关闭流
             try {
                 if(null != bis) bis.close();
                 if(null != zos) zos.close();
             } catch (IOException e) {
-                System.err.println("Rolling log for zip fail.");
+                ColorPrint.RED.println("Rolling log for zip fail.");
                 e.printStackTrace();
             }
         }
@@ -104,7 +113,7 @@ enum LogAppender {
                 String actualTime = DateUtil.dateToString(DateUtil.add(new Date(), Calendar.DAY_OF_YEAR, -1), DateUtil.FORMAT_A);
                 return fileTime.equals(actualTime);
             }catch (IOException e){
-                System.err.println("read file error");
+                ColorPrint.RED.println("read file error");
                 e.printStackTrace();
                 return false;
             }

@@ -1,5 +1,6 @@
 package xyz.thinktest.fastest.logger;
 
+import xyz.thinktest.fastest.utils.ColorPrint;
 import xyz.thinktest.fastest.utils.ObjectUtil;
 
 import java.io.*;
@@ -8,6 +9,7 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 
 /**
@@ -26,6 +28,7 @@ class FastestLoggerImplement implements FastestLogger {
     private final AtomicLong consumeCount = new AtomicLong(0);
     private final ExecutorService appenderPool = new ThreadPoolExecutor(1, LogLevel.values().length
             , 180000, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(1024), new ThreadPoolExecutor.CallerRunsPolicy());
+    public static final ReentrantReadWriteLock LOCK=new ReentrantReadWriteLock();
 
     protected FastestLoggerImplement(){
         // TODO 日志记录的Consumer
@@ -130,11 +133,11 @@ class FastestLoggerImplement implements FastestLogger {
         }
     }
 
-    private PrintWriter buildExceptionWriter(Throwable exception){
+    private StringWriter buildExceptionWriter(Throwable exception){
         StringWriter sw = new StringWriter();
         PrintWriter pw  = new PrintWriter(sw);
         exception.printStackTrace(pw);
-        return pw;
+        return sw;
     }
 
     private StackTraceElement getTargetStackTraceElement(){
@@ -147,29 +150,20 @@ class FastestLoggerImplement implements FastestLogger {
      * @param record
      */
     private void log(LogRecord record){
-        // ReentrantLock可以替代synchronized，不过当前场景下synchronized已经足够
-        synchronized (this.records){  // TODO 如果用的是LinkedBlockingQueue是不需要这个的
+        synchronized (this.records){
             this.records.offer(record);
             this.produceCount.incrementAndGet();
-            this.records.notify();  // TODO 只有一个线程会records.wait()，因此notify()足够
+            this.records.notify();
         }
     }
 
     public void notifyAppender(final Map<LogLevel, BufferedWriter> appenderMap, final LogRecord record) {
-        try {
-            PrintWriter writer = new PrintWriter(record.level == LogLevel.ERROR ? System.err : System.out);
-            BufferedWriter bw = new BufferedWriter(writer);
-            bw.write(record.toString());
-            bw.newLine();
-            bw.flush();
-            for (Map.Entry<LogLevel, BufferedWriter> entry : appenderMap.entrySet()) {
-                if(entry.getKey().id <= record.level.id){
-                    BufferedWriter _bw = entry.getValue();
-                    appenderPool.submit(new AppenderRunnable(_bw, record.toString()));
-                }
+        record.level.println(record.toString());
+        for (Map.Entry<LogLevel, BufferedWriter> entry : appenderMap.entrySet()) {
+            if(entry.getKey().id <= record.level.id){
+                BufferedWriter _bw = entry.getValue();
+                appenderPool.submit(new AppenderRunnable(_bw, record.toString()));
             }
-        }catch (IOException e){
-            e.printStackTrace();
         }
     }
 

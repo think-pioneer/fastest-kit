@@ -56,7 +56,7 @@ class TestFinish{
                     recovery.recovery(step);
                 }
             }
-        }catch (Exception e){
+        }catch (Throwable e){
             logger.error("run Step recovery method error:",e);
         }
     }

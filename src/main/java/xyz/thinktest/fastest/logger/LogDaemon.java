@@ -1,6 +1,7 @@
 package xyz.thinktest.fastest.logger;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;

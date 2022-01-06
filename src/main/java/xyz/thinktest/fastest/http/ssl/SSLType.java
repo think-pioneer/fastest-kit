@@ -17,7 +17,7 @@ public enum SSLType {
     private SSLSocketFactory sslSocketFactory;
     private final HostnameVerifier hostnameVerifier;
     private TrustManager[] trustManagers;
-    private X509TrustManager trustManager;
+    private final X509TrustManager trustManager;
 
     SSLType(SSLContext sslContext, X509TrustManager trustManager){
         this.hostnameVerifier = SSLUtil.getHostnameVerifier();
@@ -30,7 +30,7 @@ public enum SSLType {
 
                 sslContext.init(null, new X509TrustManager[]{this.trustManager}, new SecureRandom());
                 this.sslSocketFactory = sslContext.getSocketFactory();
-            } catch (Exception ignored) {
+            } catch (Throwable ignored) {
             }
         }
     }
