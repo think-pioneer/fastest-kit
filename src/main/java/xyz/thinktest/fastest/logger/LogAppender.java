@@ -2,6 +2,7 @@ package xyz.thinktest.fastest.logger;
 
 import xyz.thinktest.fastest.common.exceptions.FileException;
 import xyz.thinktest.fastest.utils.ColorPrint;
+import xyz.thinktest.fastest.utils.dates.DateTime;
 import xyz.thinktest.fastest.utils.dates.DateUtil;
 import xyz.thinktest.fastest.utils.files.FileUtil;
 
@@ -23,7 +24,7 @@ enum LogAppender {
 
     LogAppender(){
         this.bufferWriterMap = new HashMap<>();
-        this.yesterday = DateUtil.dateToString(DateUtil.add(new Date(), Calendar.DAY_OF_YEAR, -1), DateUtil.FORMAT_A);
+        this.yesterday = DateUtil.DAY.calculate(new Date(),-1).toDateTime(DateUtil.FORMAT_A).toString();
         this.buildZip();
         this.buildWriterMap();
     }
@@ -51,9 +52,6 @@ enum LogAppender {
     private void buildZip(){
         String zipFileName = String.format("logs/fastestlog-%s.zip", yesterday);
         File zipFile = new File(FileUtil.getProjectRoot(), zipFileName);
-        if(zipFile.exists()){
-            return;
-        }
         FileInputStream fis;
         BufferedInputStream bis = null;
         FileOutputStream fos;
@@ -82,13 +80,14 @@ enum LogAppender {
                         }
                         bis.close();
                         fis.close();
-                        if(sourceFile.delete()){
+                        if(!sourceFile.delete()){
                             ColorPrint.YELLOW.println("删除log文件失败：" + sourceFile.getAbsolutePath());
                         }
                     }
                 }
             }
         } catch (IOException e) {
+            ColorPrint.RED.println("Rolling log for zip fail.IOException");
             e.printStackTrace();
             throw new FileException(e);
         } finally{
@@ -97,7 +96,7 @@ enum LogAppender {
                 if(null != bis) bis.close();
                 if(null != zos) zos.close();
             } catch (IOException e) {
-                ColorPrint.RED.println("Rolling log for zip fail.");
+                ColorPrint.RED.println("Rolling log for zip fail.Close IOException");
                 e.printStackTrace();
             }
         }
@@ -109,8 +108,8 @@ enum LogAppender {
                 Path path = file.toPath();
                 BasicFileAttributes attr = Files.readAttributes(path, BasicFileAttributes.class);
                 Instant instant = attr.creationTime().toInstant();
-                String fileTime = DateUtil.dateToString(new Date(instant.toEpochMilli()), DateUtil.FORMAT_A);
-                String actualTime = DateUtil.dateToString(DateUtil.add(new Date(), Calendar.DAY_OF_YEAR, -1), DateUtil.FORMAT_A);
+                String fileTime = DateTime.newInstance(new Date(instant.toEpochMilli()), DateUtil.FORMAT_A).toString();
+                String actualTime = DateUtil.DAY.calculate(new Date(), -1).toDateTime(DateUtil.FORMAT_A).toString();
                 return fileTime.equals(actualTime);
             }catch (IOException e){
                 ColorPrint.RED.println("read file error");
@@ -121,7 +120,7 @@ enum LogAppender {
     }
 
     private void buildWriterMap(){
-        String path = "logs/fastestlog-"+"{type}-"+ DateUtil.dateToString(new Date(), DateUtil.FORMAT_A) +".log";
+        String path = "logs/fastestlog-"+"{type}-"+ DateTime.newInstance(new Date(), DateUtil.FORMAT_A) +".log";
         for(LogLevel level: LogLevel.values()){
             String _path = path.replace("{type}", level.type.toLowerCase());
             BufferedWriter bw = buildWriter(_path);

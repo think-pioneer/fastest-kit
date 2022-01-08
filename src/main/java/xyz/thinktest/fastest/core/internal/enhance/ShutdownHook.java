@@ -4,6 +4,7 @@ import xyz.thinktest.fastest.common.exceptions.FileException;
 import xyz.thinktest.fastest.core.internal.enhance.methodhelper.RestTempWrite;
 import xyz.thinktest.fastest.logger.FastestLogger;
 import xyz.thinktest.fastest.logger.FastestLoggerFactory;
+import xyz.thinktest.fastest.utils.dates.DateTime;
 import xyz.thinktest.fastest.utils.dates.DateUtil;
 import xyz.thinktest.fastest.utils.files.FileUtil;
 import xyz.thinktest.fastest.utils.files.PropertyUtil;
@@ -29,7 +30,7 @@ public final class ShutdownHook {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             String defaultPath = PropertyUtil.getProperty("rest.temp.api");
             if(Objects.isNull(defaultPath)){
-                defaultPath = ObjectUtil.format("apiconfig_custom/APIConfTemp_{}_{}.yaml", DateUtil.dateToString(new Date(), "yyyy_MM_dd_HH_mm_ss"), new Random().nextInt(10000));
+                defaultPath = ObjectUtil.format("apiconfig_custom/APIConfTemp_{}_{}.yaml", DateTime.newInstance(new Date(), DateUtil.FORMAT_D), new Random().nextInt(10000));
             }
             File file = FileUtil.createFile(defaultPath);
             if(Objects.isNull(file) || !file.exists()){
