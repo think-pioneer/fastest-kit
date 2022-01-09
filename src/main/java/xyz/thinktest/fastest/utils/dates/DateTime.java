@@ -32,15 +32,10 @@ public class DateTime {
     }
 
     private DateTime(String date, String format){
-        try{
-            SimpleDateFormat dateFormat = new SimpleDateFormat(format);
-            this.date = dateFormat.parse(date);
-            this.format = format;
-            this.calendar = Calendar.getInstance();
-            this.calendar.setTime(this.date);
-        }catch (ParseException e){
-            throw new DateException(ObjectUtil.format("Invalid date:\"{}\" or format:\"{}\""));
-        }
+        this.date = parse(date, format);
+        this.format = format;
+        this.calendar = Calendar.getInstance();
+        this.calendar.setTime(this.date);
     }
 
     private DateTime (Calendar calendar, String format){
@@ -55,16 +50,11 @@ public class DateTime {
 
     @Override
     public String toString(){
-        return toString(format);
+        return string(format);
     }
 
-    public String toString(String format){
-        try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat(format);
-            return dateFormat.format(this.date);
-        }catch (Exception e){
-            throw new DateException(ObjectUtil.format("Invalid date:\"{}\" or format:\"{}\""));
-        }
+    public String string(String format){
+        return format(this.date, format);
     }
 
     public Calendar toCalender(){
@@ -105,5 +95,23 @@ public class DateTime {
 
     public static DateTime newInstance(Calendar calendar, String format){
         return new DateTime(calendar, format);
+    }
+
+    public static Date parse(String date, String format){
+        try{
+            SimpleDateFormat sf = new SimpleDateFormat(format);
+            return sf.parse(date);
+        }catch (ParseException e){
+            throw new DateException(ObjectUtil.format("Invalid date:\"{}\" or format:\"{}\"", date, format));
+        }
+    }
+
+    public static String format(Date date, String format){
+        try {
+            SimpleDateFormat sf = new SimpleDateFormat(format);
+            return sf.format(date);
+        }catch (Exception e){
+            throw new DateException(ObjectUtil.format("Invalid date:\"{}\" or format:\"{}\"", date.toString(), format));
+        }
     }
 }

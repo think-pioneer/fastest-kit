@@ -1,8 +1,8 @@
 package xyz.thinktest.fastest.logger;
 
-import java.io.PrintWriter;
+import xyz.thinktest.fastest.utils.dates.DateTime;
+
 import java.io.StringWriter;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
@@ -15,8 +15,6 @@ class LogRecord {
     public final String targetMethod;
     public final Integer targetLine;
     public final Date timestamp;
-    public static final SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
-    public final SimpleDateFormat dateFormat = DEFAULT_DATE_FORMAT;
 
     // TODO 最好用这个，不然高并发下timestamp容易出现顺序不准确的情况。
     public LogRecord(LogLevel level, String msg, StringWriter exceptionPs, Date timestamp, StackTraceElement stackTraceElement) {
@@ -31,6 +29,6 @@ class LogRecord {
 
     @Override
     public String toString() {
-        return String.format("%s %s %s %s %s - %s %s", dateFormat.format(timestamp), level, targetType, targetMethod, targetLine, msg, exception);
+        return String.format("%s %s %s %s %s - %s %s", DateTime.format(timestamp, "yyyy-MM-dd HH:mm:ss:SSS"), level, targetType, targetMethod, targetLine, msg, exception);
     }
 }

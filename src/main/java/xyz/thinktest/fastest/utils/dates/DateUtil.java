@@ -4,7 +4,10 @@ import xyz.thinktest.fastest.utils.ObjectUtil;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -60,6 +63,26 @@ public enum DateUtil {
         public DateTime end(Date date, String format) {
             return DateTime.newInstance(date, format);
         }
+
+        @Override
+        public long diff(Date before, Date after) {
+            return after.getTime() - before.getTime();
+        }
+
+        @Override
+        public long diff(String before, String after, String format) {
+            return diff(DateTime.parse(before, format), DateTime.parse(after, format));
+        }
+
+        @Override
+        public boolean isBetween(Date left, Date right, Date value) {
+            return right.getTime() > value.getTime() && left.getTime() < value.getTime();
+        }
+
+        @Override
+        public boolean isBetween(String left, String right, String value, String format) {
+            return isBetween(DateTime.parse(left, format), DateTime.parse(right, format), DateTime.parse(value, format));
+        }
     },
     SECOND(Calendar.SECOND) {
         @Override
@@ -107,6 +130,27 @@ public enum DateUtil {
         @Override
         public DateTime end(Date date, String format) {
             return DateTime.newInstance(date, format);
+        }
+
+        @Override
+        public long diff(Date before, Date after) {
+            long result = after.getTime() - before.getTime();
+            return result / 1000;
+        }
+
+        @Override
+        public long diff(String before, String after, String format) {
+            return diff(DateTime.parse(before, format), DateTime.parse(after, format));
+        }
+
+        @Override
+        public boolean isBetween(Date left, Date right, Date value) {
+            return right.getTime() / 1000 > value.getTime() / 1000 && left.getTime() / 1000 < value.getTime() / 1000;
+        }
+
+        @Override
+        public boolean isBetween(String left, String right, String value, String format) {
+            return isBetween(DateTime.parse(left, format), DateTime.parse(right, format), DateTime.parse(value, format));
         }
     },
     MINUTE(Calendar.MINUTE) {
@@ -156,6 +200,30 @@ public enum DateUtil {
         public DateTime end(Date date, String format) {
             return DateTime.newInstance(date, format);
         }
+
+        @Override
+        public long diff(Date before, Date after) {
+            long result = after.getTime() - before.getTime();
+            return result / (1000 * 60);
+        }
+
+        @Override
+        public long diff(String before, String after, String format) {
+            return diff(DateTime.parse(before, format), DateTime.parse(after, format));
+        }
+
+        @Override
+        public boolean isBetween(Date left, Date right, Date value) {
+            long leftTime = left.getTime() / (1000 * 60);
+            long rightTime = right.getTime() / (1000 * 60);
+            long valueTime = value.getTime() / (1000 * 60);
+            return rightTime > valueTime && leftTime < valueTime;
+        }
+
+        @Override
+        public boolean isBetween(String left, String right, String value, String format) {
+            return isBetween(DateTime.parse(left, format), DateTime.parse(right, format), DateTime.parse(value, format));
+        }
     },
     HOUR(Calendar.HOUR_OF_DAY) {
         @Override
@@ -204,6 +272,30 @@ public enum DateUtil {
         public DateTime end(Date date, String format) {
             return DateTime.newInstance(date, format);
         }
+
+        @Override
+        public long diff(Date before, Date after) {
+            long result = after.getTime() - before.getTime();
+            return result / (1000 * 60 *60);
+        }
+
+        @Override
+        public long diff(String before, String after, String format) {
+            return diff(DateTime.parse(before, format), DateTime.parse(after, format));
+        }
+
+        @Override
+        public boolean isBetween(Date left, Date right, Date value) {
+            long leftTime = left.getTime() / (1000 * 60 * 60);
+            long rightTime = right.getTime() / (1000 * 60 * 60);
+            long valueTime = value.getTime() / (1000 * 60 * 60);
+            return rightTime > valueTime && leftTime < valueTime;
+        }
+
+        @Override
+        public boolean isBetween(String left, String right, String value, String format) {
+            return isBetween(DateTime.parse(left, format), DateTime.parse(right, format), DateTime.parse(value, format));
+        }
     },
     DAY(Calendar.DAY_OF_YEAR){
         @Override
@@ -251,6 +343,32 @@ public enum DateUtil {
         @Override
         public DateTime end(Date date, String format) {
             return DateTime.newInstance(date, format);
+        }
+
+        @Override
+        public long diff(Date before, Date after) {
+            LocalDate beforeDate = before.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate afterDate = after.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            Period p = Period.between(beforeDate, afterDate);
+            return p.getDays();
+        }
+
+        @Override
+        public long diff(String before, String after, String format) {
+            return diff(DateTime.parse(before, format), DateTime.parse(after, format));
+        }
+
+        @Override
+        public boolean isBetween(Date left, Date right, Date value) {
+            long rightTime = left.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getDayOfYear();
+            long valueTime = right.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getDayOfYear();
+            long leftTime = right.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getDayOfYear();
+            return rightTime > valueTime && leftTime < valueTime;
+        }
+
+        @Override
+        public boolean isBetween(String left, String right, String value, String format) {
+            return isBetween(DateTime.parse(left, format), DateTime.parse(right, format), DateTime.parse(value, format));
         }
     },
     WEEK(Calendar.WEEK_OF_YEAR) {
@@ -308,6 +426,32 @@ public enum DateUtil {
             calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
             calendar.add(Calendar.DAY_OF_WEEK, 6);
             return DateTime.newInstance(calendar, format);
+        }
+
+        @Override
+        public long diff(Date before, Date after) {
+            LocalDate beforeDate = before.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate afterDate = after.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            Period p = Period.between(beforeDate, afterDate);
+            return p.getDays() / 7;
+        }
+
+        @Override
+        public long diff(String before, String after, String format) {
+            return diff(DateTime.parse(before, format), DateTime.parse(after, format));
+        }
+
+        @Override
+        public boolean isBetween(Date left, Date right, Date value) {
+            long rightTime = left.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getDayOfYear() / 7;
+            long valueTime = right.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getDayOfYear() / 7;
+            long leftTime = right.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getDayOfYear() / 7;
+            return rightTime > valueTime && leftTime < valueTime;
+        }
+
+        @Override
+        public boolean isBetween(String left, String right, String value, String format) {
+            return isBetween(DateTime.parse(left, format), DateTime.parse(right, format), DateTime.parse(value, format));
         }
     },
     MONTH(Calendar.MONTH) {
@@ -367,6 +511,32 @@ public enum DateUtil {
             calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
             return DateTime.newInstance(calendar, format);
         }
+
+        @Override
+        public long diff(Date before, Date after) {
+            LocalDate beforeDate = before.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate afterDate = after.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            Period p = Period.between(beforeDate, afterDate);
+            return p.getMonths();
+        }
+
+        @Override
+        public long diff(String before, String after, String format) {
+            return diff(DateTime.parse(before, format), DateTime.parse(after, format));
+        }
+
+        @Override
+        public boolean isBetween(Date left, Date right, Date value) {
+            long rightTime = left.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getMonthValue();
+            long valueTime = right.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getMonthValue();
+            long leftTime = right.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getMonthValue();
+            return rightTime > valueTime && leftTime < valueTime;
+        }
+
+        @Override
+        public boolean isBetween(String left, String right, String value, String format) {
+            return isBetween(DateTime.parse(left, format), DateTime.parse(right, format), DateTime.parse(value, format));
+        }
     },
     YEAR(Calendar.YEAR) {
         @Override
@@ -423,6 +593,32 @@ public enum DateUtil {
             calendar.add(Calendar.MONTH, 12-calendar.get(Calendar.MONTH));
             calendar.set(Calendar.DAY_OF_MONTH, 0);
             return DateTime.newInstance(calendar, format);
+        }
+
+        @Override
+        public long diff(Date before, Date after) {
+            LocalDate beforeDate = before.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate afterDate = after.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            Period p = Period.between(beforeDate, afterDate);
+            return p.getYears();
+        }
+
+        @Override
+        public long diff(String before, String after, String format) {
+            return diff(DateTime.parse(before, format), DateTime.parse(after, format));
+        }
+
+        @Override
+        public boolean isBetween(Date left, Date right, Date value) {
+            long rightTime = left.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getYear();
+            long valueTime = right.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getYear();
+            long leftTime = right.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getYear();
+            return rightTime > valueTime && leftTime < valueTime;
+        }
+
+        @Override
+        public boolean isBetween(String left, String right, String value, String format) {
+            return isBetween(DateTime.parse(left, format), DateTime.parse(right, format), DateTime.parse(value, format));
         }
     };
 
@@ -521,6 +717,26 @@ public enum DateUtil {
      */
     public abstract DateTime end(Date date, String format);
 
+    /**
+     * 计算两个日期的时间差
+     */
+    public abstract long diff(Date before, Date after);
+
+    /**
+     * 计算两个日期(字符串类型)的时间差
+     */
+    public abstract long diff(String before, String after, String format);
+
+    /**
+     * 计算value是否在left和right之间(闭区间)
+     */
+    public abstract boolean isBetween(Date left, Date right, Date value);
+
+    /**
+     * (字符串类型)计算value是否在left和right之间(闭区间)
+     */
+    public abstract boolean isBetween(String left, String right, String value, String format);
+
 
     public DateTime toDateTime(String format){
         return DateTime.newInstance(this.date, format);
@@ -549,12 +765,6 @@ public enum DateUtil {
     }
 
     public DateUtil calculate(String stringDate, String format, int diff){
-        SimpleDateFormat dateFormat = new SimpleDateFormat(format);
-        try{
-            Date date = dateFormat.parse(stringDate);
-            return calculate(date, diff);
-        }catch (ParseException e){
-            throw new IllegalStateException(ObjectUtil.format("Invalid date:\"{}\" or format:\"{}\""));
-        }
+        return calculate(DateTime.parse(stringDate, format), diff);
     }
 }
