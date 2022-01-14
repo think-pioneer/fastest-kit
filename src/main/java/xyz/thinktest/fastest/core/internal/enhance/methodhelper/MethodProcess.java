@@ -30,7 +30,7 @@ public class MethodProcess<T> {
         Class<MethodAnnotationProcessable<T>> processType;
         List<Object> methodReturnValues = new ArrayList<>();
         for (AnnotationGardener gardener : this.annotations) {
-            Annotation hockAnnotation = gardener.getHockAnnotation();
+            Annotation hockAnnotation = gardener.getHookAnnotation();
             Annotation annotation = gardener.getAnnotation();
             processType = ReflectUtil.get(hockAnnotation, "value");
             MethodAnnotationProcessable<T> process = EnhanceFactory.origin(processType);

@@ -30,7 +30,7 @@ public final class ShutdownHook {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             String defaultPath = PropertyUtil.getProperty("rest.temp.api");
             if(Objects.isNull(defaultPath)){
-                defaultPath = ObjectUtil.format("apiconfig_custom/APIConfTemp_{}_{}.yaml", DateTime.newInstance(new Date(), DateUtil.FORMAT_D), new Random().nextInt(10000));
+                defaultPath = ObjectUtil.format("apiconfig_custom/APIConfTemp_{}_{}.yaml", DateTime.newInstance(new Date(), DateUtil.FORMAT_D).string(), new Random().nextInt(10000));
             }
             File file = FileUtil.createFile(defaultPath);
             if(Objects.isNull(file) || !file.exists()){

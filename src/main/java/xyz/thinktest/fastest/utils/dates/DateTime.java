@@ -49,8 +49,16 @@ public class DateTime {
     }
 
     @Override
-    public String toString(){
-        return string(format);
+    public String toString() {
+        return "DateTime{" +
+                "date=" + date.toString() +
+                ", calendar=" + calendar.toString() +
+                ", format='" + format + '\'' +
+                '}';
+    }
+
+    public String string(){
+        return format(this.date, format);
     }
 
     public String string(String format){

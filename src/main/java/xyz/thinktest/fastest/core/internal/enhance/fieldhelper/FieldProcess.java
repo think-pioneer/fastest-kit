@@ -5,7 +5,6 @@ import xyz.thinktest.fastest.core.annotations.Component;
 import xyz.thinktest.fastest.core.annotations.MutexAnnotation;
 import xyz.thinktest.fastest.core.enhance.joinpoint.Target;
 import xyz.thinktest.fastest.core.enhance.joinpoint.field.FieldAnnotationProcessable;
-import xyz.thinktest.fastest.core.internal.enhance.AnnotationGardener;
 import xyz.thinktest.fastest.core.internal.enhance.EnhanceFactory;
 import xyz.thinktest.fastest.core.internal.tool.AnnotationTool;
 import xyz.thinktest.fastest.utils.reflects.ReflectUtil;
@@ -13,8 +12,6 @@ import xyz.thinktest.fastest.utils.reflects.ReflectUtil;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -38,23 +35,17 @@ class FieldProcess<T> {
         }
         field.setAccessible(true);
         Annotation[] fieldDeclaredAnnotations = field.getDeclaredAnnotations();
-        List<AnnotationGardener> annotationGardenerList = new ArrayList<>();
         for(Annotation annotation:fieldDeclaredAnnotations){
             Before before = annotation.annotationType().getDeclaredAnnotation(Before.class);
             if(Objects.nonNull(before)){
-                annotationGardenerList.add(new AnnotationGardener(annotation, before));
-            }
-        }
-        for (AnnotationGardener gardener : annotationGardenerList) {
-            Annotation hockAnnotation = gardener.getHockAnnotation();
-            Annotation annotation = gardener.getAnnotation();
-            FieldAnnotationProcessable<T> process = EnhanceFactory.origin(ReflectUtil.get(hockAnnotation, "value"));
-            if (AnnotationTool.hasAnnotation(field.getDeclaringClass(), Component.class)) {
-                MutexAnnotation mutexAnnotation = annotation.annotationType().getDeclaredAnnotation(MutexAnnotation.class);
-                if(Objects.nonNull(mutexAnnotation)){
-                    AnnotationTool.checkIsOnly(field, annotation.getClass(), mutexAnnotation.value());
+                FieldAnnotationProcessable<T> process = EnhanceFactory.origin(ReflectUtil.get(before, "value"));
+                if (AnnotationTool.hasAnnotation(field.getDeclaringClass(), Component.class)) {
+                    MutexAnnotation mutexAnnotation = annotation.annotationType().getDeclaredAnnotation(MutexAnnotation.class);
+                    if(Objects.nonNull(mutexAnnotation)){
+                        AnnotationTool.checkIsOnly(field, annotation.getClass(), mutexAnnotation.value());
+                    }
+                    process.process(new JoinPointImpl<>(annotation, field, target, process));
                 }
-                process.process(new JoinPointImpl<>(annotation, field, target, process));
             }
         }
     }

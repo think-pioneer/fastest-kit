@@ -105,7 +105,7 @@ public enum  FileUtil {
         File[] files = path.listFiles();
         if(Objects.nonNull(files)){
             for(File file:files){
-                collect(file, fileList, suffixes);
+                collectInternal(file, fileList, suffixes);
             }
         }
     }
@@ -120,7 +120,7 @@ public enum  FileUtil {
         File[] files = path.listFiles();
         if(Objects.nonNull(files)){
             for(File file:files){
-                collect(file, fileList);
+                collectInternal(file, fileList);
             }
         }
     }

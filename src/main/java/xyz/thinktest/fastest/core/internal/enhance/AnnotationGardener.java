@@ -6,27 +6,33 @@ import java.lang.annotation.Annotation;
  * @Date: 2021/12/5
  */
 public class AnnotationGardener {
+    /**
+     * 字段上的注解
+     */
     private final Annotation annotation;
-    private final Annotation hockAnnotation;
+    /**
+     * 字段注解的hook注解
+     */
+    private final Annotation hookAnnotation;
 
-    public AnnotationGardener(Annotation annotation, Annotation hockAnnotation){
+    public AnnotationGardener(Annotation annotation, Annotation hookAnnotation){
         this.annotation = annotation;
-        this.hockAnnotation = hockAnnotation;
+        this.hookAnnotation = hookAnnotation;
     }
 
     public Annotation getAnnotation() {
         return annotation;
     }
 
-    public Annotation getHockAnnotation() {
-        return hockAnnotation;
+    public Annotation getHookAnnotation() {
+        return hookAnnotation;
     }
 
     @Override
     public String toString() {
         return "AnnotationGardener{" +
                 "annotation=" + annotation +
-                ", hockAnnotation=" + hockAnnotation +
+                ", hockAnnotation=" + hookAnnotation +
                 '}';
     }
 }

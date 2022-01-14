@@ -108,8 +108,8 @@ enum LogAppender {
                 Path path = file.toPath();
                 BasicFileAttributes attr = Files.readAttributes(path, BasicFileAttributes.class);
                 Instant instant = attr.creationTime().toInstant();
-                String fileTime = DateTime.newInstance(new Date(instant.toEpochMilli()), DateUtil.FORMAT_A).toString();
-                String actualTime = DateUtil.DAY.calculate(new Date(), -1).toDateTime(DateUtil.FORMAT_A).toString();
+                String fileTime = DateTime.newInstance(new Date(instant.toEpochMilli()), DateUtil.FORMAT_A).string();
+                String actualTime = DateUtil.DAY.calculate(new Date(), -1).toDateTime(DateUtil.FORMAT_A).string();
                 return fileTime.equals(actualTime);
             }catch (IOException e){
                 ColorPrint.RED.println("read file error");
@@ -120,7 +120,7 @@ enum LogAppender {
     }
 
     private void buildWriterMap(){
-        String path = "logs/fastestlog-"+"{type}-"+ DateTime.newInstance(new Date(), DateUtil.FORMAT_A) +".log";
+        String path = "logs/fastestlog-"+"{type}-"+ DateTime.newInstance(new Date(), DateUtil.FORMAT_A).string() +".log";
         for(LogLevel level: LogLevel.values()){
             String _path = path.replace("{type}", level.type.toLowerCase());
             BufferedWriter bw = buildWriter(_path);

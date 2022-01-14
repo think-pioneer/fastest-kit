@@ -1,8 +1,10 @@
 package xyz.thinktest.fastest.utils.files;
 
+import com.google.common.collect.Lists;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import xyz.thinktest.fastest.common.json.JSONFactory;
+import xyz.thinktest.fastest.utils.CompletableUtil;
 import xyz.thinktest.fastest.utils.files.iostream.InputStreamOptional;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.composer.ComposerException;
@@ -13,7 +15,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * @Date: 2021/12/7
@@ -51,6 +55,24 @@ public final class YamlUtil<T> {
         if(Objects.nonNull(path)) {
             path = path.replace("/", File.separator).replace("\\", File.separator);
         }
+        List<List<File>> files = Lists.partition(fileList, CompletableUtil.assignProcessMax(fileList.size()));
+        String finalPath = path;
+        List<CompletableFuture<Object>> futureList = new ArrayList<>();
+        for(List<File> fileList : files){
+            CompletableFuture<Object> completableFuture = CompletableFuture.supplyAsync(() -> parse(fileList, finalPath, keys));
+            futureList.add(completableFuture);
+        }
+        CompletableFuture.allOf(futureList.toArray(new CompletableFuture<?>[0])).join();
+        for(CompletableFuture<Object> future:futureList){
+            Object o = future.join();
+            if(Objects.nonNull(o)){
+                return o;
+            }
+        }
+        return null;
+    }
+
+    private Object parse(List<File> fileList, String path, String[] keys){
         for (File file : fileList) {
             String filePath = file.getAbsolutePath();
             ByteArrayOutputStream baost = cacheMap.get(filePath);
