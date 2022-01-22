@@ -3,6 +3,7 @@ package xyz.thinktest.fastestapi.http;
 import okhttp3.*;
 import org.apache.commons.collections4.MapUtils;
 import xyz.thinktest.fastestapi.common.exceptions.HttpException;
+import xyz.thinktest.fastestapi.core.ApplicationBean;
 import xyz.thinktest.fastestapi.http.metadata.*;
 import xyz.thinktest.fastestapi.http.metadata.Headers;
 import xyz.thinktest.fastestapi.logger.FastestLogger;
@@ -24,6 +25,7 @@ class Sender {
     private final OkHttpClient client;
     private final Request request;
     private Responder responder;
+    private final HttpCacheInternal httpCacheInternal = HttpCacheInternal.INSTANCE;
 
     public Sender(Metadata metadata, Settings settings){
         try {
@@ -48,7 +50,10 @@ class Sender {
      * @param response response
      */
     private void setResponse(Response response){
-        this.responder = new Responder(response);
+        Class<Responder> responderType = (Class<Responder>) httpCacheInternal.get("fastest.api.http.responder");
+        Responder responder = ApplicationBean.getOriginBean(responderType, new Class<?>[]{Response.class}, new Object[]{response});
+//        this.responder = new DefaultResponder(response);
+        this.responder = responder;
     }
 
     /**

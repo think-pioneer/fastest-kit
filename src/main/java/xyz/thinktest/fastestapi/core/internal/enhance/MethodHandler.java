@@ -12,9 +12,11 @@ import xyz.thinktest.fastestapi.core.internal.enhance.methodhelper.MethodProcess
 import xyz.thinktest.fastestapi.logger.FastestLogger;
 import xyz.thinktest.fastestapi.logger.FastestLoggerFactory;
 import xyz.thinktest.fastestapi.utils.ObjectUtil;
+import xyz.thinktest.fastestapi.utils.reflects.ReflectUtil;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -79,6 +81,10 @@ public class MethodHandler<T> implements MethodEnhancer {
 
     private Object invoke(Method method, MethodProxy methodProxy, Object object, Object[] args){
         try {
+            Class<?> originClass = method.getDeclaringClass();
+            if(ReflectUtil.isInterface(method) || ReflectUtil.isAbstract(method)){
+                return null;
+            }
             return methodProxy.invokeSuper(object, args);
         }catch (Throwable cause){
             throw new EnhanceException(ObjectUtil.format("run method error: {}->{}",method.getDeclaringClass().getName(), method.getName()), cause);

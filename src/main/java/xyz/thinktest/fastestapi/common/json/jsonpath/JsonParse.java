@@ -38,11 +38,11 @@ public class JsonParse {
             return JsonPath.using(config).parse(json).read(path, new TypeRef<T>() {});
         }
 
-        public JSONArray parse(String path, List<Predicate> conditions){
+        public <T> List<T> parse(String path, List<Predicate> conditions){
             return parse(path, conditions.toArray(new Predicate[0]));
         }
 
-        public JSONArray parse(String path, Predicate ...conditions){
+        public <T> List<T> parse(String path, Predicate ...conditions){
             int conditionsLen = conditions.length;
             Selector[] selectors = new Selector[conditionsLen];
             for(int i = 0; i < conditionsLen; i++){

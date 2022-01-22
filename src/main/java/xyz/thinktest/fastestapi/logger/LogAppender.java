@@ -110,7 +110,7 @@ enum LogAppender {
                 BasicFileAttributes attr = Files.readAttributes(path, BasicFileAttributes.class);
                 Instant instant = attr.creationTime().toInstant();
                 Date fileTime = DateTime.newInstance(new Date(instant.toEpochMilli()), DateUtil.FORMAT_A).toDate();
-                Date actualTime = DateUtil.DAY.calculate(new Date(), -1).toDateTime(DateUtil.FORMAT_A).toDate();
+                Date actualTime = DateUtil.DAY.calculate(new Date(), 0).toDateTime(DateUtil.FORMAT_A).toDate();
                 return DateUtil.DAY.diff(fileTime, actualTime) > 0;
             }catch (IOException e){
                 ColorPrint.RED.println("read file error");

@@ -6,6 +6,8 @@ import org.apache.commons.collections4.CollectionUtils;
 import xyz.thinktest.fastestapi.common.json.jsonpath.JsonParse;
 import xyz.thinktest.fastestapi.http.internal.Assert;
 
+import java.util.List;
+
 /**
  * @Date: 2020/10/17
  */
@@ -16,7 +18,7 @@ public class Asserts extends Assert {
         this.jsonString = json;
     }
 
-    private JSONArray parse(String path, Predicate...conditions){
+    private List<?> parse(String path, Predicate...conditions){
         return JsonParse.read(this.jsonString).parse(path, conditions);
     }
 
@@ -81,7 +83,7 @@ public class Asserts extends Assert {
     }
 
     public void assertListEmpty(String assertErrorInfo, String targetPath, Predicate ...conditions){
-        JSONArray result = parse(targetPath, conditions);
+        List<?> result = parse(targetPath, conditions);
         assertTrue(CollectionUtils.isEmpty(result), assertErrorInfo);
     }
 
@@ -90,7 +92,7 @@ public class Asserts extends Assert {
     }
 
     public void assertListNotEmpty(String assertErrorInfo, String targetPath, Predicate ...conditions){
-        JSONArray result = parse(targetPath, conditions);
+        List<?> result = parse(targetPath, conditions);
         assertTrue(CollectionUtils.isNotEmpty(result), assertErrorInfo);
     }
 
@@ -99,7 +101,7 @@ public class Asserts extends Assert {
     }
 
     public void assertListContains(String assertErrorInfo,Object exceptValue, String targetPath, Predicate ...conditions){
-        JSONArray result = parse(targetPath, conditions);
+        List<?> result = parse(targetPath, conditions);
         assertTrue(result.contains(exceptValue), assertErrorInfo);
     }
 

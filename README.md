@@ -72,13 +72,13 @@ Requester就像是一个单独的用户，理论上来说一个用户只能有�
 作为用户时
 
 ```java
-Requester requester = Requester.create(map);
+Requester requester = RequesterFactory.create(map);
 ```
 
 或者
 
 ```java
-Requester requester = Requester.create(header);
+Requester requester = RequesterFactory.create(header);
 ```
 
 以上两种方式都不需要在请求的header中再次指定鉴权信息
@@ -86,7 +86,7 @@ Requester requester = Requester.create(header);
 作为客户端时
 
 ```java
-Requester requester = Requester.create();
+Requester requester = RequesterFactory.create();
 ```
 
 #### 1.1.1.2 构建参数
@@ -94,7 +94,7 @@ Requester requester = Requester.create();
 可进行url、http method、url parameter、form body、json body设置
 
 ```java
-Requester requester = Requester.create(map);
+Requester requester = RequesterFactory.create(map);
 requester.metadata().setUrl();
 requester.metadata().setHttpMethod();
 requester.metadata().setParameters();
@@ -105,7 +105,7 @@ requester.metadata().setJson();
 #### 1.1.1.3 发送请求
 
 ```java
-Requester requester = Requester.create(map);
+Requester requester = RequesterFactory.create(map);
 //构建参数
 requester.metadata().setUrl();
 requester.metadata().setHttpMethod();
@@ -123,7 +123,7 @@ requester.sync();
 重新包装后的响应信息对象。添加断言功能（该功能也添加到requester中）。通常情况我们不会直接new该对象。都是通过requester.getResponse()来获取。
 
 ```java
-Requester requester = Requester.create(map);
+Requester requester = RequesterFactory.create(map);
 requester.sync();
 requester.getResponse();
 ```
@@ -135,7 +135,7 @@ http元数据，包含url，httpmethod，url参数，form，json，header
 用法：
 
 ```java
-Requester requester = Requester.create();
+Requester requester = RequesterFactory.create();
 Metadata metadata = new Metadata();
 metadata.setUrl();
 metadata.setHttpMethod();
@@ -149,7 +149,7 @@ requester.metadata(metadata);//如果之前对requester的metadate做过设置�
 等价于
 
 ```java
-Requester requester = Requester.create(map);
+Requester requester = RequesterFactory.create(map);
 //构建参数
 requester.metadata().setUrl();
 requester.metadata().setHttpMethod();
@@ -169,7 +169,7 @@ public class MyStep implements Step {
 
     @Capture(isThrow = false)
     public void test1(){
-        Requester requester = Requester.create();
+        Requester requester = RequesterFactory.create();
         Headers headers = new Headers();
         headers.write(new Header("cookie", "cookie"));
         requester.metadata().setHeaders(headers);
@@ -198,7 +198,7 @@ public class MyStep implements Step {
 
     @Capture(isThrow = false)
     public Responder test1(){
-        Requester requester = Requester.create();
+        Requester requester = RequesterFactory.create();
         Headers headers = new Headers();
         headers.write(new Header("cookie", "cookie"));
         requester.metadata().setHeaders(headers);

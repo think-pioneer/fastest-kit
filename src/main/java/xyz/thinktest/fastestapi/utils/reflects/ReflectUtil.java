@@ -14,54 +14,71 @@ import java.util.Objects;
 @SuppressWarnings("unchecked")
 public class ReflectUtil {
 
-    public static boolean isPublic(Member member){
-        return Modifier.isPublic(member.getModifiers());
+    public static <T> boolean isPublic(T object){
+        return Modifier.isPublic(getModifiers(object));
     }
 
-    public static boolean isPrivate(Member member){
-        return Modifier.isPrivate(member.getModifiers());
+    public static <T> boolean isPrivate(T object){
+        return Modifier.isPrivate(getModifiers(object));
     }
 
-    public static boolean isProtected(Member member){
-        return Modifier.isProtected(member.getModifiers());
+    public static <T> boolean isProtected(T object){
+        return Modifier.isProtected(getModifiers(object));
     }
 
-    public static boolean isStatic(Member member){
-        return Modifier.isStatic(member.getModifiers());
+    public static <T> boolean isStatic(T object){
+        return Modifier.isStatic(getModifiers(object));
     }
 
-    public static boolean isFinal(Member member){
-        return Modifier.isFinal(member.getModifiers());
+    public static <T> boolean isFinal(T object){
+        return Modifier.isFinal(getModifiers(object));
     }
 
-    public static boolean isSynchronized(Member member){
-        return Modifier.isSynchronized(member.getModifiers());
+    public static <T> boolean isSynchronized(T object){
+        return Modifier.isSynchronized(getModifiers(object));
     }
 
-    public static boolean isVolatile(Member member){
-        return Modifier.isVolatile(member.getModifiers());
+    public static <T> boolean isVolatile(T object){
+        return Modifier.isVolatile(getModifiers(object));
     }
 
-    public static boolean isTransient(Member member){
-        return Modifier.isTransient(member.getModifiers());
+    public static <T> boolean isTransient(T object){
+        return Modifier.isTransient(getModifiers(object));
     }
 
-    public static boolean isNative(Member member){
-        return Modifier.isNative(member.getModifiers());
+    public static <T> boolean isNative(T object){
+        return Modifier.isNative(getModifiers(object));
     }
 
-    public static boolean isInterface(Member member){
-        return Modifier.isInterface(member.getModifiers());
+    public static <T> boolean isInterface(T object){
+        return Modifier.isInterface(getModifiers(object));
     }
 
-    public static boolean isAbstract(Member member){
-        return Modifier.isAbstract(member.getModifiers());
+    public static <T> boolean isAbstract(T object){
+        return Modifier.isAbstract(getModifiers(object));
     }
 
-    public static boolean isStrict(Member member){
-        return Modifier.isStrict(member.getModifiers());
+    public static <T> boolean isStrict(T object){
+        return Modifier.isStrict(getModifiers(object));
     }
 
+    /**
+     * 获得字段、方法、构造方法、类等对象的修饰符
+     */
+    public static <T> int getModifiers(T object){
+        if(object instanceof Member){
+            Member member = (Member) object;
+            return member.getModifiers();
+        } else if(object instanceof Class){
+            Class<?> _class = (Class<?>) object;
+            return _class.getModifiers();
+        }
+        return -1;
+    }
+
+    /**
+     * 获得对象的值
+     */
     public static <T> T get(Object object, String name){
         try{
             InvocationHandler handler = Proxy.getInvocationHandler(object);

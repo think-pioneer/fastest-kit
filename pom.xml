@@ -18,17 +18,17 @@
         <project.reporting.outputEncoding>${encode}</project.reporting.outputEncoding>
         <project.compile.encoding>${encode}</project.compile.encoding>
         <revision>1.0-SNAPSHOT</revision>
-        <kotlin.version>1.6.10</kotlin.version>
+        <kotlin.version>1.4.10</kotlin.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-            <!-- https://mvnrepository.com/artifact/org.ow2.asm/asm -->
-            <dependency>
-                <groupId>org.ow2.asm</groupId>
-                <artifactId>asm</artifactId>
-                <version>9.2</version>
-            </dependency>
+<!--            &lt;!&ndash; https://mvnrepository.com/artifact/org.ow2.asm/asm &ndash;&gt;-->
+<!--            <dependency>-->
+<!--                <groupId>org.ow2.asm</groupId>-->
+<!--                <artifactId>asm</artifactId>-->
+<!--                <version>9.2</version>-->
+<!--            </dependency>-->
             <!-- https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib -->
             <dependency>
                 <groupId>org.jetbrains.kotlin</groupId>

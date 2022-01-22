@@ -99,8 +99,11 @@ public enum  FileUtil {
         if(!path.exists()){
             return;
         }
-        if(isSuffix(path, suffixes)){
-            fileList.add(path);
+        if(path.isFile()){
+            if(isSuffix(path, suffixes)){
+                fileList.add(path);
+            }
+            return;
         }
         File[] files = path.listFiles();
         if(Objects.nonNull(files)){
@@ -116,6 +119,7 @@ public enum  FileUtil {
         }
         if(path.isFile()){
             fileList.add(path);
+            return;
         }
         File[] files = path.listFiles();
         if(Objects.nonNull(files)){

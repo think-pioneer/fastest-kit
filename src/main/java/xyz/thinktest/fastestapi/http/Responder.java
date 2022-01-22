@@ -2,179 +2,76 @@ package xyz.thinktest.fastestapi.http;
 
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import xyz.thinktest.fastestapi.common.exceptions.HttpException;
-import xyz.thinktest.fastestapi.common.json.JSONFactory;
-import xyz.thinktest.fastestapi.http.metadata.Header;
 import xyz.thinktest.fastestapi.http.metadata.Headers;
 import xyz.thinktest.fastestapi.http.metadata.Json;
-import xyz.thinktest.fastestapi.logger.FastestLogger;
-import xyz.thinktest.fastestapi.logger.FastestLoggerFactory;
 
-import java.io.*;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
- *
- * @Date: 2020/11/15
- * @Desc: http response object
+ * http response
  */
-
-public class Responder {
-    private static final FastestLogger logger = FastestLoggerFactory.getLogger(Responder.class);
-    private final Response response;
-    private final int httpCode;
-    private final ResponseBody body;
-    private final String bodyString;
-    private final InputStream bodyInputStream;
-    private final byte[] bodyBytes;
-    public final Asserts asserts;
-
-    Responder(Response response) {
-        this.response = response;
-        this.httpCode = this.response.code();
-        this.body = this.response.body();
-        if(Objects.isNull(this.body)){
-            throw new HttpException("response body is null");
-        }
-        try {
-            bodyBytes = this.body.bytes();
-        }catch (IOException e){
-            throw new HttpException("read body exception", e);
-        }
-        this.bodyString = new String(bodyBytes, StandardCharsets.UTF_8);
-        this.bodyInputStream = new ByteArrayInputStream(bodyBytes);
-        this.asserts = new Asserts(this.bodyString);
-    }
-
-    public void respInfo(){
-        logger.info("**********HTTP RESPONSE**********\n" +
-                "Http Status Code:{}\n" +
-                "Http Response Header:{}\n" +
-                "Http Response body:{}", this.httpCode, this.getHeaders(), this.bodyString);
-    }
+public interface Responder {
 
     /**
-     * http status code
-     * @return http status code
+     * 打印http响应
      */
-    public int getStatusCode(){
-        return this.httpCode;
-    }
+    void printResponse();
 
     /**
-     * response body
-     * @return response body
+     *http响应码，非业务响应码
      */
-    public ResponseBody getBody(){
-        return this.body;
-    }
+    int stateCode();
 
     /**
-     * get body byte[]
-     * @return body byte
+     * http body
      */
-    public byte[] getBodyBytes(){
-        return this.bodyBytes;
-    }
+    ResponseBody body();
+
+    /**
+     *将body转成二进制
+     */
+    byte[] bodyToBytes();
 
     /**
      * response body(string)(utf-8)
-     * @return response body
      */
-    public String getBodyString(){
-        return this.bodyString;
-    }
+    String bodyToString();
 
     /**
-     * custom Charset
-     * @param charset charset
-     * @return string
+     * response body(string)自定义字符
      */
-    public String getBodyString(Charset charset){
-        return new String(this.bodyBytes, charset);
-    }
+    String bodyToString(Charset charset);
 
     /**
-     * response body(json)
-     * @return response body
+     * response body to json
      */
-    public Json getBodyJson(){
-        Json json = Json.newEmptyInstance();
-        json.append(JSONFactory.stringToJson(this.bodyString));
-        return json;
-    }
+    Json bodyToJson();
 
     /**
-     * get origin response
-     * @return okhttp response
+     * 获取okhttp的响应对象
      */
-    public Response originalResponse(){
-        return this.response;
-    }
+    Response originalResponse();
 
     /**
-     * get all header
-     * @return headers
+     * 获取所有响应头
      */
-    public Headers getHeaders(){
-        Headers headers = Headers.newEmptyInstance();
-        this.response.headers().forEach((e) -> headers.write(new Header(e.getFirst(), e.getSecond())));
-        return headers;
-    }
+    Headers headers();
 
     /**
-     * get header by key
+     *获取指定key的响应头
      * @param key header key
-     * @return header value
+     * @return 指定header key的value
      */
-    public String getHeader(String key){
-        return this.response.header(key);
-    }
+    String header(String key);
 
     /**
-     * download
-     * @param path save file's path. if folder will use response header Content-Disposition value as name
+     * 下载文件
+     * @param path 文件保存路径
      */
-    public void download(String path){
-        File file = new File(path);
-        if(!file.exists()){
-            throw new HttpException("not found path: " + file.getAbsolutePath());
-        }
-
-        if(file.isDirectory()){
-            String header = this.getHeader("Content-Disposition");
-            Pattern pattern = Pattern.compile(".*filename=\"(.*)\"");
-            Matcher matcher = pattern.matcher(header);
-            if(!matcher.find()){
-                throw new HttpException("not found file name form header");
-            }
-            file = new File(file, matcher.group(1));
-        }
-        this.download(file);
-
-    }
+    void download(String path);
 
     /**
-     * download execute
-     * @param file save file's path
+     * 将响应填充到asserts对象中，可以直接用来进行断言
      */
-    private void download(File file){
-        try {
-            FileOutputStream fos = new FileOutputStream(file);
-            int len;
-            byte[] buf = new byte[2048];
-            while ((len = this.bodyInputStream.read(buf)) != -1) {
-                fos.write(buf, 0, len);
-            }
-            fos.flush();
-            fos.close();
-            this.bodyInputStream.close();
-        }catch (IOException e){
-            throw new HttpException("download fail", e);
-        }
-    }
+    Asserts asserts();
 }

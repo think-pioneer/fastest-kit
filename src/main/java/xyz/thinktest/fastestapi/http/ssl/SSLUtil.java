@@ -20,13 +20,7 @@ public final class SSLUtil {
 
     //获取HostnameVerifier
     public static HostnameVerifier getHostnameVerifier() {
-        HostnameVerifier hostnameVerifier = new HostnameVerifier() {
-            @Override
-            public boolean verify(String s, SSLSession sslSession) {
-                return true;
-            }
-        };
-        return hostnameVerifier;
+        return (s, sslSession) -> true;
     }
 
     public static X509TrustManager getTrustManager() {
