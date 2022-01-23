@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.jayway.jsonpath.*;
 import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;
 import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
-import net.minidev.json.JSONArray;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -31,18 +31,21 @@ public class JsonParse {
         }
 
         public <T> T parse(String path, Class<T> clazz){
+            path = StringUtils.isEmpty(path) ? "$" : path;
             return JsonPath.using(config).parse(json).read(path, clazz);
         }
 
         public <T> T parse(String path){
+            path = StringUtils.isEmpty(path) ? "$" : path;
             return JsonPath.using(config).parse(json).read(path, new TypeRef<T>() {});
         }
 
-        public <T> List<T> parse(String path, List<Predicate> conditions){
+        public <T> T parse(String path, List<Predicate> conditions){
             return parse(path, conditions.toArray(new Predicate[0]));
         }
 
-        public <T> List<T> parse(String path, Predicate ...conditions){
+        public <T> T parse(String path, Predicate ...conditions){
+            path = StringUtils.isEmpty(path) ? "$" : path;
             int conditionsLen = conditions.length;
             Selector[] selectors = new Selector[conditionsLen];
             for(int i = 0; i < conditionsLen; i++){
