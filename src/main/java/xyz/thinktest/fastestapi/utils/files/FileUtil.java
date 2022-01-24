@@ -25,7 +25,7 @@ public enum  FileUtil {
                 String path = FileUtil.class.getResource("").getPath();
                 path = path.replace("file:/", "").split("!")[0];
                 path = URLDecoder.decode(path, "UTF-8");
-                resourcePath = new File(new File(path).getParent(), "resources");
+                resourcePath = new File(new File(path).getParent());
             } else {
                 //非jar模式
                 resourcePath = new File(new File(url.getFile()).getParentFile(), "classes");

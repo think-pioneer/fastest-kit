@@ -81,8 +81,7 @@ public class MethodHandler<T> implements MethodEnhancer {
 
     private Object invoke(Method method, MethodProxy methodProxy, Object object, Object[] args){
         try {
-            Class<?> originClass = method.getDeclaringClass();
-            if(ReflectUtil.isInterface(method) || ReflectUtil.isAbstract(method)){
+            if(ReflectUtil.isInterface(method) || ReflectUtil.isAbstract(method) || method.isDefault()){
                 return null;
             }
             return methodProxy.invokeSuper(object, args);

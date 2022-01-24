@@ -3,8 +3,6 @@ package xyz.thinktest.fastestapi.http;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static com.sun.corba.se.impl.util.RepositoryId.cache;
-
 /**
  * @author: aruba
  * @date: 2022-01-23
@@ -87,7 +85,7 @@ public class AssertsTest {
             "}\n";
 
     public void assertAllEqualTest(){
-        Asserts<?> asserts = new Asserts<>(jsonOrigin);
+        Asserts asserts = new Asserts(jsonOrigin);
         boolean flag = false;
         try {
             asserts.assertAllEqual(jsonResult, "");

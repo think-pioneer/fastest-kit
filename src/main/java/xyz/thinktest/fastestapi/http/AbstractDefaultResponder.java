@@ -43,6 +43,7 @@ abstract class AbstractDefaultResponder implements Responder{
         this.bodyInputStream = new ByteArrayInputStream(bodyBytes);
         this.asserts = new Asserts(this.bodyString);
     }
+
     @Override
     public void printResponse() {
         logger.info("**********HTTP RESPONSE**********\n" +

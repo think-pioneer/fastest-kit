@@ -7,24 +7,18 @@ import xyz.thinktest.fastestapi.common.json.JSONFactory;
 import xyz.thinktest.fastestapi.common.json.jsonpath.JsonParse;
 import xyz.thinktest.fastestapi.http.internal.Assert;
 
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @Date: 2020/10/17
  */
-public class Asserts<T> extends Assert {
+public class Asserts extends Assert {
     private final String jsonString;
 
     Asserts(String json){
         this.jsonString = json;
-    }
-
-    private T parse(String path, Predicate...conditions){
-        return JsonParse.read(this.jsonString).parse(path, conditions);
     }
 
     private Object parse(String path){
@@ -88,7 +82,7 @@ public class Asserts<T> extends Assert {
     }
 
     public void assertListEmpty(String assertErrorInfo, String targetPath, Predicate ...conditions){
-        List<T> result = (List<T>) parse(targetPath, conditions);
+        List<?> result = JsonParse.read(this.jsonString).parse(targetPath, conditions);
         assertTrue(CollectionUtils.isEmpty(result), assertErrorInfo);
     }
 
@@ -97,7 +91,7 @@ public class Asserts<T> extends Assert {
     }
 
     public void assertListNotEmpty(String assertErrorInfo, String targetPath, Predicate ...conditions){
-        List<T> result = (List<T>) parse(targetPath, conditions);
+        List<?> result = JsonParse.read(this.jsonString).parse(targetPath, conditions);
         assertTrue(CollectionUtils.isNotEmpty(result), assertErrorInfo);
     }
 
@@ -106,7 +100,7 @@ public class Asserts<T> extends Assert {
     }
 
     public void assertListContains(String assertErrorInfo,Object exceptValue, String targetPath, Predicate ...conditions){
-        List<T> result = (List<T>) parse(targetPath, conditions);
+        List<?> result = JsonParse.read(this.jsonString).parse(targetPath, conditions);
         assertTrue(result.contains(exceptValue), assertErrorInfo);
     }
 
@@ -128,44 +122,10 @@ public class Asserts<T> extends Assert {
         } else {
             exceptNode = JSONFactory.stringToJson(exceptValue.toString());
         }
-        JsonNode resultNode = JSONFactory.objectToJson(parse(targetPath, conditions));
-        CompletableFuture<Void> exceptFuture = CompletableFuture.runAsync(() -> jsonNodeIter("", exceptNode, exceptMap));
-        CompletableFuture<Void> resultFuture = CompletableFuture.runAsync(() -> jsonNodeIter("", resultNode, resultMap));
+        JsonNode resultNode = JSONFactory.objectToJson(JsonParse.read(this.jsonString).parse(targetPath, conditions));
+        CompletableFuture<Void> exceptFuture = CompletableFuture.runAsync(() -> JsonParse.jsonNodeIter(exceptNode, exceptMap));
+        CompletableFuture<Void> resultFuture = CompletableFuture.runAsync(() -> JsonParse.jsonNodeIter(resultNode, resultMap));
         CompletableFuture.allOf(exceptFuture, resultFuture).join();
         assertTrue(exceptMap.equals(resultMap), assertErrorInfo);
-    }
-
-    private void jsonNodeIter(String key, JsonNode node, Map<String, Object> kvMap) {
-        if (node.isValueNode())
-        {
-            kvMap.put(key, node.toString());
-            return;
-        }
-
-        if (node.isObject())
-        {
-            Iterator<Map.Entry<String, JsonNode>> it = node.fields();
-            while (it.hasNext())
-            {
-                Map.Entry<String, JsonNode> entry = it.next();
-                jsonNodeIter(key + "." +entry.getKey(), entry.getValue(), kvMap);
-            }
-        }
-
-        if (node.isArray())
-        {
-            Iterator<JsonNode> it = node.iterator();
-            int flag = 0;
-            while (it.hasNext())
-            {
-                int arrayFlag = key.lastIndexOf("[");
-                if(arrayFlag != -1){
-                    key = key.substring(0, key.lastIndexOf("["));
-                }
-                key = key + "[" + flag + "]";
-                jsonNodeIter(key, it.next(), kvMap);
-                flag++;
-            }
-        }
     }
 }

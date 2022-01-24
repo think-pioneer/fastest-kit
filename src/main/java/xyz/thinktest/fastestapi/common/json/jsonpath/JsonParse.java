@@ -5,8 +5,11 @@ import com.jayway.jsonpath.*;
 import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;
 import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
 import org.apache.commons.lang3.StringUtils;
+import xyz.thinktest.fastestapi.common.json.JSONFactory;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Date: 2020/10/23
@@ -15,6 +18,48 @@ public class JsonParse {
     private static final Configuration config = Configuration.defaultConfiguration()
             .jsonProvider(new JacksonJsonNodeJsonProvider())
             .mappingProvider(new JacksonMappingProvider());
+
+    public static void jsonNodeIter(JsonNode json, Map<String, Object> map){
+        jsonNodeIter("", json, map);
+    }
+
+    public static void jsonNodeIter(String json, Map<String, Object> map){
+        jsonNodeIter("", JSONFactory.stringToJson(json), map);
+    }
+
+    private static void jsonNodeIter(String key, JsonNode node, Map<String, Object> kvMap) {
+        if (node.isValueNode())
+        {
+            kvMap.put(key, node.toString());
+            return;
+        }
+
+        if (node.isObject())
+        {
+            Iterator<Map.Entry<String, JsonNode>> it = node.fields();
+            while (it.hasNext())
+            {
+                Map.Entry<String, JsonNode> entry = it.next();
+                jsonNodeIter(key + "." +entry.getKey(), entry.getValue(), kvMap);
+            }
+        }
+
+        if (node.isArray())
+        {
+            Iterator<JsonNode> it = node.iterator();
+            int flag = 0;
+            while (it.hasNext())
+            {
+                int arrayFlag = key.lastIndexOf("[");
+                if(arrayFlag != -1){
+                    key = key.substring(0, key.lastIndexOf("["));
+                }
+                key = key + "[" + flag + "]";
+                jsonNodeIter(key, it.next(), kvMap);
+                flag++;
+            }
+        }
+    }
 
     public static Read read(String json){
         return new Read(json);

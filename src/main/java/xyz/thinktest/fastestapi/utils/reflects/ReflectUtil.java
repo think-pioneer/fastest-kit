@@ -91,6 +91,22 @@ public class ReflectUtil {
         }
     }
 
+    public static <T> Class<T> forName(String name){
+        try{
+            return (Class<T>) Class.forName(name);
+        }catch (Exception e){
+            throw new ReflectionException("not found class:" + name, e.getCause());
+        }
+    }
+
+    public static <T> Class<T> forName(String name, boolean initialize, ClassLoader loader){
+        try{
+            return (Class<T>) Class.forName(name, initialize, loader);
+        }catch (Exception e){
+            throw new ReflectionException("not found class:" + name, e.getCause());
+        }
+    }
+
     /**
      * Gets the true type of the collection element
      */

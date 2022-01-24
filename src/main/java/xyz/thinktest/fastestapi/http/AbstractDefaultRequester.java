@@ -1,12 +1,15 @@
 package xyz.thinktest.fastestapi.http;
 
 import xyz.thinktest.fastestapi.common.exceptions.FastestBasicException;
+import xyz.thinktest.fastestapi.logger.FastestLogger;
+import xyz.thinktest.fastestapi.logger.FastestLoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 abstract class AbstractDefaultRequester implements Requester {
+    private final static FastestLogger logger = FastestLoggerFactory.getLogger(AbstractDefaultRequester.class);
     private final Map<Object, Object> authentication = new HashMap<>();
     private final Metadata metadata;
     private final Settings settings;
@@ -60,11 +63,6 @@ abstract class AbstractDefaultRequester implements Requester {
     }
 
     @Override
-    public void printResponse() {
-        this.responder.printResponse();
-    }
-
-    @Override
     public void sync() {
         this.send(true);
     }
@@ -112,5 +110,13 @@ abstract class AbstractDefaultRequester implements Requester {
         if(requesterSettings.isCleanBody()){
             this.metadata.headersRecovery().parametersRecovery().formRecovery().jsonRecovery();
         }
+    }
+
+    @Override
+    public void printResponse() {
+        logger.info("**********HTTP RESPONSE**********\n" +
+                "Http Status Code:{}\n" +
+                "Http Response Header:{}\n" +
+                "Http Response body:{}", this.responder.stateCode(), this.responder.headers(), this.responder.bodyToString());
     }
 }

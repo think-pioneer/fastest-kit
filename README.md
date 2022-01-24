@@ -381,15 +381,15 @@ public class CaseTest {
 | key   | string | ""     | 配置文件中的key（和value的区别，需要输入字段名）             |
 | file  | string | ""     | 指定配置文件名，需要从resources下的完整路径，不能只提供一个文件名，因为文件名也会重复 |
 
-### 1.2.4 @Singleton
+### 1.2.4 @MultipleInstance
 
 #### 用法说明
 
-创建单例实例
+创建多实例。框架默认在生成实例时是单例（模拟的单例），这是为了能减少性能开销。如果需要多实例，则只需要添加该注解，则会每次生成不同的实例
 
 ```java
 @Component
-@Singleton
+@MultipleInstance
 public class HelloController {
 }
 ```
@@ -870,7 +870,9 @@ public class CaseTest {
 
 ## 1.5 Step
 
-Step为该模块定义的[测试三层](# 1.0 用例分层思想)中的step层，所有step需要继承并实现Step类
+Step为该模块定义的[测试三层](# 1.0 用例分层思想)中的step层，所有step需要继承并实现Step类。
+
+继承Step类的目的是为了方便框架执行recovery操作，该继承并不是必须的操作。
 
 ```java
 import org.testng.step.Step;
@@ -902,8 +904,8 @@ pom.xml
 ```xml
     <dependencies>
         <dependency>
-            <groupId>org.fastest</groupId>
-            <artifactId>fastest-starter</artifactId>
+            <groupId>xyz.thinktest</groupId>
+            <artifactId>fastest-web</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
@@ -939,7 +941,7 @@ pom.xml
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-
+                <version>3.3.0</version>
                 <executions>
                     <execution>
                         <id>jar-with-dependencies</id>
@@ -989,7 +991,7 @@ assembly.xml
     <fileSets>
         <fileSet>
             <directory>src/main/resources</directory>
-            <outputDirectory>resources</outputDirectory>
+            <outputDirectory>/</outputDirectory>
         </fileSet>
         <fileSet>
             <directory>target</directory>

@@ -23,12 +23,12 @@
 
     <dependencyManagement>
         <dependencies>
-<!--            &lt;!&ndash; https://mvnrepository.com/artifact/org.ow2.asm/asm &ndash;&gt;-->
-<!--            <dependency>-->
-<!--                <groupId>org.ow2.asm</groupId>-->
-<!--                <artifactId>asm</artifactId>-->
-<!--                <version>9.2</version>-->
-<!--            </dependency>-->
+            <!-- https://mvnrepository.com/artifact/org.ow2.asm/asm -->
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm</artifactId>
+                <version>9.2</version>
+            </dependency>
             <!-- https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib -->
             <dependency>
                 <groupId>org.jetbrains.kotlin</groupId>
@@ -108,12 +108,17 @@
             <artifactId>okhttp</artifactId>
             <version>4.9.2</version>
         </dependency>
-
         <!-- https://mvnrepository.com/artifact/commons-beanutils/commons-beanutils -->
         <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
             <version>1.9.4</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-simple -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.33</version>
         </dependency>
     </dependencies>
 

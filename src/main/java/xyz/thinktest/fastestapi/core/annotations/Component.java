@@ -10,5 +10,4 @@ import java.lang.annotation.*;
 @Documented
 @Inherited
 public @interface Component {
-//    Class<? extends EasyEnhancer> value() default EasyHandler.class;
 }

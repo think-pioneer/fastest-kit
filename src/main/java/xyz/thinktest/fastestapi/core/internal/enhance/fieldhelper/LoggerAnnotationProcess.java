@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import xyz.thinktest.fastestapi.core.enhance.joinpoint.Target;
 import xyz.thinktest.fastestapi.core.enhance.joinpoint.field.JoinPoint;
 import xyz.thinktest.fastestapi.core.internal.enhance.LogFactory;
+import xyz.thinktest.fastestapi.logger.FastestLogger;
 import xyz.thinktest.fastestapi.utils.ObjectUtil;
 import xyz.thinktest.fastestapi.common.exceptions.EnhanceException;
 import xyz.thinktest.fastestapi.core.annotations.LoggerJoin;
@@ -27,8 +28,8 @@ public class LoggerAnnotationProcess<T> extends AbstractFieldProcess<T> {
         Target<T> target = joinPoint.getTarget();
         LoggerJoin loggerJoin = (LoggerJoin) joinPoint.getAnnotation();
         Class<?> fieldType = field.getType();
-        if(!"org.fastest.logger.FastLogger".equals(fieldType.getName())){
-            throw new EnhanceException("@LoggerSlf4j must annotated org.fastest.logger.FastLogger type");
+        if(!FastestLogger.class.equals(fieldType)){
+            throw new EnhanceException("@LoggerJoin must annotated org.fastest.logger.FastLogger type");
         }
         if(!Modifier.isStatic(field.getModifiers())){
             throw new EnhanceException(ObjectUtil.format("Field {} is not static", field.getName()));

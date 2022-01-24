@@ -5,7 +5,7 @@ import xyz.thinktest.fastestapi.core.enhance.joinpoint.field.FieldAnnotationProc
 import xyz.thinktest.fastestapi.core.enhance.joinpoint.field.JoinPoint;
 import xyz.thinktest.fastestapi.core.internal.enhance.EnhanceFactory;
 import xyz.thinktest.fastestapi.core.annotations.Component;
-import xyz.thinktest.fastestapi.core.annotations.Singleton;
+import xyz.thinktest.fastestapi.core.annotations.MultipleInstance;
 
 import java.lang.reflect.Field;
 import java.util.Objects;
@@ -36,12 +36,13 @@ public class ComponentAnnotationProcess<T> implements FieldAnnotationProcessable
         Target<T> target = joinPoint.getTarget();
         Object instance = null;
         boolean hasArguments = Objects.nonNull(argumentTypes) && Objects.nonNull(arguments);
-        Singleton singleton = clazz.getDeclaredAnnotation(Singleton.class);
-        if (Objects.nonNull(singleton)) {
+        MultipleInstance multipleInstance = clazz.getAnnotation(MultipleInstance.class);
+        //如果未启用多实例，则默认按照单例来处理  # 优化新能，频繁创建实例影响性能
+        if (Objects.isNull(multipleInstance)) {
             instance = instanceCache.get(clazz.hashCode());
         }
         if(Objects.isNull(instance)){
-            Component component = clazz.getDeclaredAnnotation(Component.class);
+            Component component = clazz.getAnnotation(Component.class);
             if (Objects.nonNull(component) && !isOrigin) {
                 if (hasArguments) {
                     instance = EnhanceFactory.enhance(clazz, argumentTypes, arguments);
