@@ -728,14 +728,8 @@ public class CaseTest {
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Before(RestMetadataProcess.class)
-public @interface RestMetadata {
-    String serverName() default "";
-    String apiName();
-    String desc() default "";
-    boolean auto() default true;
-    boolean sync() default true;
-}
+@Before(CustomAnnImpl.class)
+public @interface CustomAnn {}
 ```
 
 表示@RestMetadata在被注解方法执行之前执行。
