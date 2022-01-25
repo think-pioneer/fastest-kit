@@ -28,8 +28,8 @@ public class JsonParse {
     }
 
     private static void jsonNodeIter(String key, JsonNode node, Map<String, Object> kvMap) {
-        if (node.isValueNode())
-        {
+        if (node.isValueNode()) {
+            key = key.startsWith(".") ? key.substring(1) : key;
             kvMap.put(key, node.toString());
             return;
         }

@@ -1,12 +1,18 @@
 package xyz.thinktest.fastestapi.utils.files;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.lang3.StringUtils;
+import org.yaml.snakeyaml.Yaml;
 import xyz.thinktest.fastestapi.common.exceptions.FileException;
+import xyz.thinktest.fastestapi.common.json.JSONFactory;
+import xyz.thinktest.fastestapi.common.json.jsonpath.JsonParse;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * @Date: 2020/10/24
@@ -16,13 +22,27 @@ public enum  PropertyUtil {
     private final Properties properties;
     private final ConcurrentHashMap<String, Properties> propertiesMap;
     PropertyUtil(){
-        this.properties = new Properties();
-        this.propertiesMap = new ConcurrentHashMap<>();
-        this.properties.putAll(System.getProperties());
-        List<File> fileList = new ArrayList<>();
-        FileUtil.collect(FileUtil.getClassPath(), fileList, new String[]{"properties"});
         try {
-            for (File file : fileList) {
+            this.properties = new Properties();
+            this.propertiesMap = new ConcurrentHashMap<>();
+            this.properties.putAll(System.getProperties());
+            List<File> fileList = new ArrayList<>();
+            FileUtil.collect(FileUtil.getClassPath(), fileList, new String[]{"properties", "yaml", "yml", "json"});
+            List<File> propertiesFileList = fileList.stream().filter(file -> file.getAbsolutePath().endsWith("properties")).collect(Collectors.toList());
+            List<File> yamlFileList = fileList.stream().filter(file -> file.getAbsolutePath().endsWith("yaml") || file.getAbsolutePath().endsWith("yml")).collect(Collectors.toList());
+            List<File> jsonFileList = fileList.stream().filter(file -> file.getAbsolutePath().endsWith("json")).collect(Collectors.toList());
+            CompletableFuture<Void> propertyFuture = CompletableFuture.runAsync(() -> propertyHandler(propertiesFileList));
+            CompletableFuture<Void> yamlFuture = CompletableFuture.runAsync(() -> yamlHandler(yamlFileList));
+            CompletableFuture<Void> jsonFuture = CompletableFuture.runAsync(() -> jsonHandler(jsonFileList));
+            CompletableFuture.allOf(propertyFuture, yamlFuture, jsonFuture).join();
+        }catch (Throwable e){
+            throw new FileException("properties initialize error", e);
+        }
+    }
+
+    private void propertyHandler(List<File> list){
+        try {
+            for (File file : list) {
                 String name = file.getAbsolutePath();
                 if (!name.endsWith("log4j2.properties") && !name.contains("log4j") && !name.endsWith("pom.properties")) {
                     Properties properties = new Properties();
@@ -32,7 +52,45 @@ public enum  PropertyUtil {
                 }
             }
         }catch (IOException e){
-            throw new FileException("properties initialize error", e);
+            throw new FileException("properties handler error: "+ e.getMessage(), e);
+        }
+    }
+
+    private void yamlHandler(List<File> list){
+        try {
+            for (File file : list) {
+                if(file.getParent().endsWith("apiconfig_custom")){
+                    continue;
+                }
+                Yaml yaml = new Yaml();
+                Map<String, Object> yamlOfMap = yaml.load(FileUtil.read(file));
+                JsonNode jsonNode = JSONFactory.objectToJson(yamlOfMap);
+                TreeMap<String, Object> treeMap = new TreeMap<>();
+                JsonParse.jsonNodeIter(jsonNode, treeMap);
+                Properties properties = new Properties();
+                properties.putAll(treeMap);
+                this.properties.putAll(properties);
+                this.propertiesMap.put(file.getAbsolutePath(), properties);
+            }
+        }catch (Exception e){
+            throw new FileException("yaml handler error:" + e.getMessage(), e);
+        }
+    }
+
+    private void jsonHandler(List<File> list){
+        try {
+            for (File file : list) {
+                TreeMap<String, Object> treeMap = new TreeMap<>();
+                String fileName = file.getAbsolutePath();
+                JsonNode jsonNode = JSONFactory.read(file);
+                JsonParse.jsonNodeIter(jsonNode, treeMap);
+                Properties properties = new Properties();
+                properties.putAll(treeMap);
+                this.properties.putAll(properties);
+                this.propertiesMap.put(fileName, properties);
+            }
+        }catch (Exception e){
+            throw new FileException("json handler error:" + e.getMessage(), e);
         }
     }
 

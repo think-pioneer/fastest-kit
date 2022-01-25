@@ -2,6 +2,7 @@ package xyz.thinktest.fastestapi.core.rest.http.metadata;
 
 import xyz.thinktest.fastestapi.common.yaml.ListConstructor;
 import xyz.thinktest.fastestapi.utils.files.FileUtil;
+import xyz.thinktest.fastestapi.utils.files.PropertyUtil;
 import xyz.thinktest.fastestapi.utils.files.YamlUtil;
 import org.yaml.snakeyaml.TypeDescription;
 
@@ -99,9 +100,7 @@ public final class ReadApiConfig {
      * @return api config object
      */
     private static List<Server> init(){
-        System.out.println("我是path");
-        System.out.println(FileUtil.getClassPath());
-        String apiConfName = YamlUtil.getString("api.config.folder.path");
+        String apiConfName = PropertyUtil.getProperty("api.config.folder.path");
         if(Objects.nonNull(apiConfName)){
             folderName = apiConfName;
         }

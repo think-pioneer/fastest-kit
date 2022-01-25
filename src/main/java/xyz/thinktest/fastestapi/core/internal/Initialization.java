@@ -4,7 +4,7 @@ import xyz.thinktest.fastestapi.core.internal.configuration.SystemConfig;
 import xyz.thinktest.fastestapi.common.exceptions.FastestBasicException;
 import xyz.thinktest.fastestapi.http.DefaultResponder;
 import xyz.thinktest.fastestapi.http.HttpCacheInternal;
-import xyz.thinktest.fastestapi.utils.files.YamlUtil;
+import xyz.thinktest.fastestapi.utils.files.PropertyUtil;
 
 import java.util.Objects;
 
@@ -17,7 +17,6 @@ public class Initialization {
     public static void init(){
         try{
             realInit();
-            readResponder();
         }catch (Exception e){
             throw new FastestBasicException("initialization fail", e);
         }
@@ -25,14 +24,20 @@ public class Initialization {
 
     private static void realInit(){
         SystemConfig.disableWarning();
+        SystemConfig.disableSlf4jBindingWarning();
+        readResponder();
     }
 
-    private static void readResponder() throws ClassNotFoundException {
-        String responderClass = YamlUtil.getString("fastest.api.http.responder");
-        if(Objects.isNull(responderClass)){
-            responderClass = DefaultResponder.class.getCanonicalName();
+    private static void readResponder() {
+        try {
+            String responderClass = PropertyUtil.getProperty("fastest.api.http.responder");
+            if (Objects.isNull(responderClass)) {
+                responderClass = DefaultResponder.class.getCanonicalName();
+            }
+            httpCacheInternal.set("fastest.api.http.responder", Class.forName(responderClass));
+        }catch (ClassNotFoundException e){
+            throw new FastestBasicException("load class fail", e);
         }
-        httpCacheInternal.set("fastest.api.http.responder", Class.forName(responderClass));
     }
 
 }

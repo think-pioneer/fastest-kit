@@ -19,4 +19,8 @@ public final class SystemConfig {
 
         }
     }
+
+    public static void disableSlf4jBindingWarning(){
+        System.setProperty("java.vendor.url", "android");
+    }
 }

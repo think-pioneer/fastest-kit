@@ -5,6 +5,7 @@ import org.testng.annotations.Test;
 
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 @Test
 public class JsonPathTest {
@@ -55,5 +56,11 @@ public class JsonPathTest {
     public void parseTest(){
         Map<String, Object> map = JsonParse.read(json).parse("store");
         Assert.assertTrue(map.get("book") instanceof List);
+    }
+
+    public void jsonNodeIterTest(){
+        TreeMap<String, Object> treeMap = new TreeMap<>();
+        JsonParse.jsonNodeIter(json, treeMap);
+        Assert.assertFalse(treeMap.isEmpty());
     }
 }

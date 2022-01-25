@@ -44,6 +44,6 @@ public final class RestTempWrite {
         Yaml yaml = new Yaml(options);
         StringWriter sw = new StringWriter();
         yaml.dumpAll(list.iterator(), sw);
-        writer.write(String.valueOf(sw).replace("!!org.fastest.core.rest.http.metadata.ReadApiConfig$Server", "").trim());
+        writer.write(String.valueOf(sw).replace("!!xyz.thinktest.fastestapi.core.rest.http.metadata.ReadApiConfig$Server", "").trim());
     }
 }

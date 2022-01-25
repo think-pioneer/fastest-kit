@@ -6,7 +6,7 @@ import xyz.thinktest.fastestapi.core.enhance.joinpoint.field.JoinPoint;
 import xyz.thinktest.fastestapi.utils.ObjectUtil;
 import xyz.thinktest.fastestapi.common.exceptions.ValueException;
 import xyz.thinktest.fastestapi.core.annotations.Value;
-import xyz.thinktest.fastestapi.utils.files.YamlUtil;
+import xyz.thinktest.fastestapi.utils.files.PropertyUtil;
 import xyz.thinktest.fastestapi.utils.reflects.FieldHelper;
 import xyz.thinktest.fastestapi.utils.reflects.ReflectUtil;
 
@@ -48,9 +48,9 @@ public class ValueAnnotationProcess<T> extends AbstractFieldProcess<T> {
         }
         String val;
         if(StringUtils.isEmpty(fileName)){
-            val = YamlUtil.getString(key);
+            val = PropertyUtil.getProperty(key);
         } else {
-            val = YamlUtil.getString(fileName, key);
+            val = PropertyUtil.getProperty(fileName, key);
         }
         if(Objects.nonNull(val)){
             setField(field, fieldType, val, joinPoint.getTarget());

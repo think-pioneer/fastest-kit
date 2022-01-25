@@ -480,7 +480,7 @@ public class CaseTest {
 
 自动装载api配置文件中的host、uri，httpmethod信息
 
-配置文件的位置默认在resources/apiconfig下，会读取该目录下(包括子目录)所有的json文件，所以该目录请只放api配置文件(yaml格式)。如需自定义apiconf目录的路径，则在配置文件（yaml）中加入节点api.config.folder.path=YOURPATH
+配置文件的位置默认在apiconfig下，会读取该目录下(包括子目录)所有的配置文件，所以该目录请只放api配置文件(yaml格式)。如需自定义apiconf目录的路径，则在配置文件（yaml）中加入节点api.config.folder.path=YOURPATH
 
 api配置文件模板可通过"ReadApiConfig.printTemplate();"查看，该方法也会返回该模板
 

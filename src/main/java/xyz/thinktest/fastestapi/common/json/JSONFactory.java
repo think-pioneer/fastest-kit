@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import xyz.thinktest.fastestapi.common.exceptions.JsonException;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -30,6 +31,22 @@ public class JSONFactory {
     public static JsonNode read(InputStream stream){
         try {
             return mapper.readTree(stream);
+        }catch (IOException e){
+            throw new JsonException("stream to json node fail", e);
+        }
+    }
+
+    public static JsonNode read(File file){
+        try {
+            return mapper.readTree(file);
+        }catch (IOException e){
+            throw new JsonException("stream to json node fail", e);
+        }
+    }
+
+    public static JsonNode read(String file){
+        try {
+            return mapper.readTree(file);
         }catch (IOException e){
             throw new JsonException("stream to json node fail", e);
         }
@@ -103,10 +120,14 @@ public class JSONFactory {
      */
     public static <T> T stringToObject(String jsonString, Class<?> collectionClass, Class<?> ...elementClasses){
         JavaType javaType = mapper.getTypeFactory().constructParametricType(collectionClass, elementClasses);
+        return stringToObject(jsonString, javaType);
+    }
+
+    public static <T> T stringToObject(String json, JavaType javaType){
         try {
-            return mapper.readValue(jsonString, javaType);
+            return mapper.readValue(json, javaType);
         } catch (JsonProcessingException e) {
-            throw new JsonException("string to object fail:(json=" + jsonString + ",collectionType=" + collectionClass.getName() + ",elementType=" + Arrays.toString(elementClasses), e);
+            throw new JsonException("string to object fail:(json=" + json, e);
         }
     }
 

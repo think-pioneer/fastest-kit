@@ -53,7 +53,7 @@ public class RestTempProcess<T> extends AbstractRestAnnotationProcess<T> {
             uri.setHost(host);
             uri.setUrl(url);
             server.setUris(new ArrayList<ReadApiConfig.Uri>(){{add(uri);}});
+            RestTempWrite.add(server);
         }
-        RestTempWrite.add(server);
     }
 }

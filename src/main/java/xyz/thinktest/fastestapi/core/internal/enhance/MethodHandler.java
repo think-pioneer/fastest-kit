@@ -9,14 +9,17 @@ import xyz.thinktest.fastestapi.core.annotations.After;
 import xyz.thinktest.fastestapi.core.annotations.Before;
 import xyz.thinktest.fastestapi.core.annotations.Capture;
 import xyz.thinktest.fastestapi.core.internal.enhance.methodhelper.MethodProcess;
+import xyz.thinktest.fastestapi.core.internal.tool.AnnotationProcessCache;
+import xyz.thinktest.fastestapi.core.internal.tool.MethodAnnotationProcessEntity;
 import xyz.thinktest.fastestapi.logger.FastestLogger;
 import xyz.thinktest.fastestapi.logger.FastestLoggerFactory;
 import xyz.thinktest.fastestapi.utils.ObjectUtil;
 import xyz.thinktest.fastestapi.utils.reflects.ReflectUtil;
 
 import java.lang.annotation.Annotation;
+import java.lang.invoke.MethodHandles;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -26,6 +29,7 @@ import java.util.Objects;
  */
 
 public class MethodHandler<T> implements MethodEnhancer {
+    private final AnnotationProcessCache cache = AnnotationProcessCache.INSTANCE;
     @Override
     public Object intercept(Object origin, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
         Capture capture = method.getAnnotation(Capture.class);
@@ -53,19 +57,28 @@ public class MethodHandler<T> implements MethodEnhancer {
     }
 
     private Object proxy(Target<T> target, Method method, Object[] args, MethodProxy methodProxy){
-        Annotation[] allAnnotation = method.getDeclaredAnnotations();
-        List<AnnotationGardener> beforeAnnotations = new ArrayList<>();
-        List<AnnotationGardener> afterAnnotations = new ArrayList<>();
-        for (Annotation annotation : allAnnotation) {
-            Before beforeAnnotation = annotation.annotationType().getDeclaredAnnotation(Before.class);
-            After afterAnnotation = annotation.annotationType().getDeclaredAnnotation(After.class);
-            if (Objects.nonNull(beforeAnnotation)) {
-                beforeAnnotations.add(new AnnotationGardener(annotation, beforeAnnotation));
+        MethodAnnotationProcessEntity entity = cache.get(method);
+        List<AnnotationGardener> beforeAnnotations;
+        List<AnnotationGardener> afterAnnotations;
+        if(Objects.isNull(entity)){
+            Annotation[] allAnnotation = method.getDeclaredAnnotations();
+            beforeAnnotations = new ArrayList<>();
+            afterAnnotations = new ArrayList<>();
+            for (Annotation annotation : allAnnotation) {
+                Before beforeAnnotation = annotation.annotationType().getDeclaredAnnotation(Before.class);
+                After afterAnnotation = annotation.annotationType().getDeclaredAnnotation(After.class);
+                if (Objects.nonNull(beforeAnnotation)) {
+                    beforeAnnotations.add(new AnnotationGardener(annotation, beforeAnnotation));
+                }
+                if (Objects.nonNull(afterAnnotation)) {
+                    afterAnnotations.add(new AnnotationGardener(annotation, afterAnnotation));
+                }
             }
-            if (Objects.nonNull(afterAnnotation)) {
-                afterAnnotations.add(new AnnotationGardener(annotation, afterAnnotation));
-            }
+            entity = new MethodAnnotationProcessEntity(beforeAnnotations, afterAnnotations, method);
+            cache.put(method, entity);
         }
+        beforeAnnotations = entity.getBeforeAnnotations();
+        afterAnnotations = entity.getAfterAnnotations();
         if(CollectionUtils.isNotEmpty(beforeAnnotations)) {
             MethodProcess<T> methodProcess = new MethodProcess<>(beforeAnnotations);
             methodProcess.process(target, method, args);
@@ -81,8 +94,18 @@ public class MethodHandler<T> implements MethodEnhancer {
 
     private Object invoke(Method method, MethodProxy methodProxy, Object object, Object[] args){
         try {
-            if(ReflectUtil.isInterface(method) || ReflectUtil.isAbstract(method) || method.isDefault()){
+            if(ReflectUtil.isInterface(method) || ReflectUtil.isAbstract(method)){
                 return null;
+            }
+            if(method.isDefault()){
+                Constructor<MethodHandles.Lookup> constructor = MethodHandles.Lookup.class.getDeclaredConstructor(Class.class, int.class);
+                constructor.setAccessible(true);
+                Class<?> declaringClass = method.getDeclaringClass();
+                int allModes = MethodHandles.Lookup.PUBLIC | MethodHandles.Lookup.PRIVATE | MethodHandles.Lookup.PROTECTED | MethodHandles.Lookup.PACKAGE;
+                return constructor.newInstance(declaringClass, allModes)
+                        .unreflectSpecial(method, declaringClass)
+                        .bindTo(object)
+                        .invokeWithArguments(args);
             }
             return methodProxy.invokeSuper(object, args);
         }catch (Throwable cause){
