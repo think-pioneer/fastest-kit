@@ -1,6 +1,7 @@
 package xyz.thinktest.fastestapi.core.internal.enhance.fieldhelper;
 
 import org.apache.commons.lang3.StringUtils;
+import xyz.thinktest.fastestapi.core.annotations.Pointcut;
 import xyz.thinktest.fastestapi.core.enhance.joinpoint.Target;
 import xyz.thinktest.fastestapi.core.enhance.joinpoint.field.JoinPoint;
 import xyz.thinktest.fastestapi.core.internal.enhance.LogFactory;
@@ -16,16 +17,17 @@ import java.lang.reflect.Modifier;
 /**
  * @Date: 2021/11/3
  */
-public class LoggerAnnotationProcess<T> extends AbstractFieldProcess<T> {
+@Pointcut(annotation = LoggerJoin.class)
+public class LoggerAnnotationProcess extends AbstractFieldProcess {
 
     @Override
-    public void process(JoinPoint<T> joinPoint) {
+    public void process(JoinPoint joinPoint) {
         this.exec(joinPoint);
     }
 
-    private void exec(JoinPoint<T> joinPoint){
+    private <T> void exec(JoinPoint joinPoint){
         Field field = joinPoint.getField();
-        Target<T> target = joinPoint.getTarget();
+        Target target = joinPoint.getTarget();
         LoggerJoin loggerJoin = (LoggerJoin) joinPoint.getAnnotation();
         Class<?> fieldType = field.getType();
         if(!FastestLogger.class.equals(fieldType)){

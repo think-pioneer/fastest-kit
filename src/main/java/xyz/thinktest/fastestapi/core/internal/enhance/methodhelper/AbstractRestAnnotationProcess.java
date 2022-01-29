@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 /**
  * @Date: 2021/11/30
  */
-public abstract class AbstractRestAnnotationProcess<T> extends AbstractMethodProcess<T> {
+public abstract class AbstractRestAnnotationProcess extends AbstractMethodProcess {
     protected void buildMetadata(Method method, Object[] args, String url, HttpMethod httpMethod, boolean isAuto, boolean isSync){
         List<Object> argList = new ArrayList<>(Arrays.asList(args));
         AtomicReference<String> newUrl = new AtomicReference<>();

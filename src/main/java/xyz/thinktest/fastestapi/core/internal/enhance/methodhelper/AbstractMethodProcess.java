@@ -6,8 +6,8 @@ import xyz.thinktest.fastestapi.core.enhance.joinpoint.method.MethodAnnotationPr
 /**
  * @Date: 2021/11/28
  */
-public abstract class AbstractMethodProcess<T> implements MethodAnnotationProcessable<T> {
+public abstract class AbstractMethodProcess implements MethodAnnotationProcessable {
 
     @Override
-    public abstract void process(JoinPoint<T> joinPoint);
+    public abstract void process(JoinPoint joinPoint);
 }

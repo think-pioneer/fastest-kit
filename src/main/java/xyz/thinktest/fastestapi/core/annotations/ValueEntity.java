@@ -1,7 +1,5 @@
 package xyz.thinktest.fastestapi.core.annotations;
 
-import xyz.thinktest.fastestapi.core.internal.enhance.fieldhelper.ValueEntityAnnotationProcess;
-
 import java.lang.annotation.*;
 
 /**
@@ -10,7 +8,7 @@ import java.lang.annotation.*;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Before(ValueEntityAnnotationProcess.class)
+@Before
 @MutexAnnotation({Autowired.class, Value.class})
 public @interface ValueEntity {
     String key() default "";

@@ -9,15 +9,16 @@ import java.lang.reflect.Method;
 /**
  * @Date: 2021/12/6
  */
-class JoinPointImpl<T> implements JoinPoint<T> {
+@SuppressWarnings("unchecked")
+class JoinPointImpl implements JoinPoint {
     private final Annotation annotation;
     private final Method method;
     private final Object[] args;
-    private final Target<T> target;
-    private final T self;
-    private T returnValue;
+    private final Target target;
+    private final Object self;
+    private Object returnValue;
 
-    public JoinPointImpl(Annotation annotation, Method method, Object[] args, Target<T> target, T self){
+    public JoinPointImpl(Annotation annotation, Method method, Object[] args, Target target, Object self){
         this.annotation = annotation;
         this.method = method;
         this.args = args;
@@ -41,21 +42,21 @@ class JoinPointImpl<T> implements JoinPoint<T> {
     }
 
     @Override
-    public Target<T> getTarget() {
-        return this.target;
+    public <T> Target getTarget() {
+        return (Target) this.target;
     }
 
     @Override
-    public void setReturn(T value) {
+    public <T> void setReturn(T value) {
         this.returnValue = value;
     }
 
-    public T getReturnValue(){
-        return returnValue;
+    public <T> T getReturnValue(){
+        return (T) returnValue;
     }
 
     @Override
-    public T getThis() {
-        return this.self;
+    public <T> T getThis() {
+        return (T) this.self;
     }
 }

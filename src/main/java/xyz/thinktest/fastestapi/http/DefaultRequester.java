@@ -1,8 +1,5 @@
 package xyz.thinktest.fastestapi.http;
 
-import xyz.thinktest.fastestapi.http.metadata.Header;
-import xyz.thinktest.fastestapi.http.metadata.Headers;
-
 import java.util.HashMap;
 import java.util.Map;
 

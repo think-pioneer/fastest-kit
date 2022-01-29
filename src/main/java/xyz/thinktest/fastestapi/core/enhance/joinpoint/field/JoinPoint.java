@@ -8,7 +8,7 @@ import java.lang.reflect.Field;
 /**
  * @Date: 2021/12/6
  */
-public interface JoinPoint<T> {
+public interface JoinPoint {
 
     /**
      *annotation object
@@ -23,11 +23,11 @@ public interface JoinPoint<T> {
     /**
      *Intercepted field object
      */
-    Target<T> getTarget();
+    <T> Target getTarget();
 
     /**
      * feature realization object
      */
 
-    Object getThis();
+    <T> T getThis();
 }

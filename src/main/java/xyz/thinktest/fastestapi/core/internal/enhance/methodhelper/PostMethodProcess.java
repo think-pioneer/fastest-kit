@@ -1,5 +1,6 @@
 package xyz.thinktest.fastestapi.core.internal.enhance.methodhelper;
 
+import xyz.thinktest.fastestapi.core.annotations.Pointcut;
 import xyz.thinktest.fastestapi.core.enhance.joinpoint.method.JoinPoint;
 import xyz.thinktest.fastestapi.utils.ObjectUtil;
 import xyz.thinktest.fastestapi.common.exceptions.FastestBasicException;
@@ -11,13 +12,14 @@ import java.lang.reflect.InvocationTargetException;
 /**
  * @Date: 2021/10/29
  */
-public class PostMethodProcess<T> extends AbstractMethodProcess<T> {
+@Pointcut(annotation = PostMethod.class)
+public class PostMethodProcess extends AbstractMethodProcess {
 
-    public void process(JoinPoint<T> joinPoint){
+    public void process(JoinPoint joinPoint){
         this.exec(joinPoint);
     }
 
-    private void exec(JoinPoint<T> joinPoint){
+    private <T> void exec(JoinPoint joinPoint){
         PostMethod postMethod = (PostMethod) joinPoint.getAnnotation();
         Class<?> targetClass = postMethod.targetClass();
         String methodName = postMethod.method();

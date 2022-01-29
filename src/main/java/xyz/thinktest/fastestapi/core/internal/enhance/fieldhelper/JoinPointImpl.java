@@ -9,13 +9,14 @@ import java.lang.reflect.Field;
 /**
  * @Date: 2021/12/6
  */
-class JoinPointImpl<T> implements JoinPoint<T> {
+@SuppressWarnings("unchecked")
+class JoinPointImpl implements JoinPoint {
     private final Annotation annotation;
     private final Field field;
-    private final Target<T> target;
+    private final Target target;
     private final Object self;
 
-    public JoinPointImpl(Annotation annotation, Field field, Target<T> target, Object self){
+    public JoinPointImpl(Annotation annotation, Field field, Target target, Object self){
         this.annotation = annotation;
         this.field = field;
         this.target = target;
@@ -33,12 +34,12 @@ class JoinPointImpl<T> implements JoinPoint<T> {
     }
 
     @Override
-    public Target<T> getTarget() {
-        return this.target;
+    public <T> Target getTarget() {
+        return (Target) this.target;
     }
 
     @Override
-    public Object getThis() {
-        return this.self;
+    public <T> T getThis() {
+        return (T) this.self;
     }
 }

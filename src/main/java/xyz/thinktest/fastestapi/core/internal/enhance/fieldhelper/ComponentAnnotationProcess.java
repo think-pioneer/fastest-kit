@@ -13,7 +13,7 @@ import java.util.Objects;
 /**
  * @Date: 2021/10/29
  */
-public class ComponentAnnotationProcess<T> implements FieldAnnotationProcessable<T> {
+public class ComponentAnnotationProcess implements FieldAnnotationProcessable {
     private final InstanceCache instanceCache = InstanceCache.CACHE;
     private final Class<?> clazz;
     private final Class<?>[] argumentTypes;
@@ -28,12 +28,12 @@ public class ComponentAnnotationProcess<T> implements FieldAnnotationProcessable
     }
 
     @Override
-    public void process(JoinPoint<T> joinPoint) {
+    public void process(JoinPoint joinPoint) {
         this.exec(joinPoint);
     }
 
-    private void exec(JoinPoint<T> joinPoint){
-        Target<T> target = joinPoint.getTarget();
+    private <T> void exec(JoinPoint joinPoint){
+        Target target = joinPoint.getTarget();
         Object instance = null;
         boolean hasArguments = Objects.nonNull(argumentTypes) && Objects.nonNull(arguments);
         MultipleInstance multipleInstance = clazz.getAnnotation(MultipleInstance.class);

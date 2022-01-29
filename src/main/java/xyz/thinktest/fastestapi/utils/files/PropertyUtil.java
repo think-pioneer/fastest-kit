@@ -26,6 +26,7 @@ public enum  PropertyUtil {
             this.properties = new Properties();
             this.propertiesMap = new ConcurrentHashMap<>();
             this.properties.putAll(System.getProperties());
+            this.jarPropertyHandler();
             List<File> fileList = new ArrayList<>();
             FileUtil.collect(FileUtil.getClassPath(), fileList, new String[]{"properties", "yaml", "yml", "json"});
             List<File> propertiesFileList = fileList.stream().filter(file -> file.getAbsolutePath().endsWith("properties")).collect(Collectors.toList());
@@ -38,6 +39,12 @@ public enum  PropertyUtil {
         }catch (Throwable e){
             throw new FileException("properties initialize error", e);
         }
+    }
+
+    private void jarPropertyHandler() throws IOException {
+        Properties properties = new Properties();
+        properties.load(PropertyUtil.class.getClassLoader().getResourceAsStream("application.properties"));
+        this.properties.putAll(properties);
     }
 
     private void propertyHandler(List<File> list){

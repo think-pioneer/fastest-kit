@@ -1,6 +1,7 @@
 package xyz.thinktest.fastestapi.core.internal.enhance.fieldhelper;
 
 import org.apache.commons.lang3.StringUtils;
+import xyz.thinktest.fastestapi.core.annotations.Pointcut;
 import xyz.thinktest.fastestapi.core.enhance.joinpoint.Target;
 import xyz.thinktest.fastestapi.core.enhance.joinpoint.field.JoinPoint;
 import xyz.thinktest.fastestapi.utils.ObjectUtil;
@@ -19,14 +20,15 @@ import java.util.Objects;
 /**
  * @Date: 2021/10/31
  */
-public class ValueAnnotationProcess<T> extends AbstractFieldProcess<T> {
+@Pointcut(annotation = Value.class)
+public class ValueAnnotationProcess extends AbstractFieldProcess {
 
     @Override
-    public void process(JoinPoint<T> joinPoint) {
+    public void process(JoinPoint joinPoint) {
         this.exec(joinPoint);
     }
 
-    private void exec(JoinPoint<T> joinPoint){
+    private void exec(JoinPoint joinPoint){
         Field field = joinPoint.getField();
         Value value = (Value) joinPoint.getAnnotation();
         Class<?> fieldType = field.getType();
@@ -57,7 +59,7 @@ public class ValueAnnotationProcess<T> extends AbstractFieldProcess<T> {
         }
     }
 
-    public static <T> void setField(Field field, Class<?> fieldType, String value, Target<T> target){
+    public static <T> void setField(Field field, Class<?> fieldType, String value, Target target){
         try {
             String canonicalName = fieldType.getCanonicalName();
             if (fieldType.isArray()) {

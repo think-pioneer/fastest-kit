@@ -1,7 +1,5 @@
 package xyz.thinktest.fastestapi.core.annotations;
 
-import xyz.thinktest.fastestapi.core.internal.enhance.methodhelper.RestMetadataProcess;
-
 import java.lang.annotation.*;
 
 /**
@@ -10,7 +8,7 @@ import java.lang.annotation.*;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Before(RestMetadataProcess.class)
+@Before
 @MutexAnnotation({RestTemp.class})
 public @interface RestMetadata {
     String serverName() default "";

@@ -2,6 +2,7 @@ package xyz.thinktest.fastestapi.core.internal.enhance.fieldhelper;
 
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.lang3.StringUtils;
+import xyz.thinktest.fastestapi.core.annotations.Pointcut;
 import xyz.thinktest.fastestapi.core.enhance.joinpoint.field.JoinPoint;
 import xyz.thinktest.fastestapi.core.internal.enhance.EnhanceFactory;
 import xyz.thinktest.fastestapi.common.exceptions.EnhanceException;
@@ -20,14 +21,15 @@ import java.util.List;
  * @Date: 2021/11/27
  */
 @SuppressWarnings("unchecked")
-public class ValueEntityAnnotationProcess<T> extends AbstractFieldProcess<T> {
+@Pointcut(annotation = ValueEntity.class)
+public class ValueEntityAnnotationProcess extends AbstractFieldProcess {
 
     @Override
-    public void process(JoinPoint<T> joinPoint){
+    public void process(JoinPoint joinPoint){
         this.exec(joinPoint);
     }
 
-    private void exec(JoinPoint<T> joinPoint){
+    private void exec(JoinPoint joinPoint){
         Field field = joinPoint.getField();
         ValueEntity valueEntity = (ValueEntity) joinPoint.getAnnotation();
         try {

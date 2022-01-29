@@ -2,12 +2,12 @@ package xyz.thinktest.fastestapi.core.internal.enhance.fieldhelper;
 
 import xyz.thinktest.fastestapi.core.enhance.joinpoint.Target;
 import xyz.thinktest.fastestapi.core.enhance.joinpoint.field.FieldAnnotationProcessable;
-import xyz.thinktest.fastestapi.core.internal.enhance.EnhanceFactory;
+import xyz.thinktest.fastestapi.core.internal.enhance.AnnotationGardener;
 import xyz.thinktest.fastestapi.core.internal.tool.AnnotationTool;
-import xyz.thinktest.fastestapi.core.annotations.Before;
 import xyz.thinktest.fastestapi.core.annotations.Component;
 import xyz.thinktest.fastestapi.core.annotations.MutexAnnotation;
-import xyz.thinktest.fastestapi.utils.reflects.ReflectUtil;
+import xyz.thinktest.fastestapi.core.internal.tool.FieldAnnotationProcessCache;
+import xyz.thinktest.fastestapi.core.internal.tool.FieldAnnotationProcessEntity;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -17,13 +17,15 @@ import java.util.Objects;
 /**
  * @Date: 2021/10/31
  */
-class FieldProcess<T> {
-    private final Target<T> target;
+class FieldProcess {
+    private final Target target;
     private final Field field;
+    private final FieldAnnotationProcessCache cache;
 
-    protected FieldProcess(Target<T> target, Field field){
+    protected FieldProcess(Target target, Field field){
         this.target = target;
         this.field = field;
+        this.cache = FieldAnnotationProcessCache.INSTANCE;
     }
     public void process() {
         exec();
@@ -34,18 +36,19 @@ class FieldProcess<T> {
             return;
         }
         field.setAccessible(true);
-        Annotation[] fieldDeclaredAnnotations = field.getDeclaredAnnotations();
-        for(Annotation annotation:fieldDeclaredAnnotations){
-            Before before = annotation.annotationType().getDeclaredAnnotation(Before.class);
-            if(Objects.nonNull(before)){
-                FieldAnnotationProcessable<T> process = EnhanceFactory.origin(ReflectUtil.get(before, "value"));
-                if (AnnotationTool.hasAnnotation(field.getDeclaringClass(), Component.class)) {
-                    MutexAnnotation mutexAnnotation = annotation.annotationType().getDeclaredAnnotation(MutexAnnotation.class);
-                    if(Objects.nonNull(mutexAnnotation)){
-                        AnnotationTool.checkIsOnly(field, annotation.getClass(), mutexAnnotation.value());
-                    }
-                    process.process(new JoinPointImpl<>(annotation, field, target, process));
+        FieldAnnotationProcessEntity entity = cache.get(field);
+        if(Objects.isNull(entity)){
+            return;
+        }
+        for(AnnotationGardener annotationGardener:entity.getBeforeAnnotations()){
+            FieldAnnotationProcessable process = (FieldAnnotationProcessable) annotationGardener.getProcess();
+            Annotation annotation = annotationGardener.getAnnotation();
+            if (AnnotationTool.hasAnnotation(field.getDeclaringClass(), Component.class)) {
+                MutexAnnotation mutexAnnotation = annotation.annotationType().getDeclaredAnnotation(MutexAnnotation.class);
+                if(Objects.nonNull(mutexAnnotation)){
+                    AnnotationTool.checkIsOnly(field, annotation.getClass(), mutexAnnotation.value());
                 }
+                process.process(new JoinPointImpl(annotation, field, target, process));
             }
         }
     }

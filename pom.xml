@@ -6,7 +6,7 @@
 
     <groupId>xyz.thinktest</groupId>
     <artifactId>fastest-api</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>${revision}</version>
 
     <properties>
         <java.version>1.8</java.version>
@@ -41,7 +41,11 @@
                 <artifactId>kotlin-stdlib-common</artifactId>
                 <version>${kotlin.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>1.7.33</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -120,9 +124,21 @@
             <artifactId>slf4j-simple</artifactId>
             <version>1.7.33</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.reflections/reflections -->
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.10.2</version>
+        </dependency>
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -166,6 +182,15 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <delimiters>@</delimiters>
+                    <useDefaultDelimiters>false</useDefaultDelimiters>
+                </configuration>
             </plugin>
         </plugins>
     </build>

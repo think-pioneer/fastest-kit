@@ -1,5 +1,8 @@
 package xyz.thinktest.fastestapi.core.rest.http.metadata;
 
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.type.TypeFactory;
+import xyz.thinktest.fastestapi.common.json.JSONFactory;
 import xyz.thinktest.fastestapi.common.yaml.ListConstructor;
 import xyz.thinktest.fastestapi.utils.files.FileUtil;
 import xyz.thinktest.fastestapi.utils.files.PropertyUtil;
@@ -96,7 +99,7 @@ public final class ReadApiConfig {
     }
 
     /**
-     * initialization api config, run only one
+     * initialization api config, run only once
      * @return api config object
      */
     private static List<Server> init(){
@@ -106,13 +109,19 @@ public final class ReadApiConfig {
         }
         List<Server> allFileServers = new ArrayList<>();
         List<File> fileList = new ArrayList<>();
-        FileUtil.collect(FileUtil.createFolder(root, folderName), fileList, new String[]{".yaml"});
+        FileUtil.collect(FileUtil.createFolder(root, folderName), fileList, new String[]{".yaml", ".yml", ".json"});
         ListConstructor<Server> constructor = new ListConstructor<>(Server.class);
         TypeDescription customTypeDescription = new TypeDescription(List.class);
         customTypeDescription.addPropertyParameters("uris", Uri.class);
         constructor.addTypeDescription(customTypeDescription);
+        JavaType javaType = TypeFactory.defaultInstance().constructParametricType(List.class, Server.class);
         fileList.forEach(file -> {
-            List<Server> oneFileServers = YamlUtil.toEntity(file.getAbsolutePath(), constructor);
+            List<Server> oneFileServers;
+            if(file.getAbsolutePath().endsWith(".json")){
+                oneFileServers = JSONFactory.stringToObject(JSONFactory.read(file).toString(), javaType);
+            }else {
+                oneFileServers = YamlUtil.toEntity(file.getAbsolutePath(), constructor);
+            }
             Map<String, Map<String, Uri>> tmpServerMap = new HashMap<>();
             for(Server server:oneFileServers){
                 Map<String, Uri> apiMap = new HashMap<>();

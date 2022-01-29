@@ -1,7 +1,5 @@
 package xyz.thinktest.fastestapi.core.annotations;
 
-import xyz.thinktest.fastestapi.core.internal.enhance.methodhelper.PreMethodProcess;
-
 import java.lang.annotation.*;
 
 /**
@@ -11,7 +9,7 @@ import java.lang.annotation.*;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Before(PreMethodProcess.class)
+@Before
 public @interface PreMethod {
     Class<?> targetClass();
     String method();

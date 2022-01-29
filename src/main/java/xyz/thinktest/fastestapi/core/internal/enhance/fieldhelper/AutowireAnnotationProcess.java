@@ -1,5 +1,6 @@
 package xyz.thinktest.fastestapi.core.internal.enhance.fieldhelper;
 
+import xyz.thinktest.fastestapi.core.annotations.Pointcut;
 import xyz.thinktest.fastestapi.core.enhance.constructor.AutowireConstructor;
 import xyz.thinktest.fastestapi.core.enhance.joinpoint.Target;
 import xyz.thinktest.fastestapi.core.enhance.joinpoint.field.JoinPoint;
@@ -20,9 +21,11 @@ import java.util.Map;
  * @Date: 2021/10/29
  */
 @SuppressWarnings("unchecked")
-public class AutowireAnnotationProcess<T> extends AbstractFieldProcess<T> {
+@Pointcut(annotation = Autowired.class)
+public class AutowireAnnotationProcess extends AbstractFieldProcess {
 
-    public void process(JoinPoint<T> joinPoint){
+    @Override
+    public void process(JoinPoint joinPoint){
         Class<?> declaringClass = joinPoint.getField().getDeclaringClass();
         Class<?> fieldType = joinPoint.getField().getType();
         if(checkCircularReference(declaringClass, fieldType)){
@@ -40,14 +43,14 @@ public class AutowireAnnotationProcess<T> extends AbstractFieldProcess<T> {
         return false;
     }
 
-    private void exec(JoinPoint<T> joinPoint){
+    private <T> void exec(JoinPoint joinPoint){
         Field field = joinPoint.getField();
-        Target<T> target = joinPoint.getTarget();
+        Target target = joinPoint.getTarget();
         Autowired autowired = (Autowired) joinPoint.getAnnotation();
         Object instance = target.getInstance();
         Class<?> fieldType = field.getType();
         try{
-            Target<T> fieldTargetManger = new Target<>();
+            Target fieldTargetManger = new Target();
             if(!"".equals(autowired.method().trim()) && !Autowired.class.equals(autowired.targetClass())){
                 Object tmpInstance = EnhanceFactory.origin(fieldType);
                 Method fieldInstanceConstructorParams = tmpInstance.getClass().getDeclaredMethod(autowired.method());
@@ -62,11 +65,11 @@ public class AutowireAnnotationProcess<T> extends AbstractFieldProcess<T> {
                     paramTypes.add(param.getType());
                     paramObjects.add(param.getObject());
                 });
-                ComponentAnnotationProcess<T> componentAnnotationProcess = new ComponentAnnotationProcess<>(tmpInstance.getClass(), paramTypes.toArray(new Class[0]), paramObjects.toArray(new Object[0]), autowired.isOrigin());
-                componentAnnotationProcess.process(new JoinPointImpl<>(autowired, null, fieldTargetManger, componentAnnotationProcess));
+                ComponentAnnotationProcess componentAnnotationProcess = new ComponentAnnotationProcess(tmpInstance.getClass(), paramTypes.toArray(new Class[0]), paramObjects.toArray(new Object[0]), autowired.isOrigin());
+                componentAnnotationProcess.process(new JoinPointImpl(autowired, null, (Target) fieldTargetManger, componentAnnotationProcess));
             } else {
-                ComponentAnnotationProcess<T> componentAnnotationProcess = new ComponentAnnotationProcess<>(fieldType, null, null, autowired.isOrigin());
-                componentAnnotationProcess.process(new JoinPointImpl<>(autowired, null, fieldTargetManger, componentAnnotationProcess));
+                ComponentAnnotationProcess componentAnnotationProcess = new ComponentAnnotationProcess(fieldType, null, null, autowired.isOrigin());
+                componentAnnotationProcess.process(new JoinPointImpl(autowired, null, (Target) fieldTargetManger, componentAnnotationProcess));
             }
             Object fieldInstance = fieldTargetManger.getInstance();
             FieldHelper.getInstance(instance, field).set(fieldInstance);

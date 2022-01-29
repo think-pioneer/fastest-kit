@@ -8,7 +8,7 @@ import java.lang.reflect.Method;
 /**
  * @Date: 2021/12/6
  */
-public interface JoinPoint<T> {
+public interface JoinPoint {
 
     /**
      * annotation object
@@ -28,15 +28,15 @@ public interface JoinPoint<T> {
     /**
      *Represented object
      */
-    Target<T> getTarget();
+    <T> Target getTarget();
 
     /**
      * The value returned to the proxied method
      */
-    void setReturn(T value);
+    <T> void setReturn(T value);
 
     /**
      *feature realization object
      */
-    T getThis();
+    <T> T getThis();
 }

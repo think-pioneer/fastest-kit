@@ -4,6 +4,7 @@ import xyz.thinktest.fastestapi.core.internal.enhance.AnnotationGardener;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,12 +16,11 @@ public class MethodAnnotationProcessEntity implements Serializable {
 
     private final List<AnnotationGardener> beforeAnnotations;
     private final List<AnnotationGardener> afterAnnotations;
-    private final Method method;
+    private Method method;
 
-    public MethodAnnotationProcessEntity(List<AnnotationGardener> beforeAnnotations, List<AnnotationGardener> afterAnnotations, Method method) {
-        this.beforeAnnotations = beforeAnnotations;
-        this.afterAnnotations = afterAnnotations;
-        this.method = method;
+    public MethodAnnotationProcessEntity(){
+        this.beforeAnnotations = new ArrayList<>();
+        this.afterAnnotations = new ArrayList<>();
     }
 
     public List<AnnotationGardener> getBeforeAnnotations() {
@@ -33,6 +33,26 @@ public class MethodAnnotationProcessEntity implements Serializable {
 
     public Method getMethod() {
         return method;
+    }
+
+    public void setBeforeAnnotations(List<AnnotationGardener> beforeAnnotations) {
+        this.beforeAnnotations.addAll(beforeAnnotations);
+    }
+
+    public void setBeforeAnnotation(AnnotationGardener beforeAnnotation) {
+        this.beforeAnnotations.add(beforeAnnotation);
+    }
+
+    public void setAfterAnnotations(List<AnnotationGardener> afterAnnotations) {
+        this.afterAnnotations.addAll(afterAnnotations);
+    }
+
+    public void setAfterAnnotation(AnnotationGardener afterAnnotation) {
+        this.afterAnnotations.add(afterAnnotation);
+    }
+
+    public void setMethod(Method method) {
+        this.method = method;
     }
 
     @Override

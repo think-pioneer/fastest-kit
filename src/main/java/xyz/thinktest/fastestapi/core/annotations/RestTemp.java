@@ -1,6 +1,5 @@
 package xyz.thinktest.fastestapi.core.annotations;
 
-import xyz.thinktest.fastestapi.core.internal.enhance.methodhelper.RestTempProcess;
 import xyz.thinktest.fastestapi.http.metadata.HttpMethod;
 
 import java.lang.annotation.*;
@@ -11,7 +10,7 @@ import java.lang.annotation.*;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Before(RestTempProcess.class)
+@Before
 @MutexAnnotation(RestMetadata.class)
 public @interface RestTemp {
     String name() default "";

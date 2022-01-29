@@ -3,14 +3,14 @@ package xyz.thinktest.fastestapi.core.enhance.joinpoint;
 /**
  * @Date: 2021/10/29
  */
-public class Target<T> {
-    private T instance;
+public class Target {
+    private Object instance;
 
-    public T getInstance() {
+    public Object getInstance() {
         return instance;
     }
 
-    public void setInstance(T instance) {
+    public void setInstance(Object instance) {
         this.instance = instance;
     }
 

@@ -1,7 +1,7 @@
 package org.testng.listener;
 
 import xyz.thinktest.fastestapi.core.internal.Initialization;
-import xyz.thinktest.fastestapi.core.internal.enhance.ShutdownHook;
+import xyz.thinktest.fastestapi.core.internal.tool.ShutdownHookActuator;
 import xyz.thinktest.fastestapi.core.enhance.joinpoint.Target;
 import xyz.thinktest.fastestapi.core.internal.enhance.fieldhelper.TestNGProcess;
 import org.testng.ITestContext;
@@ -14,7 +14,7 @@ import java.util.Objects;
 /**
  * @Date: 2020/10/30
  */
-public class TestRunListener<T> implements ITestListener {
+public class TestRunListener implements ITestListener {
     private final TestFinish testFinish = new TestFinish();
 
     public void onTestSuccess(ITestResult result){
@@ -31,9 +31,9 @@ public class TestRunListener<T> implements ITestListener {
         for(ITestNGMethod method:context.getAllTestMethods()){
             Class<?> caseClazz = method.getRealClass();
             if(Objects.nonNull(caseClazz)){
-                Target<T> manger = new Target<>();
-                manger.setInstance((T) method.getInstance());
-                TestNGProcess<T> process = new TestNGProcess<>(caseClazz);
+                Target manger = new Target();
+                manger.setInstance(method.getInstance());
+                TestNGProcess process = new TestNGProcess(caseClazz);
                 process.process(manger);
             }
         }
@@ -41,6 +41,6 @@ public class TestRunListener<T> implements ITestListener {
 
     @Override
     public void onFinish(ITestContext context){
-        ShutdownHook.writeApiTempJson();
+        ShutdownHookActuator.writeApiTempJson();
     }
 }

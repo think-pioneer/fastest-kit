@@ -2,7 +2,7 @@
 
 # 0、前言
 
-Fastest一个基于注解思想的快速(HTTP)测试框架。所有常用的操作都有对应的注解来实现。
+Fastest一个基于注解思想的快速(HTTP)测试框架。使用注解快速完成用例功能编写。
 
 优势：
 
@@ -728,17 +728,11 @@ public class CaseTest {
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Before(CustomAnnImpl.class)
+@Before
 public @interface CustomAnn {}
 ```
 
 表示@RestMetadata在被注解方法执行之前执行。
-
-#### 参数说明
-
-| 参数  | 类型  | 默认值 | 说明             |
-| ----- | ----- | ------ | ---------------- |
-| value | Class | 必填   | 注解的功能实现类 |
 
 ### 1.2.14 @After
 
@@ -747,12 +741,6 @@ public @interface CustomAnn {}
 类似aop的(after)切入点
 
 ***[自定义方法注解](##1.3 自定义注解)***时，指定该注解的功能在被注解方法之后执行。value参数指定该注解的实现类。功能和@Before一样。
-
-#### 参数说明
-
-| 参数  | 类型  | 默认值 | 说明             |
-| ----- | ----- | ------ | ---------------- |
-| value | Class | 必填   | 注解的功能实现类 |
 
 ### 1.2.15 @MutexAnnotation
 
@@ -788,6 +776,55 @@ public @interface C{}
 | recovery | boolean | true         | 是否对step进行恢复操作                                       |
 | executor | Class   | RecoveryStep | 执行恢复操作的类                                             |
 | stepType | Class[] | Step.class   | 需要进行恢复操作的step类，如果为Step.class则对测试类下的所有step进行恢复操作。通常用例下面会有很多step，可能在执行用例后不需要将所有step都执行恢复操作，可通过该参数指定需要恢复的step |
+
+### 1.2.17 @Pointcut
+
+自定义注解时，通过在注解实现类上使用该注解实现注解和实现类的绑定。
+
+#### 使用说明
+
+LogPrint.java
+
+```java
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface LogPrint {
+}
+```
+
+LogPringImpl.java
+
+```java
+@Pointcut(annotation = LogPrint.class)
+public class LogPrintImpl<T> implements MethodAnnotationProcessable<T> {
+    @Override
+    public void process(JoinPoint joinPoint) {
+        System.out.println("print log");
+    }
+}
+```
+
+Controller.java
+
+```java
+@Component
+public interface Controller {
+
+    @LogPrint
+    default void hello(){
+    }
+}
+```
+
+#### 参数说明
+
+| 参数       | 类型  | 默认值 | 说明                                                 |
+| ---------- | ----- | ------ | ---------------------------------------------------- |
+| annotation | Class | 必填   | 用来将实现类和注解绑定到一起                         |
+| index      | int   | 0      | 如果一个注解有多个实现类，则通过该参数指定执行顺序。 |
+
+
 
 ## 1.3 自定义注解
 
@@ -1014,8 +1051,11 @@ mvn clean package -DskipTests -Dmaven.skip.test.exec
 java -cp fastest-test-1.0-SNAPSHOT.jar:fastest-test-1.0-SNAPSHOT-tests.jar org.testng.TestNG [testng xml path]
 ```
 
-## 其他说明
+## 系统参数
 
-1、默认从resources目录下读取文件，如果有其他路径的需要自行在assmebly.xml配置源路径和目标路径。如果使用resources目录作为各种文件的根目录，则向项目中可以使用FileUtil.RESOURCES_PATH，如果不使用resources目录，则需要使用FileUtil.PROJECT_ROOT拼接路径，或使用其他可识别的路径。
+| 参数                       | 是否必须 | 默认值                                                       | 说明                                                         |
+| -------------------------- | -------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| api.config.folder.path     | 否       | apiconfig                                                    | api配置文件的目录，会扫描该目录下所有的文件及子文件夹，文件类型为json、yaml、yml |
+| rest.temp.api              | 否       | apiconfig/apiconfig_custom/APIConfTemp_2022_01_29_23_31_01_6508.yaml | 保存RestTemp注解参数的目录及文件，文件类型为yaml             |
+| fastest.api.http.responder | 否       | DefaultResponder                                             | 自定义responder的实现类                                      |
 
-2、resources读取的是src/main/resources目录，这是为了照顾大家的使用习惯

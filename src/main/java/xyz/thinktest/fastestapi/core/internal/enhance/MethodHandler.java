@@ -1,26 +1,23 @@
 package xyz.thinktest.fastestapi.core.internal.enhance;
 
+import com.google.common.collect.Lists;
 import net.sf.cglib.proxy.MethodProxy;
 import org.apache.commons.collections4.CollectionUtils;
 import xyz.thinktest.fastestapi.core.enhance.joinpoint.Target;
 import xyz.thinktest.fastestapi.common.exceptions.CaptureException;
 import xyz.thinktest.fastestapi.common.exceptions.EnhanceException;
-import xyz.thinktest.fastestapi.core.annotations.After;
-import xyz.thinktest.fastestapi.core.annotations.Before;
 import xyz.thinktest.fastestapi.core.annotations.Capture;
 import xyz.thinktest.fastestapi.core.internal.enhance.methodhelper.MethodProcess;
-import xyz.thinktest.fastestapi.core.internal.tool.AnnotationProcessCache;
+import xyz.thinktest.fastestapi.core.internal.tool.MethodAnnotationProcessCache;
 import xyz.thinktest.fastestapi.core.internal.tool.MethodAnnotationProcessEntity;
 import xyz.thinktest.fastestapi.logger.FastestLogger;
 import xyz.thinktest.fastestapi.logger.FastestLoggerFactory;
 import xyz.thinktest.fastestapi.utils.ObjectUtil;
 import xyz.thinktest.fastestapi.utils.reflects.ReflectUtil;
 
-import java.lang.annotation.Annotation;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,14 +25,14 @@ import java.util.Objects;
  * @Date: 2021/3/29
  */
 
-public class MethodHandler<T> implements MethodEnhancer {
-    private final AnnotationProcessCache cache = AnnotationProcessCache.INSTANCE;
+public class MethodHandler implements MethodEnhancer {
+    private final MethodAnnotationProcessCache cache = MethodAnnotationProcessCache.INSTANCE;
     @Override
-    public Object intercept(Object origin, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
+    public Object intercept(Object origin, Method method, Object[] args, MethodProxy methodProxy) {
         Capture capture = method.getAnnotation(Capture.class);
         try {
-            Target<T> target = new Target<>();
-            target.setInstance((T) origin);
+            Target target = new Target();
+            target.setInstance(origin);
             return proxy(target, method, args, methodProxy);
         }catch (Throwable c){
             CaptureException cause = new CaptureException(c);
@@ -56,37 +53,22 @@ public class MethodHandler<T> implements MethodEnhancer {
         }
     }
 
-    private Object proxy(Target<T> target, Method method, Object[] args, MethodProxy methodProxy){
+    private Object proxy(Target target, Method method, Object[] args, MethodProxy methodProxy){
         MethodAnnotationProcessEntity entity = cache.get(method);
-        List<AnnotationGardener> beforeAnnotations;
-        List<AnnotationGardener> afterAnnotations;
-        if(Objects.isNull(entity)){
-            Annotation[] allAnnotation = method.getDeclaredAnnotations();
-            beforeAnnotations = new ArrayList<>();
-            afterAnnotations = new ArrayList<>();
-            for (Annotation annotation : allAnnotation) {
-                Before beforeAnnotation = annotation.annotationType().getDeclaredAnnotation(Before.class);
-                After afterAnnotation = annotation.annotationType().getDeclaredAnnotation(After.class);
-                if (Objects.nonNull(beforeAnnotation)) {
-                    beforeAnnotations.add(new AnnotationGardener(annotation, beforeAnnotation));
-                }
-                if (Objects.nonNull(afterAnnotation)) {
-                    afterAnnotations.add(new AnnotationGardener(annotation, afterAnnotation));
-                }
-            }
-            entity = new MethodAnnotationProcessEntity(beforeAnnotations, afterAnnotations, method);
-            cache.put(method, entity);
+        List<AnnotationGardener> beforeAnnotations = Lists.newArrayList();
+        List<AnnotationGardener> afterAnnotations = Lists.newArrayList();
+        if(Objects.nonNull(entity)){
+            beforeAnnotations = entity.getBeforeAnnotations();
+            afterAnnotations = entity.getAfterAnnotations();
         }
-        beforeAnnotations = entity.getBeforeAnnotations();
-        afterAnnotations = entity.getAfterAnnotations();
+
         if(CollectionUtils.isNotEmpty(beforeAnnotations)) {
-            MethodProcess<T> methodProcess = new MethodProcess<>(beforeAnnotations);
+            MethodProcess methodProcess = new MethodProcess(beforeAnnotations);
             methodProcess.process(target, method, args);
         }
-        Object result;
-        result = invoke(method, methodProxy, target.getInstance(), args);
+        Object result = invoke(method, methodProxy, target.getInstance(), args);
         if(CollectionUtils.isNotEmpty(afterAnnotations)){
-            MethodProcess<T> methodProcess = new MethodProcess<>(afterAnnotations);
+            MethodProcess methodProcess = new MethodProcess(afterAnnotations);
             methodProcess.process(target, method, args);
         }
         return result;

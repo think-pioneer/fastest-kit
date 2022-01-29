@@ -2,6 +2,7 @@ package xyz.thinktest.fastestapi.utils;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import xyz.thinktest.fastestapi.common.exceptions.FastestBasicException;
 
@@ -36,6 +37,9 @@ public final class ObjectUtil {
             tmp = matcher.replaceFirst(value);
             matcher = pattern.matcher(tmp);
             contentList.remove(0);
+            if(CollectionUtils.isEmpty(contentList)){
+                contentList.add("{;SEAT;}");
+            }
         }
         if(Objects.nonNull(tmp)){
             tmp = tmp.replace("{;SEAT;}", "{}");

@@ -49,10 +49,9 @@ class Sender {
      * set response when async request
      * @param response response
      */
-    private void setResponse(Response response){
+    private <T> void setResponse(Response response){
         Class<Responder> responderType = (Class<Responder>) httpCacheInternal.get("fastest.api.http.responder");
         Responder responder = ApplicationBean.getOriginBean(responderType, new Class<?>[]{Response.class}, new Object[]{response});
-//        this.responder = new DefaultResponder(response);
         this.responder = responder;
     }
 

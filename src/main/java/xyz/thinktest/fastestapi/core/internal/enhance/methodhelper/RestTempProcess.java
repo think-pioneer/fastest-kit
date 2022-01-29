@@ -1,5 +1,6 @@
 package xyz.thinktest.fastestapi.core.internal.enhance.methodhelper;
 
+import xyz.thinktest.fastestapi.core.annotations.Pointcut;
 import xyz.thinktest.fastestapi.core.enhance.joinpoint.method.JoinPoint;
 import xyz.thinktest.fastestapi.core.rest.http.metadata.ReadApiConfig;
 import xyz.thinktest.fastestapi.utils.ObjectUtil;
@@ -15,14 +16,15 @@ import java.util.Objects;
 /**
  * @Date: 2021/11/28
  */
-public class RestTempProcess<T> extends AbstractRestAnnotationProcess<T> {
+@Pointcut(annotation = RestTemp.class)
+public class RestTempProcess extends AbstractRestAnnotationProcess {
 
     @Override
-    public void process(JoinPoint<T> joinPoint){
+    public void process(JoinPoint joinPoint){
         this.exec(joinPoint);
     }
 
-    private void exec(JoinPoint<T> joinPoint){
+    private void exec(JoinPoint joinPoint){
         Method method = joinPoint.getMethod();
         RestTemp restTemp = (RestTemp) joinPoint.getAnnotation();
 

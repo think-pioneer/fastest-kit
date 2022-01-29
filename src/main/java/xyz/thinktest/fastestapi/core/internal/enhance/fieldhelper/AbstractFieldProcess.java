@@ -6,7 +6,7 @@ import xyz.thinktest.fastestapi.core.enhance.joinpoint.field.JoinPoint;
 /**
  * @Date: 2021/11/3
  */
-public abstract class AbstractFieldProcess<T> implements FieldAnnotationProcessable<T> {
+public abstract class AbstractFieldProcess implements FieldAnnotationProcessable {
     @Override
-    public void process(JoinPoint<T> joinPoint){}
+    public void process(JoinPoint joinPoint){}
 }
