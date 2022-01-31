@@ -1,6 +1,5 @@
-package xyz.thinktest.fastestapi.core.internal.tool;
+package xyz.thinktest.fastestapi.core.internal.scanner;
 
-import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 import org.reflections.util.ConfigurationBuilder;
 import xyz.thinktest.fastestapi.utils.files.PropertyUtil;

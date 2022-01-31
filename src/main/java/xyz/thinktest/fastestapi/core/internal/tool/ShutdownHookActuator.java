@@ -4,6 +4,8 @@ import org.reflections.Reflections;
 import xyz.thinktest.fastestapi.core.enhance.ShutdownHook;
 import xyz.thinktest.fastestapi.core.internal.enhance.EnhanceFactory;
 import xyz.thinktest.fastestapi.core.internal.enhance.methodhelper.RestTempWrite;
+import xyz.thinktest.fastestapi.core.internal.scanner.ReflectionsUnit;
+
 import java.util.Set;
 
 /**
@@ -12,7 +14,7 @@ import java.util.Set;
 public final class ShutdownHookActuator {
     private ShutdownHookActuator(){}
 
-    public static void writeApiTempJson(){
+    public static void execute(){
         if(RestTempWrite.getAllApi().isEmpty()){
             return;
         }

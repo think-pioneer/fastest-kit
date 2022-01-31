@@ -1,4 +1,4 @@
-package xyz.thinktest.fastestapi.core.internal.tool;
+package xyz.thinktest.fastestapi.core.internal.scanner;
 
 import xyz.thinktest.fastestapi.core.internal.enhance.AnnotationGardener;
 

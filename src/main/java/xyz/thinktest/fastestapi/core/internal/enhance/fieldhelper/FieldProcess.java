@@ -6,8 +6,8 @@ import xyz.thinktest.fastestapi.core.internal.enhance.AnnotationGardener;
 import xyz.thinktest.fastestapi.core.internal.tool.AnnotationTool;
 import xyz.thinktest.fastestapi.core.annotations.Component;
 import xyz.thinktest.fastestapi.core.annotations.MutexAnnotation;
-import xyz.thinktest.fastestapi.core.internal.tool.FieldAnnotationProcessCache;
-import xyz.thinktest.fastestapi.core.internal.tool.FieldAnnotationProcessEntity;
+import xyz.thinktest.fastestapi.core.internal.scanner.FieldAnnotationProcessCache;
+import xyz.thinktest.fastestapi.core.internal.scanner.FieldAnnotationProcessEntity;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;

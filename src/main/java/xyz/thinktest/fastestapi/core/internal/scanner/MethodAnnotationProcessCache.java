@@ -1,4 +1,4 @@
-package xyz.thinktest.fastestapi.core.internal.tool;
+package xyz.thinktest.fastestapi.core.internal.scanner;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;

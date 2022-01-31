@@ -41,6 +41,6 @@ public class TestRunListener implements ITestListener {
 
     @Override
     public void onFinish(ITestContext context){
-        ShutdownHookActuator.writeApiTempJson();
+        ShutdownHookActuator.execute();
     }
 }

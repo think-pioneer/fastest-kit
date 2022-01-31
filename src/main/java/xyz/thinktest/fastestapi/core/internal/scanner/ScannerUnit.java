@@ -1,4 +1,4 @@
-package xyz.thinktest.fastestapi.core.internal.tool;
+package xyz.thinktest.fastestapi.core.internal.scanner;
 
 import org.reflections.Reflections;
 import xyz.thinktest.fastestapi.common.exceptions.InitializationException;
@@ -22,16 +22,16 @@ import java.util.concurrent.CompletableFuture;
  * @date: 2022-01-27
  */
 @SuppressWarnings("unchecked")
-public class Scanner {
+public class ScannerUnit {
     private final MethodAnnotationProcessCache cacheMethod = MethodAnnotationProcessCache.INSTANCE;
     private final FieldAnnotationProcessCache cacheField = FieldAnnotationProcessCache.INSTANCE;
     private final Reflections reflectionsAnnotation;
 
-    public Scanner(){
+    private ScannerUnit(){
         this.reflectionsAnnotation = ReflectionsUnit.INSTANCE.reflections;
     }
 
-    public void scanner(){
+    private void scanner(){
         CompletableFuture<Void> methodFuture = CompletableFuture.runAsync(this::methodScanHandler);
         CompletableFuture<Void> fieldFuture = CompletableFuture.runAsync(this::fieldScanHandler);
         try {
@@ -41,7 +41,7 @@ public class Scanner {
         }
     }
 
-    public void methodScanHandler(){
+    private void methodScanHandler(){
         Set<Class<? extends MethodAnnotationProcessable>> methodProcessClasses = reflectionsAnnotation.getSubTypesOf(MethodAnnotationProcessable.class);
         for(Class<? extends MethodAnnotationProcessable> clazz : methodProcessClasses){
             if(!ReflectUtil.isInterface(clazz) && !ReflectUtil.isAbstract(clazz)){
@@ -95,7 +95,7 @@ public class Scanner {
         }
     }
 
-    public void fieldScanHandler(){
+    private void fieldScanHandler(){
         Set<Class<? extends FieldAnnotationProcessable>> fieldProcessClasses = reflectionsAnnotation.getSubTypesOf(FieldAnnotationProcessable.class);
         for(Class<? extends FieldAnnotationProcessable> clazz : fieldProcessClasses){
             if(!ReflectUtil.isInterface(clazz) && !ReflectUtil.isAbstract(clazz)){
@@ -134,6 +134,6 @@ public class Scanner {
     }
 
     public static void scan(){
-        new Scanner().scanner();
+        new ScannerUnit().scanner();
     }
 }
