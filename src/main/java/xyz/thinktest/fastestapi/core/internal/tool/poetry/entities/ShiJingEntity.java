@@ -7,7 +7,7 @@ import java.util.List;
  * @author: aruba
  * @date: 2022-01-31
  */
-public class ShijingEntity implements Serializable {
+public class ShiJingEntity implements Serializable {
     private static final long serialVersionUID = 1626667330718847813L;
     private String title;
     private String chapter;
@@ -48,7 +48,7 @@ public class ShijingEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "ShijingEntity{" +
+        return "ShiJingEntity{" +
                 "title='" + title + '\'' +
                 ", chapter='" + chapter + '\'' +
                 ", section='" + section + '\'' +

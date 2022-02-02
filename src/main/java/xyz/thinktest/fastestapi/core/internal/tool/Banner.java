@@ -2,9 +2,7 @@ package xyz.thinktest.fastestapi.core.internal.tool;
 
 
 import com.google.common.io.ByteStreams;
-import xyz.thinktest.fastestapi.common.exceptions.InitializationException;
 import xyz.thinktest.fastestapi.utils.ColorPrint;
-import xyz.thinktest.fastestapi.utils.dates.DateUtil;
 import xyz.thinktest.fastestapi.utils.files.PropertyUtil;
 
 import java.io.InputStream;
@@ -28,10 +26,20 @@ public enum Banner {
             for (String line : text.trim().split("\r\n")) {
                 parseLine(line);
             }
-            ColorPrint.GREEN.println("\r\n:: Fastest ::      (" + PropertyUtil.getProperty("fastest.api.version") + ")");
         }catch (Exception e){
-            throw new InitializationException("banner show error");
+            String text = "\n" +
+                    " _______  _______  _______ _________ _______  _______ _________\n" +
+                    "(  ____ \\(  ___  )(  ____ \\\\__   __/(  ____ \\(  ____ \\\\__   __/\n" +
+                    "| (    \\/| (   ) || (    \\/   ) (   | (    \\/| (    \\/   ) (   \n" +
+                    "| (__    | (___) || (_____    | |   | (__    | (_____    | |   \n" +
+                    "|  __)   |  ___  |(_____  )   | |   |  __)   (_____  )   | |   \n" +
+                    "| (      | (   ) |      ) |   | |   | (            ) |   | |   \n" +
+                    "| )      | )   ( |/\\____) |   | |   | (____/\\/\\____) |   | |   \n" +
+                    "|/       |/     \\|\\_______)   )_(   (_______/\\_______)   )_(   \n" +
+                    "                                                               \n";
+            ColorPrint.CYAN.println(text);
         }
+        ColorPrint.GREEN.println("\r\n:: Fastest ::      (" + PropertyUtil.getProperty("fastest.api.version") + ")");
     }
 
     private void parseLine(String line){

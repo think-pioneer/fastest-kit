@@ -4,62 +4,95 @@ import java.io.PrintWriter;
 import java.util.Arrays;
 
 public enum ColorPrint {
-    WHITE{
+    WHITE("255;255;255"){
         @Override
         public void println(String msg) {
-            out(msg, "255;255;255");
+            out(msg);
         }
 
         @Override
         public void print(String msg) {
-            out(msg, "255;255;255", false);
+            out(msg, false);
         }
     },
-    CYAN {
+    RED("205;51;51") {
         @Override
         public void println(String msg) {
-            out(msg, "0;255;255");
+            out(msg);
         }
 
         @Override
         public void print(String msg) {
-            out(msg, "0;255;255", false);
+            out(msg, false);
         }
     },
-    GREEN {
+    ORANGE("255;127;0"){
         @Override
         public void println(String msg) {
-            out(msg, "0;255;127");
+            out(msg);
         }
 
         @Override
         public void print(String msg) {
-            out(msg, "0;255;127", false);
+            out(msg, false);
         }
     },
-    YELLOW {
+    YELLOW("255;236;139") {
         @Override
         public void println(String msg) {
-            out(msg, "255;236;139");
+            out(msg);
         }
 
         @Override
         public void print(String msg) {
-            out(msg, "255;236;139", false);
+            out(msg, false);
         }
     },
-    RED {
+    GREEN("0;255;127") {
         @Override
         public void println(String msg) {
-            out(msg, "205;51;51");
+            out(msg);
         }
 
         @Override
         public void print(String msg) {
-            out(msg, "205;51;51", false);
+            out(msg, false);
         }
     },
-    DEFAULT{
+    CYAN("0;255;255") {
+        @Override
+        public void println(String msg) {
+            out(msg);
+        }
+
+        @Override
+        public void print(String msg) {
+            out(msg, false);
+        }
+    },
+    BLUE("0;0;255"){
+        @Override
+        public void println(String msg) {
+            out(msg);
+        }
+
+        @Override
+        public void print(String msg) {
+            out(msg, false);
+        }
+    },
+    PURPLE("139;0;255"){
+        @Override
+        public void println(String msg) {
+            out(msg);
+        }
+
+        @Override
+        public void print(String msg) {
+            out(msg, false);
+        }
+    },
+    DEFAULT("-1;-1;-1"){
         @Override
         public void println(String msg) {
             System.out.println(msg);
@@ -70,6 +103,14 @@ public enum ColorPrint {
             System.out.print(msg);
         }
     };
+    protected final String colorCode;
+    ColorPrint(String colorCode){
+        this.colorCode = colorCode;
+    }
+
+    String getColorCode() {
+        return colorCode;
+    }
 
     public abstract void println(String msg);
 
@@ -81,19 +122,23 @@ public enum ColorPrint {
         return sb.toString();
     }
 
-    protected void out(String msg, String colorCode, boolean isNewLine){
+    protected void out(String msg, boolean isNewLine){
         PrintWriter print = new PrintWriter(System.out);
-        print.append(buildString(msg, colorCode));
+        print.append(buildString(msg, this.colorCode));
         if(isNewLine){
             print.append("\n");
         }
         print.flush();
     }
-    protected void out(String msg, String colorCode){
-        out(msg, colorCode, true);
+    protected void out(String msg){
+        out(msg, true);
     }
 
     public static ColorPrint color(String type){
         return Arrays.stream(ColorPrint.values()).filter(color -> color.name().equals(type.toUpperCase())).findFirst().orElse(DEFAULT);
+    }
+
+    public static ColorPrint code(String code){
+        return Arrays.stream(ColorPrint.values()).filter(color -> color.getColorCode().equals(code.trim())).findFirst().orElse(DEFAULT);
     }
 }

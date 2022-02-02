@@ -1,6 +1,7 @@
 package org.testng.listener;
 
 import xyz.thinktest.fastestapi.core.internal.Initialization;
+import xyz.thinktest.fastestapi.core.internal.configuration.SystemConfig;
 import xyz.thinktest.fastestapi.core.internal.tool.ShutdownHookActuator;
 import xyz.thinktest.fastestapi.core.enhance.joinpoint.Target;
 import xyz.thinktest.fastestapi.core.internal.enhance.fieldhelper.TestNGProcess;
@@ -27,6 +28,7 @@ public class TestRunListener implements ITestListener {
 
     @Override
     public void onStart(ITestContext context){
+        SystemConfig.config();
         Initialization.init();
         for(ITestNGMethod method:context.getAllTestMethods()){
             Class<?> caseClazz = method.getRealClass();

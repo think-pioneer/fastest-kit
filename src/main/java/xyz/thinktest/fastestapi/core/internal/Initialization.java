@@ -1,7 +1,6 @@
 package xyz.thinktest.fastestapi.core.internal;
 
 import xyz.thinktest.fastestapi.core.enhance.Initialize;
-import xyz.thinktest.fastestapi.core.internal.configuration.SystemConfig;
 import xyz.thinktest.fastestapi.common.exceptions.FastestBasicException;
 import xyz.thinktest.fastestapi.core.internal.enhance.EnhanceFactory;
 import xyz.thinktest.fastestapi.core.internal.scanner.Reflections;
@@ -39,13 +38,13 @@ public class Initialization {
         }
     }
     private static void runInit(){
-        poetry();
+        try {
+            poetry();
+        }catch (Throwable ignored){}
         DateUtil.SECOND.sleep(3);
     }
 
     private static void realInit(){
-        SystemConfig.disableWarning();
-        SystemConfig.disableSlf4jBindingWarning();
         readResponder();
         ScannerUnit.scan();
         runUserInit();
@@ -72,10 +71,10 @@ public class Initialization {
     }
 
     private static void poetry(){
-        Set<Class<? extends Poetry>> poetries = reflections.getSubTypesOf(Poetry.class);
-        for(Class<? extends Poetry> clazz:poetries){
-            Poetry poetry = EnhanceFactory.enhance(clazz);
-            poetry.show();
-        }
+        List<Class<? extends Poetry>> poetries = new ArrayList<>(reflections.getSubTypesOf(Poetry.class));
+        Random random = new Random();
+        Poetry poetry = EnhanceFactory.origin(poetries.get(random.nextInt(poetries.size())));
+        String content = poetry.show();
+        ColorPrint.CYAN.println(content);
     }
 }

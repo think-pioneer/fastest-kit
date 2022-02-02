@@ -12,8 +12,6 @@ import org.reflections.serializers.Serializer;
 import org.reflections.serializers.XmlSerializer;
 import org.reflections.util.*;
 import org.reflections.vfs.Vfs;
-import xyz.thinktest.fastestapi.logger.FastestLogger;
-import xyz.thinktest.fastestapi.logger.FastestLoggerFactory;
 
 import javax.annotation.Nullable;
 import java.io.*;
@@ -28,9 +26,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import static org.reflections.scanners.Scanners.SubTypes;
 import static org.reflections.scanners.Scanners.*;
-import static java.lang.String.format;
 import static org.reflections.util.ReflectionUtilsPredicates.withAnnotation;
 import static org.reflections.util.ReflectionUtilsPredicates.withAnyParameterAnnotation;
 
@@ -39,8 +35,6 @@ import static org.reflections.util.ReflectionUtilsPredicates.withAnyParameterAnn
  * @date: 2022-01-30
  */
 public class Reflections extends org.reflections.Reflections implements NameHelper {
-    public final static FastestLogger log = FastestLoggerFactory.getLogger(Reflections.class);
-
     protected final transient Configuration configuration;
     protected final Store store;
 
@@ -94,38 +88,24 @@ public class Reflections extends org.reflections.Reflections implements NameHelp
                                     }
                                     if (entries != null) collect.get(scanner.index()).addAll(entries);
                                 }
-                            } catch (Exception e) {
-                                if (log != null) log.trace("could not scan file {} with scanner {}", file.getRelativePath(), scanner.getClass().getSimpleName(), e);
-                            }
+                            } catch (Exception ignored) {}
                         }
                     }
                 }
-            } catch (Exception e) {
-                if (log != null) log.warn("could not create Vfs.Dir from url. ignoring the exception and continuing", e);
-            } finally {
+            } catch (Exception ignored) {} finally {
                 if (dir != null) dir.close();
             }
         });
 
         // merge
-        Map<String, Map<String, Set<String>>> storeMap =
-                collect.entrySet().stream()
-                        .collect(Collectors.toMap(
-                                Map.Entry::getKey,
-                                entry -> entry.getValue().stream().filter(e -> e.getKey() != null)
-                                        .collect(Collectors.groupingBy(
-                                                Map.Entry::getKey,
-                                                HashMap::new,
-                                                Collectors.mapping(Map.Entry::getValue, Collectors.toSet())))));
-        if (log != null) {
-            int keys = 0, values = 0;
-            for (Map<String, Set<String>> map : storeMap.values()) {
-                keys += map.size();
-                values += map.values().stream().mapToLong(Set::size).sum();
-            }
-            log.info(format("Reflections took %d ms to scan %d urls, producing %d keys and %d values", System.currentTimeMillis() - start, urls.size(), keys, values));
-        }
-        return storeMap;
+        return collect.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> entry.getValue().stream().filter(e -> e.getKey() != null)
+                                .collect(Collectors.groupingBy(
+                                        Map.Entry::getKey,
+                                        HashMap::new,
+                                        Collectors.mapping(Map.Entry::getValue, Collectors.toSet())))));
     }
 
     private boolean doFilter(Vfs.File file, @Nullable Predicate<String> predicate) {

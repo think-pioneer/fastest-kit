@@ -1,9 +1,9 @@
-${RED} _______ ${YELLOW} _______ ${CYAN} _______ ${RED}_________${YELLOW} _______ ${CYAN} _______ ${RED}_________
-${RED}(  ____ \${YELLOW}(  ___  )${CYAN}(  ____ \${RED}\__   __/${YELLOW}(  ____ \${CYAN}(  ____ \${RED}\__   __/
-${RED}| (    \/${YELLOW}| (   ) |${CYAN}| (    \/${RED}   ) (   ${YELLOW}| (    \/${CYAN}| (    \/${RED}   ) (
-${RED}| (__    ${YELLOW}| (___) |${CYAN}| (_____ ${RED}   | |   ${YELLOW}| (__    ${CYAN}| (_____ ${RED}   | |
-${RED}|  __)   ${YELLOW}|  ___  |${CYAN}(_____  )${RED}   | |   ${YELLOW}|  __)   ${CYAN}(_____  )${RED}   | |
-${RED}| (      ${YELLOW}| (   ) |${CYAN}      ) |${RED}   | |   ${YELLOW}| (      ${CYAN}      ) |${RED}   | |
-${RED}| )      ${YELLOW}| )   ( |${CYAN}/\____) |${RED}   | |   ${YELLOW}| (____/\${CYAN}/\____) |${RED}   | |
-${RED}|/       ${YELLOW}|/     \|${CYAN}\_______)${RED}   )_(   ${YELLOW}(_______/${CYAN}\_______)${RED}   )_(
+${RED} _______ ${ORANGE} _______ ${YELLOW} _______ ${GREEN}_________${CYAN} _______ ${BLUE} _______ ${PURPLE}_________
+${RED}(  ____ \${ORANGE}(  ___  )${YELLOW}(  ____ \${GREEN}\__   __/${CYAN}(  ____ \${BLUE}(  ____ \${PURPLE}\__   __/
+${RED}| (    \/${ORANGE}| (   ) |${YELLOW}| (    \/${GREEN}   ) (   ${CYAN}| (    \/${BLUE}| (    \/${PURPLE}   ) (
+${RED}| (__    ${ORANGE}| (___) |${YELLOW}| (_____ ${GREEN}   | |   ${CYAN}| (__    ${BLUE}| (_____ ${PURPLE}   | |
+${RED}|  __)   ${ORANGE}|  ___  |${YELLOW}(_____  )${GREEN}   | |   ${CYAN}|  __)   ${BLUE}(_____  )${PURPLE}   | |
+${RED}| (      ${ORANGE}| (   ) |${YELLOW}      ) |${GREEN}   | |   ${CYAN}| (      ${BLUE}      ) |${PURPLE}   | |
+${RED}| )      ${ORANGE}| )   ( |${YELLOW}/\____) |${GREEN}   | |   ${CYAN}| (____/\${BLUE}/\____) |${PURPLE}   | |
+${RED}|/       ${ORANGE}|/     \|${YELLOW}\_______)${GREEN}   )_(   ${CYAN}(_______/${BLUE}\_______)${PURPLE}   )_(
 

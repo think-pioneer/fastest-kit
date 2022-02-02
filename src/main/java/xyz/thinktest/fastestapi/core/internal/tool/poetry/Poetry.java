@@ -5,5 +5,5 @@ package xyz.thinktest.fastestapi.core.internal.tool.poetry;
  * @date: 2022-01-30
  */
 public interface Poetry {
-    void show();
+    String show();
 }

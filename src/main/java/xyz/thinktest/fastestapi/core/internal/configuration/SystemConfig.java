@@ -6,7 +6,12 @@ import java.lang.reflect.Field;
 
 public final class SystemConfig {
 
-    public static void disableWarning(){
+    public static void config(){
+        disableWarning();
+        disableSlf4jBindingWarning();
+    }
+
+    private static void disableWarning(){
         try {
             Field theUnsafe = Unsafe.class.getDeclaredField("theUnsafe");
             theUnsafe.setAccessible(true);
@@ -20,7 +25,7 @@ public final class SystemConfig {
         }
     }
 
-    public static void disableSlf4jBindingWarning(){
+    private static void disableSlf4jBindingWarning(){
         System.setProperty("java.vendor.url", "android");
     }
 }
