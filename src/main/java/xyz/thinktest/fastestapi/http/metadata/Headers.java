@@ -12,7 +12,7 @@ public class Headers extends MetaList {
 
     private Headers(){}
 
-    public static Headers newEmptyInstance(){
+    public static Headers newEmpty(){
         return new Headers();
     }
 

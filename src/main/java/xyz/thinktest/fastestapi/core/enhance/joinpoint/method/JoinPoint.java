@@ -28,7 +28,7 @@ public interface JoinPoint {
     /**
      *Represented object
      */
-    <T> Target getTarget();
+    Target getTarget();
 
     /**
      * The value returned to the proxied method

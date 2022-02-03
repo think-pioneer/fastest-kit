@@ -12,7 +12,7 @@ public class Parameters extends MetaMap {
 
     private Parameters(){}
 
-    public static Parameters newEmptyInstance(){
+    public static Parameters newEmpty(){
         return new Parameters();
     }
 
@@ -35,7 +35,7 @@ public class Parameters extends MetaMap {
     }
 
     public MetaList readAllParameter(){
-        MetaList list = MetaList.newEmptyInstance();
+        MetaList list = MetaList.newEmpty();
         list.addAll(this.values());
         return list;
     }

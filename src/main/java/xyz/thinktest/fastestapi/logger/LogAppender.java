@@ -1,6 +1,6 @@
 package xyz.thinktest.fastestapi.logger;
 
-import xyz.thinktest.fastestapi.utils.ColorPrint;
+import xyz.thinktest.fastestapi.utils.color.ColorPrint;
 import xyz.thinktest.fastestapi.common.exceptions.FileException;
 import xyz.thinktest.fastestapi.utils.dates.DateTime;
 import xyz.thinktest.fastestapi.utils.dates.DateUtil;

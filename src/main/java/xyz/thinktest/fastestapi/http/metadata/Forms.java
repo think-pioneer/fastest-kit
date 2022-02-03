@@ -12,7 +12,7 @@ public class Forms extends MetaMap {
 
     private Forms(){}
 
-    public static Forms newEmptyInstance(){
+    public static Forms newEmpty(){
         return new Forms();
     }
 
@@ -52,7 +52,7 @@ public class Forms extends MetaMap {
      * Get all the elements of the form
      */
     public MetaList readAllForm(){
-        MetaList list = MetaList.newEmptyInstance();
+        MetaList list = MetaList.newEmpty();
         list.addAll(this.values());
         return list;
     }

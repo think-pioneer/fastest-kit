@@ -42,8 +42,8 @@ class JoinPointImpl implements JoinPoint {
     }
 
     @Override
-    public <T> Target getTarget() {
-        return (Target) this.target;
+    public Target getTarget() {
+        return this.target;
     }
 
     @Override

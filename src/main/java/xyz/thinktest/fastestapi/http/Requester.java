@@ -6,7 +6,7 @@ package xyz.thinktest.fastestapi.http;
 public interface Requester {
 
     /**
-     * 设置http元数据
+     * 设置或获取http元数据
      */
     Metadata metadata();
 

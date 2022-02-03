@@ -2,7 +2,7 @@ package xyz.thinktest.fastestapi.core.internal.tool;
 
 
 import com.google.common.io.ByteStreams;
-import xyz.thinktest.fastestapi.utils.ColorPrint;
+import xyz.thinktest.fastestapi.utils.color.ColorPrint;
 import xyz.thinktest.fastestapi.utils.files.PropertyUtil;
 
 import java.io.InputStream;

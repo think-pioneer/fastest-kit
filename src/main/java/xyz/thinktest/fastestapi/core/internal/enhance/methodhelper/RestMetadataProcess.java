@@ -28,7 +28,7 @@ public class RestMetadataProcess extends AbstractRestAnnotationProcess {
         this.exec(joinPoint);
     }
 
-    private <T> void exec(JoinPoint joinPoint){
+    private void exec(JoinPoint joinPoint){
         Method method = joinPoint.getMethod();
         RestMetadata restMetadata = (RestMetadata) joinPoint.getAnnotation();
         Object[] args = joinPoint.getArgs();

@@ -43,7 +43,7 @@ public class AutowireAnnotationProcess extends AbstractFieldProcess {
         return false;
     }
 
-    private <T> void exec(JoinPoint joinPoint){
+    private void exec(JoinPoint joinPoint){
         Field field = joinPoint.getField();
         Target target = joinPoint.getTarget();
         Autowired autowired = (Autowired) joinPoint.getAnnotation();
@@ -66,10 +66,10 @@ public class AutowireAnnotationProcess extends AbstractFieldProcess {
                     paramObjects.add(param.getObject());
                 });
                 ComponentAnnotationProcess componentAnnotationProcess = new ComponentAnnotationProcess(tmpInstance.getClass(), paramTypes.toArray(new Class[0]), paramObjects.toArray(new Object[0]), autowired.isOrigin());
-                componentAnnotationProcess.process(new JoinPointImpl(autowired, null, (Target) fieldTargetManger, componentAnnotationProcess));
+                componentAnnotationProcess.process(new JoinPointImpl(autowired, null, fieldTargetManger, componentAnnotationProcess));
             } else {
                 ComponentAnnotationProcess componentAnnotationProcess = new ComponentAnnotationProcess(fieldType, null, null, autowired.isOrigin());
-                componentAnnotationProcess.process(new JoinPointImpl(autowired, null, (Target) fieldTargetManger, componentAnnotationProcess));
+                componentAnnotationProcess.process(new JoinPointImpl(autowired, null, fieldTargetManger, componentAnnotationProcess));
             }
             Object fieldInstance = fieldTargetManger.getInstance();
             FieldHelper.getInstance(instance, field).set(fieldInstance);

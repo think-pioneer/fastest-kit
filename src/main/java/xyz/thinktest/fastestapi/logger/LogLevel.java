@@ -1,6 +1,6 @@
 package xyz.thinktest.fastestapi.logger;
 
-import xyz.thinktest.fastestapi.utils.ColorPrint;
+import xyz.thinktest.fastestapi.utils.color.ColorPrint;
 
 enum LogLevel {
     TRACE(1, "TRACE") {

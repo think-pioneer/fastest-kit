@@ -1,6 +1,14 @@
 package xyz.thinktest.fastestapi.http.metadata;
 
+import xyz.thinktest.fastestapi.common.exceptions.EnhanceException;
+import xyz.thinktest.fastestapi.utils.ObjectUtil;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -13,12 +21,22 @@ public class Restfuls extends MetaMap {
 
     private Restfuls(){}
 
-    public static Restfuls newEmptyInstance(){
+    public static Restfuls newEmpty(){
         return new Restfuls();
     }
 
     public Restfuls write(String key, String value) {
         this.put(key, new Restful(key, value));
+        return this;
+    }
+
+    public Restfuls write(String key, Restful value) {
+        this.put(key, value);
+        return this;
+    }
+
+    public Restfuls writeAll(Restfuls restfuls){
+        this.putAll(restfuls);
         return this;
     }
 
@@ -31,7 +49,7 @@ public class Restfuls extends MetaMap {
     }
 
     public MetaList readAllRestful(){
-        MetaList list = MetaList.newEmptyInstance();
+        MetaList list = MetaList.newEmpty();
         list.addAll(this.values());
         return list;
     }
@@ -42,5 +60,20 @@ public class Restfuls extends MetaMap {
 
     public void erasure(){
         this.clear();
+    }
+
+    public String buildUrl(String url){
+        Pattern pattern = Pattern.compile("\\{([^}]*)\\}");
+        Matcher matcher = pattern.matcher(url);
+        Map<String, String> restParams = new HashMap<>();
+        while (matcher.find()){
+            restParams.put(matcher.group(1), matcher.group());
+        }
+        if(restParams.isEmpty()){
+            throw new EnhanceException(ObjectUtil.format("url:[{}] not restful url", url));
+        }
+        AtomicReference<String> newUrl = new AtomicReference<>();
+        this.forEach((key, value) -> newUrl.set(url.replace(restParams.get(key), String.valueOf(value.getValue()))));
+        return newUrl.get();
     }
 }

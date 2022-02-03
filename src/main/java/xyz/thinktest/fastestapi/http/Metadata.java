@@ -23,12 +23,14 @@ public class Metadata {
     private final Parameters parameters;
     private final Forms forms;
     private final Json json;
+    private final Restfuls restfuls;
 
     public Metadata(){
-        this.headers = Headers.newEmptyInstance();
-        this.parameters = Parameters.newEmptyInstance();
-        this.forms = Forms.newEmptyInstance();
-        this.json = Json.newEmptyInstance();
+        this.headers = Headers.newEmpty();
+        this.parameters = Parameters.newEmpty();
+        this.forms = Forms.newEmpty();
+        this.json = Json.newEmpty();
+        this.restfuls = Restfuls.newEmpty();
     }
 
     public Metadata setUrl(Url url){
@@ -64,7 +66,7 @@ public class Metadata {
         return this.method;
     }
 
-    public Metadata setHeaders(String key, String value){
+    public Metadata setHeader(String key, String value){
         this.headers.write(new Header(key, value));
         return this;
     }
@@ -83,7 +85,7 @@ public class Metadata {
         return this;
     }
 
-    public Metadata setHeaders(Header header){
+    public Metadata setHeader(Header header){
         this.headers.write(header);
         return this;
     }
@@ -109,7 +111,7 @@ public class Metadata {
         return this;
     }
 
-    public Metadata setParameters(String key, Object value){
+    public Metadata setParameter(String key, Object value){
         this.parameters.write(key, value);
         return this;
     }
@@ -121,7 +123,12 @@ public class Metadata {
         return this;
     }
 
-    public Metadata setParameters(Parameter parameter){
+    public Metadata setParameter(String key, Parameter parameter){
+        this.parameters.put(key, parameter);
+        return this;
+    }
+
+    public Metadata setParameter(Parameter parameter){
         this.parameters.put(parameter.getKey(), parameter);
         return this;
     }
@@ -147,13 +154,18 @@ public class Metadata {
         return this;
     }
 
-    public Metadata setForms(Object key, Object value){
+    public Metadata setForm(Object key, Object value){
         this.forms.write(key, value);
         return this;
     }
 
-    public Metadata setForms(Object key, Form form){
+    public Metadata setForm(Object key, Form form){
         this.forms.put(key, form);
+        return this;
+    }
+
+    public Metadata setForm(Form form){
+        this.forms.put(form.getKey(), form);
         return this;
     }
 
@@ -215,8 +227,39 @@ public class Metadata {
     }
 
     public Metadata jsonRecovery(){
-        this.json.recovery();
+        this.json.erasure();
         return this;
+    }
+
+    public Metadata setRestful(String place, String value){
+        this.restfuls.write(place, value);
+        return this;
+    }
+
+    public Metadata setRestfuls(Restfuls restfuls){
+        this.restfuls.writeAll(restfuls);
+        return this;
+    }
+
+    public Metadata setRestful(Restful restful){
+        this.restfuls.write(restful.getKey(), restful);
+        return this;
+    }
+
+    public Metadata setRestful(String key, Restful restful){
+        this.restfuls.write(key, restful);
+        return this;
+    }
+
+    public Metadata setRestful(List<Restful> restfuls){
+        if(CollectionUtils.isNotEmpty(restfuls)){
+            restfuls.forEach(this::setRestful);
+        }
+        return this;
+    }
+
+    public Restfuls getRestfuls(){
+        return this.restfuls;
     }
 
     public Metadata recovery(){
@@ -225,7 +268,8 @@ public class Metadata {
         this.headers.erasure();
         this.parameters.erasure();
         this.forms.erasure();
-        this.json.recovery();
+        this.json.erasure();
+        this.restfuls.erasure();
         return this;
     }
 
@@ -238,6 +282,7 @@ public class Metadata {
                 ", parameters=" + parameters +
                 ", forms=" + forms +
                 ", json=" + json +
+                ", restfuls=" + restfuls +
                 '}';
     }
 }

@@ -34,7 +34,7 @@ public class MethodProcess {
                 if(Objects.nonNull(mutexAnnotation)) {
                     AnnotationTool.checkIsOnly(method, annotation.getClass(), mutexAnnotation.value());
                 }
-                JoinPointImpl joinPoint = new JoinPointImpl(annotation, method, args, (Target) target, process);
+                JoinPointImpl joinPoint = new JoinPointImpl(annotation, method, args, target, process);
                 process.process(joinPoint);
                 methodReturnValues.add(joinPoint.getReturnValue());
             }

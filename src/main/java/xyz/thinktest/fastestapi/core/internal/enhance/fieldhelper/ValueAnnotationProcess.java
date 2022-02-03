@@ -59,7 +59,7 @@ public class ValueAnnotationProcess extends AbstractFieldProcess {
         }
     }
 
-    public static <T> void setField(Field field, Class<?> fieldType, String value, Target target){
+    public static void setField(Field field, Class<?> fieldType, String value, Target target){
         try {
             String canonicalName = fieldType.getCanonicalName();
             if (fieldType.isArray()) {

@@ -10,7 +10,7 @@ import xyz.thinktest.fastestapi.core.internal.tool.Banner;
 import xyz.thinktest.fastestapi.core.internal.tool.poetry.Poetry;
 import xyz.thinktest.fastestapi.http.DefaultResponder;
 import xyz.thinktest.fastestapi.http.HttpCacheInternal;
-import xyz.thinktest.fastestapi.utils.ColorPrint;
+import xyz.thinktest.fastestapi.utils.color.ColorPrint;
 import xyz.thinktest.fastestapi.utils.dates.DateUtil;
 import xyz.thinktest.fastestapi.utils.files.PropertyUtil;
 

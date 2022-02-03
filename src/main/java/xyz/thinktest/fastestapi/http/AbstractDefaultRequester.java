@@ -85,7 +85,7 @@ abstract class AbstractDefaultRequester implements Requester {
         //如果用户在构造函数中提作为鉴权供了authentication，则始终使用authentication
         if(!this.authentication.isEmpty()){
             this.authentication.forEach((k, v) -> {
-                this.metadata.setHeaders(String.valueOf(k), String.valueOf(v));
+                this.metadata.setHeader(String.valueOf(k), String.valueOf(v));
             });
         }
         Sender sender = new Sender(metadata, this.settings);

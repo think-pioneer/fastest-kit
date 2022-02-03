@@ -3,7 +3,6 @@ package xyz.thinktest.fastestapi.utils.files;
 import com.google.common.collect.Lists;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
-import xyz.thinktest.fastestapi.utils.CompletableUtil;
 import xyz.thinktest.fastestapi.utils.files.iostream.InputStreamOptional;
 import xyz.thinktest.fastestapi.common.json.JSONFactory;
 import org.yaml.snakeyaml.Yaml;
@@ -44,6 +43,10 @@ public final class YamlUtil<T> {
         return instance;
     }
 
+    private int assignProcessMax(int size){
+        return Math.max(size/Runtime.getRuntime().availableProcessors(), 1);
+    }
+
     /**
      * Get value by file name and key
      * @param path file name(path)
@@ -54,7 +57,7 @@ public final class YamlUtil<T> {
         if(Objects.nonNull(path)) {
             path = path.replace("/", File.separator).replace("\\", File.separator);
         }
-        List<List<File>> files = Lists.partition(fileList, CompletableUtil.assignProcessMax(fileList.size()));
+        List<List<File>> files = Lists.partition(fileList, assignProcessMax(fileList.size()));
         String finalPath = path;
         List<CompletableFuture<Object>> futureList = new ArrayList<>();
         for(List<File> fileList : files){

@@ -3,11 +3,12 @@ package xyz.thinktest.fastestapi.core.enhance.joinpoint;
 /**
  * @Date: 2021/10/29
  */
+@SuppressWarnings("unchecked")
 public class Target {
     private Object instance;
 
-    public Object getInstance() {
-        return instance;
+    public <T> T getInstance() {
+        return (T) instance;
     }
 
     public void setInstance(Object instance) {

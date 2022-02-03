@@ -14,8 +14,8 @@ public class BulkEdit {
      */
     public static Headers stringToHeaders(String content){
         content = content.trim();
-        Headers headers = Headers.newEmptyInstance();
-        for(String element:content.split("\n")){
+        Headers headers = Headers.newEmpty();
+        for(String element:content.split("\r\n")){
             String[] kv = element.split(":");
             if(kv.length>2) {
                 headers.write(new Header(kv[0], kv[1]));
@@ -29,7 +29,7 @@ public class BulkEdit {
      */
     public static Parameters stringToParameters(String content){
         content = content.trim();
-        Parameters parameters = Parameters.newEmptyInstance();
+        Parameters parameters = Parameters.newEmpty();
         for(String element:content.split("\n")){
             String[] kv = element.split(":");
             if(kv.length > 2){
@@ -44,7 +44,7 @@ public class BulkEdit {
      */
     public static Forms stringToFroms(String content){
         content = content.trim();
-        Forms forms = Forms.newEmptyInstance();
+        Forms forms = Forms.newEmpty();
         for(String element:content.split("\n")){
             String[] kv = element.split(":");
             if(kv.length > 2){

@@ -32,7 +32,7 @@ public class ComponentAnnotationProcess implements FieldAnnotationProcessable {
         this.exec(joinPoint);
     }
 
-    private <T> void exec(JoinPoint joinPoint){
+    private void exec(JoinPoint joinPoint){
         Target target = joinPoint.getTarget();
         Object instance = null;
         boolean hasArguments = Objects.nonNull(argumentTypes) && Objects.nonNull(arguments);
@@ -58,7 +58,7 @@ public class ComponentAnnotationProcess implements FieldAnnotationProcessable {
             }
             instanceCache.put(clazz.hashCode(), instance);
         }
-        target.setInstance((T) instance);
+        target.setInstance(instance);
         for(Field field1:clazz.getDeclaredFields()){
             new FieldProcess(target, field1).process();
         }

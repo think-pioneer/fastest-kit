@@ -23,7 +23,7 @@ public interface JoinPoint {
     /**
      *Intercepted field object
      */
-    <T> Target getTarget();
+    Target getTarget();
 
     /**
      * feature realization object

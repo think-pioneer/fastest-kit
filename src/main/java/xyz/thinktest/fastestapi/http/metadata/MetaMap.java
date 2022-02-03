@@ -8,7 +8,7 @@ import java.util.HashMap;
 public class MetaMap extends HashMap<Object, Meta>{
     MetaMap(){}
 
-    public static MetaMap newEmptyInstance(){
+    public static MetaMap newEmpty(){
         return new MetaMap();
     }
 }

@@ -1,5 +1,6 @@
 package xyz.thinktest.fastestapi.core.internal.enhance.methodhelper;
 
+import org.apache.commons.collections4.MapUtils;
 import xyz.thinktest.fastestapi.http.Metadata;
 import xyz.thinktest.fastestapi.http.Requester;
 import xyz.thinktest.fastestapi.utils.ObjectUtil;
@@ -10,7 +11,6 @@ import xyz.thinktest.fastestapi.http.metadata.Restfuls;
 
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,39 +20,36 @@ import java.util.regex.Pattern;
 public abstract class AbstractRestAnnotationProcess extends AbstractMethodProcess {
     protected void buildMetadata(Method method, Object[] args, String url, HttpMethod httpMethod, boolean isAuto, boolean isSync){
         List<Object> argList = new ArrayList<>(Arrays.asList(args));
-        AtomicReference<String> newUrl = new AtomicReference<>();
+        Restfuls restfuls = null;
         for(Object arg:args){
             if(arg instanceof Restfuls){
-                Restfuls restfuls = (Restfuls) arg;
-                Pattern pattern = Pattern.compile("\\{([^}]*)\\}");
-                Matcher matcher = pattern.matcher(url);
-                Map<String, String> restParams = new HashMap<>();
-                while (matcher.find()){
-                    restParams.put(matcher.group(1), matcher.group());
-                }
-                if(restParams.isEmpty()){
-                    throw new EnhanceException(ObjectUtil.format("url:[{}] not restful url", url));
-                }
-                String finalUrl = url;
-                restfuls.forEach((key, value) -> newUrl.set(finalUrl.replace(restParams.get(key), String.valueOf(value.getValue()))));
-                url = newUrl.get();
+                restfuls = (Restfuls) arg;
                 break;
             }
-        }
-        if(!isUrl(url)){
-            throw new EnhanceException(ObjectUtil.format("url:\"{}\" is not a valid url", url));
         }
         Requester requester = null;
         for(int i = 0; i < argList.size(); i++){
             Object arg = argList.get(i);
             if(arg instanceof Requester){
                 requester = (Requester) arg;
-                requester.metadata().setUrl(url).setHttpMethod(httpMethod);
+                if(Objects.isNull(restfuls)) {
+                    restfuls = requester.metadata().getRestfuls();
+                }
+                if(MapUtils.isNotEmpty(restfuls)){
+                    requester.metadata().setUrl(restfuls.buildUrl(url)).setHttpMethod(httpMethod);
+                }else {
+                    requester.metadata().setUrl(url).setHttpMethod(httpMethod);
+                }
                 argList.set(i, requester);
                 break;
             } else if(arg instanceof Metadata) {
                 Metadata metadata = (Metadata) arg;
-                metadata.setUrl(url).setHttpMethod(httpMethod);
+                restfuls = metadata.getRestfuls();
+                if(MapUtils.isNotEmpty(restfuls)){
+                    metadata.setUrl(restfuls.buildUrl(url)).setHttpMethod(httpMethod);
+                }else{
+                    metadata.setUrl(url).setHttpMethod(httpMethod);
+                }
                 argList.set(i, metadata);
                 break;
             }
@@ -60,6 +57,9 @@ public abstract class AbstractRestAnnotationProcess extends AbstractMethodProces
         if(isAuto){
             if(Objects.isNull(requester)){
                 throw new HttpException(ObjectUtil.format("{}.{}use auto send needs Requester object as params,but not found",method.getDeclaringClass().getName(), method.getName()));
+            }
+            if(!isUrl(requester.metadata().getUrl().string())){
+                throw new EnhanceException(ObjectUtil.format("url:\"{}\" is not a valid url", url));
             }
             if(isSync){
                 requester.sync();
@@ -74,7 +74,7 @@ public abstract class AbstractRestAnnotationProcess extends AbstractMethodProces
      * @param url url
      * @return result
      */
-    protected boolean isUrl(String url){
+    private boolean isUrl(String url){
         String regex = "(ht|f)tp(s?)\\:\\/\\/[0-9a-zA-Z]([-.\\w]*[0-9a-zA-Z])*(:(0-9)*)*(\\/?)([a-zA-Z0-9\\-\\.\\?\\,\\'\\/\\&%\\+\\$#_=]*)?";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(url.trim());

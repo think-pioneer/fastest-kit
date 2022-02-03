@@ -79,7 +79,7 @@ abstract class AbstractDefaultResponder implements Responder{
 
     @Override
     public Json bodyToJson() {
-        Json json = Json.newEmptyInstance();
+        Json json = Json.newEmpty();
         json.append(JSONFactory.stringToJson(this.bodyString));
         return json;
     }
@@ -91,7 +91,7 @@ abstract class AbstractDefaultResponder implements Responder{
 
     @Override
     public Headers headers() {
-        Headers headers = Headers.newEmptyInstance();
+        Headers headers = Headers.newEmpty();
         this.response.headers().forEach((e) -> headers.write(new Header(e.getFirst(), e.getSecond())));
         return headers;
     }

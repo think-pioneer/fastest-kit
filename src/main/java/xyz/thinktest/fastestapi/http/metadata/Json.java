@@ -15,7 +15,7 @@ public class Json extends Meta {
 
     private Json(){}
 
-    public static Json newEmptyInstance(){
+    public static Json newEmpty(){
         return new Json();
     }
 
@@ -39,7 +39,7 @@ public class Json extends Meta {
         this.jsonNode = jsonNode;
     }
 
-    public void recovery(){
+    public void erasure(){
         this.jsonNode = JSONFactory.createObjectNode();
     }
 

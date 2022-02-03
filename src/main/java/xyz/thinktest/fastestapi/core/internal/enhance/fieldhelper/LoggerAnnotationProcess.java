@@ -25,7 +25,7 @@ public class LoggerAnnotationProcess extends AbstractFieldProcess {
         this.exec(joinPoint);
     }
 
-    private <T> void exec(JoinPoint joinPoint){
+    private void exec(JoinPoint joinPoint){
         Field field = joinPoint.getField();
         Target target = joinPoint.getTarget();
         LoggerJoin loggerJoin = (LoggerJoin) joinPoint.getAnnotation();
