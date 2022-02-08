@@ -5,12 +5,14 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.text.Normalizer;
+import java.util.Objects;
 
 /**
  * @Date: 2020/10/16
  */
 public class Url {
     private final String url;
+    private String fullUrl;
     private static final char[] hexDigits = {
             '0', '1', '2', '3', '4', '5', '6', '7',
             '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
@@ -28,8 +30,19 @@ public class Url {
         this.url = uri.toString();
     }
 
-    public String string(){
+    public String getUrl(){
         return this.url;
+    }
+
+    public void setFullUrl(String fullUrl) {
+        this.fullUrl = fullUrl;
+    }
+
+    public String getFullUrl() {
+        if(Objects.isNull(fullUrl)){
+            return url;
+        }
+        return fullUrl;
     }
 
     @Override
@@ -42,20 +55,24 @@ public class Url {
      * @return ascii string
      */
     public String asciiString() {
+        String url = Objects.isNull(fullUrl) ? this.url : this.fullUrl;
+        if(Objects.isNull(url)){
+            return "";
+        }
 
-        int n = this.url.length();
+        int n = url.length();
         if (n == 0)
-            return this.url;
+            return url;
 
         // First check whether we actually need to encode
         for (int i = 0;;) {
-            if (this.url.charAt(i) >= '\u0080')
+            if (url.charAt(i) >= '\u0080')
                 break;
             if (++i >= n)
-                return this.url;
+                return url;
         }
 
-        String ns = Normalizer.normalize(this.url, Normalizer.Form.NFC);
+        String ns = Normalizer.normalize(url, Normalizer.Form.NFC);
         ByteBuffer bb;
         bb = ByteBuffer.wrap(ns.getBytes(StandardCharsets.UTF_8));
         StringBuilder sb = new StringBuilder();

@@ -103,7 +103,7 @@ public final class ReadApiConfig {
      * @return api config object
      */
     private static List<Server> init(){
-        String apiConfName = PropertyUtil.getProperty("api.config.folder.path");
+        String apiConfName = PropertyUtil.getProperty("fastest.api.config.folder.path");
         if(Objects.nonNull(apiConfName)){
             folderName = apiConfName;
         }

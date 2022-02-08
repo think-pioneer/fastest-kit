@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 /**
  * @Date: 2020/10/24
  */
+@SuppressWarnings("unchecked")
 public enum  PropertyUtil {
     INSTANCE;
     private final Properties properties;
@@ -288,11 +289,11 @@ public enum  PropertyUtil {
         return PropertyUtil.INSTANCE.getPropertiesInternal(path);
     }
 
-    public static Object getOrDefault(String key, Object defaultValue){
-        return PropertyUtil.INSTANCE.getOrDefaultInternal(key, defaultValue);
+    public static <T> T getOrDefault(String key, T defaultValue){
+        return (T) PropertyUtil.INSTANCE.getOrDefaultInternal(key, defaultValue);
     }
 
-    public static Object getOrDefault(String key, Object defaultValue, String path){
-        return PropertyUtil.INSTANCE.getOrDefaultInternal(key, defaultValue,path);
+    public static <T> T getOrDefault(String key, T defaultValue, String path){
+        return (T) PropertyUtil.INSTANCE.getOrDefaultInternal(key, defaultValue,path);
     }
 }

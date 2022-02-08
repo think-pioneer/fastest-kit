@@ -29,10 +29,11 @@ public class TangShi implements Poetry{
     }
 
     @Override
-    public String show() {
+    public String content() {
         TangShiEntity entity = rangeTangShi();
         StringBuilder sb = new StringBuilder();
-        sb.append("\r\n").append(entity.getTitle()).append("·").append(entity.getAuthor()).append("\r\n");
+        sb.append("\r\n《").append(entity.getTitle()).append("》")
+                .append("  --").append(entity.getAuthor()).append("\r\n\r\n");
         for(String str:entity.getParagraphs()){
             sb.append(str).append("\r\n");
         }

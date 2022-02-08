@@ -1,8 +1,13 @@
-package xyz.thinktest.fastestapi.core.internal.enhance.methodhelper;
+package xyz.thinktest.fastestapi.core.enhance;
 
 import org.apache.commons.collections4.MapUtils;
+import xyz.thinktest.fastestapi.core.annotations.HttpLog;
+import xyz.thinktest.fastestapi.core.internal.enhance.methodhelper.AbstractMethodProcess;
 import xyz.thinktest.fastestapi.http.Metadata;
 import xyz.thinktest.fastestapi.http.Requester;
+import xyz.thinktest.fastestapi.http.Responder;
+import xyz.thinktest.fastestapi.logger.FastestLogger;
+import xyz.thinktest.fastestapi.logger.FastestLoggerFactory;
 import xyz.thinktest.fastestapi.utils.ObjectUtil;
 import xyz.thinktest.fastestapi.common.exceptions.EnhanceException;
 import xyz.thinktest.fastestapi.common.exceptions.HttpException;
@@ -17,8 +22,9 @@ import java.util.regex.Pattern;
 /**
  * @Date: 2021/11/30
  */
-public abstract class AbstractRestAnnotationProcess extends AbstractMethodProcess {
-    protected void buildMetadata(Method method, Object[] args, String url, HttpMethod httpMethod, boolean isAuto, boolean isSync){
+public abstract class RunHttpRequest extends AbstractMethodProcess {
+    private static final FastestLogger logger = FastestLoggerFactory.getLogger("HttpRequest");
+    protected void run(Method method, Object[] args, String url, HttpMethod httpMethod, boolean isAuto, boolean isSync){
         List<Object> argList = new ArrayList<>(Arrays.asList(args));
         Restfuls restfuls = null;
         for(Object arg:args){
@@ -58,13 +64,40 @@ public abstract class AbstractRestAnnotationProcess extends AbstractMethodProces
             if(Objects.isNull(requester)){
                 throw new HttpException(ObjectUtil.format("{}.{}use auto send needs Requester object as params,but not found",method.getDeclaringClass().getName(), method.getName()));
             }
-            if(!isUrl(requester.metadata().getUrl().string())){
+            if(!isUrl(requester.metadata().getUrl().getUrl())){
                 throw new EnhanceException(ObjectUtil.format("url:\"{}\" is not a valid url", url));
+            }
+            HttpLog httpLog = method.getDeclaredAnnotation(HttpLog.class);
+            boolean showRequestLog = Objects.isNull(httpLog) ? requester.settings().requester().isShowRequestLog() : httpLog.showRequestLog();
+            boolean showResponseLog = Objects.isNull(httpLog) ? requester.settings().requester().isShowResponseLog() : httpLog.showResponseLog();
+            Metadata metadata = requester.metadata();
+            if(showRequestLog) {
+                logger.info("**********HTTP REQUEST**********\n" +
+                        "Http Url:{}\n" +
+                        "Http Method:{}\n" +
+                        "Http Header:{}\n" +
+                        "Http QueryParameters:{}\n" +
+                        "Http Forms:{}\n" +
+                        "Http Json:{}", metadata.getUrl().getFullUrl(), metadata.getMethod().getMethodName(), metadata.getHeaders(), metadata.getParameters(), metadata.getForms(), metadata.getJson());
             }
             if(isSync){
                 requester.sync();
             } else {
                 requester.async();
+            }
+            if(showResponseLog) {
+                Responder responder = requester.getResponder();
+                if (Objects.isNull(responder)) {
+                    logger.info("**********HTTP RESPONSE**********\n" +
+                            "Http Status Code:null\n" +
+                            "Http Response Header:null\n" +
+                            "Http Response body:null");
+                } else {
+                    logger.info("**********HTTP RESPONSE**********\n" +
+                            "Http Status Code:{}\n" +
+                            "Http Response Header:{}\n" +
+                            "Http Response body:{}", responder.stateCode(), responder.headers(), responder.bodyToString());
+                }
             }
         }
     }

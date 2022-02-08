@@ -16,7 +16,7 @@ public interface Requester {
     Metadata metadata(Metadata metadata);
 
     /**
-     *设置客户端的设置项
+     *获取客户端的设置项
      */
     Settings settings();
 
@@ -24,11 +24,6 @@ public interface Requester {
      * 获取responder
      */
     Responder getResponder();
-
-    /**
-     * 打印http响应的关键信息
-     */
-    void printResponse();
 
     /**
      * 执行同步请求

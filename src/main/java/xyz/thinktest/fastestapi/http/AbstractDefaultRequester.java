@@ -111,12 +111,4 @@ abstract class AbstractDefaultRequester implements Requester {
             this.metadata.headersRecovery().parametersRecovery().formRecovery().jsonRecovery();
         }
     }
-
-    @Override
-    public void printResponse() {
-        logger.info("**********HTTP RESPONSE**********\n" +
-                "Http Status Code:{}\n" +
-                "Http Response Header:{}\n" +
-                "Http Response body:{}", this.responder.stateCode(), this.responder.headers(), this.responder.bodyToString());
-    }
 }

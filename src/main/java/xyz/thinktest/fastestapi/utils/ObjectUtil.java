@@ -79,5 +79,12 @@ public final class ObjectUtil {
         }
         return true;
     }
+
+    public static <T, U> T nullOfDefault(U src, T defaultValue){
+        if(null == src){
+            return defaultValue;
+        }
+        return (T) src;
+    }
 }
 

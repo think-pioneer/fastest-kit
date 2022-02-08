@@ -19,7 +19,7 @@ import java.util.Objects;
  *
  * @Date: 2020/11/15
  */
-
+@SuppressWarnings("unchecked")
 class Sender {
     private static final FastestLogger logger = FastestLoggerFactory.getLogger(Sender.class);
     private final OkHttpClient client;
@@ -31,9 +31,9 @@ class Sender {
         try {
             this.request = new RequestContainer(metadata).build();
         }catch (Exception e){
-            throw new HttpException(e.getMessage());
+            throw new HttpException(e.getMessage(), e);
         }
-        this.client = settings.client();
+        this.client = settings.http();
 
     }
 
@@ -49,10 +49,9 @@ class Sender {
      * set response when async request
      * @param response response
      */
-    private <T> void setResponse(Response response){
+    private void setResponse(Response response){
         Class<Responder> responderType = (Class<Responder>) httpCacheInternal.get("fastest.api.http.responder");
-        Responder responder = ApplicationBean.getOriginBean(responderType, new Class<?>[]{Response.class}, new Object[]{response});
-        this.responder = responder;
+        this.responder = ApplicationBean.getOriginBean(responderType, new Class<?>[]{Response.class}, new Object[]{response});
     }
 
     /**
@@ -117,6 +116,7 @@ class Sender {
                 });
             }
             this.httpUrl = urlBuilder.build();
+            this.metadata.getUrl().setFullUrl(this.httpUrl.toString());
         }
 
         private void buildBody(){
@@ -146,13 +146,6 @@ class Sender {
             this.buildBody();
             this.builder.url(this.httpUrl);
             HttpMethod method = this.metadata.getMethod();
-            logger.info("**********HTTP REQUEST**********\n" +
-                    "Http Url:{}\n" +
-                    "Http Method:{}\n" +
-                    "Http Header:{}\n" +
-                    "Http QueryParameters:{}\n" +
-                    "Http Forms:{}\n" +
-                    "Http Json:{}", this.httpUrl, method.getMethodName(), this.metadata.getHeaders(), this.metadata.getParameters(), this.metadata.getForms(), this.metadata.getJson());
             method.execute(this.builder, this.requestBody);
             return this.builder.build();
         }

@@ -1055,9 +1055,11 @@ java -cp fastest-test-1.0-SNAPSHOT.jar:fastest-test-1.0-SNAPSHOT-tests.jar org.t
 
 ## 系统参数
 
-| 参数                       | 是否必须 | 默认值                                                       | 说明                                                         |
-| -------------------------- | -------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| api.config.folder.path     | 否       | apiconfig                                                    | api配置文件的目录，会扫描该目录下所有的文件及子文件夹，文件类型为json、yaml、yml |
-| rest.temp.api              | 否       | apiconfig/apiconfig_custom/APIConfTemp_2022_01_29_23_31_01_6508.yaml | 保存RestTemp注解参数的目录及文件，文件类型为yaml             |
-| fastest.api.http.responder | 否       | DefaultResponder                                             | 自定义responder的实现类                                      |
+| 参数                           | 是否必须 | 默认值                                                       | 说明                                                         |
+| ------------------------------ | -------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| fastest.api.config.folder.path | 否       | apiconfig                                                    | api配置文件的目录，会扫描该目录下所有的文件及子文件夹，文件类型为json、yaml、yml |
+| fastest.rest.temp.api          | 否       | apiconfig/<br>apiconfig_custom/<br>APIConfTemp_2022_01_29_23_31_01_6508.yaml | 保存RestTemp注解参数的目录及文件，文件类型为yaml             |
+| fastest.api.http.responder     | 否       | DefaultResponder                                             | 自定义responder的实现类                                      |
+| fastest.rest.print.request     | 否       | true                                                         | 全局参数，控制打印http请求的log，单次请求可通过@HttpLog的showRequestLog覆盖该参数的值 |
+| fastest.rest.print.response    | 否       | false                                                        | 全局参数，控制打印http响应的log，单次请求可通过@HttpLog的showResponseLog覆盖该参数的值 |
 

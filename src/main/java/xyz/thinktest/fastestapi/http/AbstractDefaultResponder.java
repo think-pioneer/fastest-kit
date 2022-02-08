@@ -45,14 +45,6 @@ abstract class AbstractDefaultResponder implements Responder{
     }
 
     @Override
-    public void printResponse() {
-        logger.info("**********HTTP RESPONSE**********\n" +
-                "Http Status Code:{}\n" +
-                "Http Response Header:{}\n" +
-                "Http Response body:{}", this.httpCode, this.headers(), this.bodyString);
-    }
-
-    @Override
     public int stateCode() {
         return this.httpCode;
     }

@@ -20,10 +20,11 @@ public class SongCi implements Poetry{
         songcies = JSONFactory.stringToObject(JSONFactory.read(is).toString(), List.class, SongCiEntity.class);
     }
     @Override
-    public String show() {
+    public String content() {
         SongCiEntity entity = rangeSongCi();
         StringBuilder sb = new StringBuilder();
-        sb.append("\r\n").append(entity.getRhythmic()).append("·").append(entity.getAuthor()).append("\r\n");
+        sb.append("\r\n《").append(entity.getRhythmic()).append("》")
+                .append("  --").append(entity.getAuthor()).append("\r\n\r\n");
         for(String line:entity.getParagraphs()){
             sb.append(line).append("\r\n");
         }

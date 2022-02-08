@@ -13,11 +13,6 @@ import java.nio.charset.Charset;
 public interface Responder {
 
     /**
-     * 打印http响应
-     */
-    void printResponse();
-
-    /**
      *http响应码，非业务响应码
      */
     int stateCode();

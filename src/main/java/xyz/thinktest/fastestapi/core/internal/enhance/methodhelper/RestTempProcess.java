@@ -1,6 +1,7 @@
 package xyz.thinktest.fastestapi.core.internal.enhance.methodhelper;
 
 import xyz.thinktest.fastestapi.core.annotations.Pointcut;
+import xyz.thinktest.fastestapi.core.enhance.RunHttpRequest;
 import xyz.thinktest.fastestapi.core.enhance.joinpoint.method.JoinPoint;
 import xyz.thinktest.fastestapi.core.rest.http.metadata.ReadApiConfig;
 import xyz.thinktest.fastestapi.utils.ObjectUtil;
@@ -17,7 +18,7 @@ import java.util.Objects;
  * @Date: 2021/11/28
  */
 @Pointcut(annotation = RestTemp.class)
-public class RestTempProcess extends AbstractRestAnnotationProcess {
+public class RestTempProcess extends RunHttpRequest {
 
     @Override
     public void process(JoinPoint joinPoint){
@@ -43,7 +44,7 @@ public class RestTempProcess extends AbstractRestAnnotationProcess {
         if(args.length == 0){
             throw  new EnhanceException(ObjectUtil.format("method:[{}] haven't no parameters.", method.getName()));
         }
-        buildMetadata(method, args, url, httpMethodType, isAuto, isSync);
+        run(method, args, url, httpMethodType, isAuto, isSync);
         ReadApiConfig.Server server = ReadApiConfig.Server.init();
         server.setHost(host);
         if(globalIsSave){

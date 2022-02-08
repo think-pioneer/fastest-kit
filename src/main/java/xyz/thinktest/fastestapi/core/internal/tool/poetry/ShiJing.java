@@ -20,10 +20,11 @@ public class ShiJing implements Poetry{
     }
 
     @Override
-    public String show() {
+    public String content() {
         ShiJingEntity entity = rangeShiJing();
         StringBuilder sb = new StringBuilder();
-        sb.append("\r\n").append(entity.getChapter()).append("·").append(entity.getSection()).append("·").append(entity.getTitle()).append("\r\n");
+        sb.append("\r\n《").append(entity.getTitle()).append("》")
+                .append("  --").append(entity.getChapter()).append("·").append(entity.getSection()).append("\r\n\r\n");
         for(String s:entity.getContent()){
             sb.append(s).append("\r\n");
         }

@@ -1,6 +1,8 @@
 package xyz.thinktest.fastestapi.http;
 
 import okhttp3.*;
+import xyz.thinktest.fastestapi.utils.ObjectUtil;
+import xyz.thinktest.fastestapi.utils.files.PropertyUtil;
 
 import javax.net.SocketFactory;
 import javax.net.ssl.HostnameVerifier;
@@ -10,6 +12,7 @@ import java.net.Proxy;
 import java.net.ProxySelector;
 import java.time.Duration;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -24,11 +27,11 @@ public class Settings extends OkHttpClient {
         requesterSettings = new RequesterSettings();
     }
 
-    OkHttpClient client(){
+    OkHttpClient http(){
         return builder.build();
     }
 
-    RequesterSettings requester(){
+    public RequesterSettings requester(){
         return requesterSettings;
     }
 
@@ -39,6 +42,16 @@ public class Settings extends OkHttpClient {
 
     public Settings cleanBody(boolean isCleanBody){
         this.requesterSettings.setCleanBody(isCleanBody);
+        return this;
+    }
+
+    public Settings showRequestLog(boolean showRequestLog){
+        this.requesterSettings.setShowRequestLog(showRequestLog);
+        return this;
+    }
+
+    public Settings showResponseLog(boolean showResponseLog){
+        this.requesterSettings.setShowResponseLog(showResponseLog);
         return this;
     }
 
@@ -216,17 +229,23 @@ public class Settings extends OkHttpClient {
     public static class RequesterSettings {
         private boolean isCleanMetadata;
         private boolean isCleanBody;
+        private Boolean showRequestLog;
+        private Boolean showResponseLog;
 
         RequesterSettings(){
             this.isCleanMetadata = false;
             this.isCleanBody = true;
+            String request = PropertyUtil.getOrDefault("fastest.rest.print.request", "true");
+            String response = PropertyUtil.getOrDefault("fastest.rest.print.response", "false");
+            this.showRequestLog = Boolean.parseBoolean(request);
+            this.showResponseLog = Boolean.parseBoolean(response);
         }
 
         public boolean isCleanMetadata() {
             return isCleanMetadata;
         }
 
-        public void setCleanMetadata(boolean cleanMetadata) {
+        void setCleanMetadata(boolean cleanMetadata) {
             isCleanMetadata = cleanMetadata;
         }
 
@@ -234,8 +253,24 @@ public class Settings extends OkHttpClient {
             return isCleanBody;
         }
 
-        public void setCleanBody(boolean cleanBody) {
+        void setCleanBody(boolean cleanBody) {
             isCleanBody = cleanBody;
+        }
+
+        public boolean isShowRequestLog() {
+            return showRequestLog;
+        }
+
+        void setShowRequestLog(boolean showRequestLog) {
+            this.showRequestLog = showRequestLog;
+        }
+
+        public boolean isShowResponseLog() {
+            return showResponseLog;
+        }
+
+        void setShowResponseLog(boolean showResponseLog) {
+            this.showResponseLog = showResponseLog;
         }
     }
 }

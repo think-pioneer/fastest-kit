@@ -2,6 +2,7 @@ package xyz.thinktest.fastestapi.core.internal.enhance.methodhelper;
 
 import org.apache.commons.lang3.StringUtils;
 import xyz.thinktest.fastestapi.core.annotations.Pointcut;
+import xyz.thinktest.fastestapi.core.enhance.RunHttpRequest;
 import xyz.thinktest.fastestapi.core.enhance.joinpoint.method.JoinPoint;
 import xyz.thinktest.fastestapi.core.rest.http.metadata.ReadApiConfig;
 import xyz.thinktest.fastestapi.http.Metadata;
@@ -21,7 +22,7 @@ import java.util.Objects;
  * @Date: 2021/11/28
  */
 @Pointcut(annotation = RestMetadata.class)
-public class RestMetadataProcess extends AbstractRestAnnotationProcess {
+public class RestMetadataProcess extends RunHttpRequest {
 
     @Override
     public void process(JoinPoint joinPoint){
@@ -71,6 +72,6 @@ public class RestMetadataProcess extends AbstractRestAnnotationProcess {
         if(StringUtils.isEmpty(url)){
             throw new EnhanceException(ObjectUtil.format("Class={}, method={} url is empty", clazz.getName(), method.getName()));
         }
-        buildMetadata(method, args, url, httpMethodType, isAuto, isSync);
+        run(method, args, url, httpMethodType, isAuto, isSync);
     }
 }

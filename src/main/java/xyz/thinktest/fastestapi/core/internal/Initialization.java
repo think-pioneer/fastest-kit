@@ -74,7 +74,7 @@ public class Initialization {
         List<Class<? extends Poetry>> poetries = new ArrayList<>(reflections.getSubTypesOf(Poetry.class));
         Random random = new Random();
         Poetry poetry = EnhanceFactory.origin(poetries.get(random.nextInt(poetries.size())));
-        String content = poetry.show();
+        String content = poetry.content();
         ColorPrint.CYAN.println(content);
     }
 }
