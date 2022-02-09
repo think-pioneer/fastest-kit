@@ -1,7 +1,6 @@
 package xyz.thinktest.fastestapi.http;
 
-import xyz.thinktest.fastestapi.http.DefaultRequester;
-import xyz.thinktest.fastestapi.http.Requester;
+import xyz.thinktest.fastestapi.core.ApplicationBean;
 import xyz.thinktest.fastestapi.http.metadata.Header;
 import xyz.thinktest.fastestapi.http.metadata.Headers;
 
@@ -9,14 +8,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class RequesterFactory {
+    private static final HttpCacheInternal httpCacheInternal = HttpCacheInternal.INSTANCE;
     private RequesterFactory(){}
 
     public static Requester create(){
-        return new DefaultRequester();
+        Class<Requester> requesterType = httpCacheInternal.get("fastest.api.http.requester");
+        return ApplicationBean.getEnhanceBean(requesterType);
     }
 
     public static Requester create(Map<Object, Object> authentication){
-        return new DefaultRequester(authentication);
+        Class<Requester> requesterType = httpCacheInternal.get("fastest.api.http.requester");
+        return ApplicationBean.getOriginBean(requesterType, new Class[]{Map.class}, new Object[]{authentication});
     }
 
     public static Requester create(Header header){

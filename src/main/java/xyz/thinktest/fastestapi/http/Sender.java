@@ -50,8 +50,8 @@ class Sender {
      * @param response response
      */
     private void setResponse(Response response){
-        Class<Responder> responderType = (Class<Responder>) httpCacheInternal.get("fastest.api.http.responder");
-        this.responder = ApplicationBean.getOriginBean(responderType, new Class<?>[]{Response.class}, new Object[]{response});
+        Class<Responder> responderType = httpCacheInternal.get("fastest.api.http.responder");
+        this.responder = ApplicationBean.getEnhanceBean(responderType, new Class<?>[]{Response.class}, new Object[]{response});
     }
 
     /**

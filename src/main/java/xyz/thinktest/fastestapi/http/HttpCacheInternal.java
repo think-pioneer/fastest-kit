@@ -3,6 +3,7 @@ package xyz.thinktest.fastestapi.http;
 import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings("unchecked")
 public enum HttpCacheInternal {
     INSTANCE;
     private final Map<String, Object> cache;
@@ -14,7 +15,7 @@ public enum HttpCacheInternal {
         this.cache.put(key, value);
     }
 
-    public Object get(String key){
-        return this.cache.get(key);
+    public <T> T get(String key){
+        return (T) this.cache.get(key);
     }
 }

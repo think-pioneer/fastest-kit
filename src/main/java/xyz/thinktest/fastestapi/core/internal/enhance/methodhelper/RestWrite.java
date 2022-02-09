@@ -1,7 +1,7 @@
 package xyz.thinktest.fastestapi.core.internal.enhance.methodhelper;
 
 import xyz.thinktest.fastestapi.common.exceptions.FileException;
-import xyz.thinktest.fastestapi.core.enhance.ShutdownHook;
+import xyz.thinktest.fastestapi.core.enhance.Shutdown;
 import xyz.thinktest.fastestapi.logger.FastestLogger;
 import xyz.thinktest.fastestapi.logger.FastestLoggerFactory;
 import xyz.thinktest.fastestapi.utils.ObjectUtil;
@@ -23,10 +23,10 @@ import java.util.Random;
  *
  * @date: 2022-01-28
  */
-public class RestWriteHook extends ShutdownHook {
-    private static final FastestLogger logger = FastestLoggerFactory.getLogger(RestWriteHook.class);
+public class RestWrite implements Shutdown {
+    private static final FastestLogger logger = FastestLoggerFactory.getLogger(RestWrite.class);
     @Override
-    public void run() {
+    public void postHook() {
         String defaultPath = PropertyUtil.getProperty("fastest.rest.temp.api");
         if(Objects.isNull(defaultPath)){
             defaultPath = ObjectUtil.format("apiconfig_custom/APIConfTemp_{}_{}.yaml", DateTime.newInstance(new Date(), DateUtil.FORMAT_D).string(), new Random().nextInt(10000));

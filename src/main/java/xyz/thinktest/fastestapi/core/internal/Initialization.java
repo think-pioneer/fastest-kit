@@ -1,13 +1,14 @@
 package xyz.thinktest.fastestapi.core.internal;
 
+import xyz.thinktest.fastestapi.common.exceptions.InitializationException;
 import xyz.thinktest.fastestapi.core.enhance.Initialize;
-import xyz.thinktest.fastestapi.common.exceptions.FastestBasicException;
 import xyz.thinktest.fastestapi.core.internal.enhance.EnhanceFactory;
 import xyz.thinktest.fastestapi.core.internal.scanner.Reflections;
 import xyz.thinktest.fastestapi.core.internal.scanner.ReflectionsUnit;
 import xyz.thinktest.fastestapi.core.internal.scanner.ScannerUnit;
 import xyz.thinktest.fastestapi.core.internal.tool.Banner;
 import xyz.thinktest.fastestapi.core.internal.tool.poetry.Poetry;
+import xyz.thinktest.fastestapi.http.DefaultRequester;
 import xyz.thinktest.fastestapi.http.DefaultResponder;
 import xyz.thinktest.fastestapi.http.HttpCacheInternal;
 import xyz.thinktest.fastestapi.utils.color.ColorPrint;
@@ -34,7 +35,7 @@ public class Initialization {
             CompletableFuture.allOf(coffee, runInit).get();
             ColorPrint.GREEN.println("Initialization complete!!!");
         }catch (Throwable e){
-            throw new FastestBasicException("initialization fail", e);
+            throw new InitializationException("initialization fail", e);
         }
     }
     private static void runInit(){
@@ -45,20 +46,25 @@ public class Initialization {
     }
 
     private static void realInit(){
-        readResponder();
+        httpInit();
         ScannerUnit.scan();
         runUserInit();
     }
 
-    private static void readResponder() {
+    private static void httpInit(){
         try {
+            String requesterClass = PropertyUtil.getProperty("fastest.api.http.requester");
             String responderClass = PropertyUtil.getProperty("fastest.api.http.responder");
+            if(Objects.isNull(requesterClass)){
+                requesterClass = DefaultRequester.class.getCanonicalName();
+            }
             if (Objects.isNull(responderClass)) {
                 responderClass = DefaultResponder.class.getCanonicalName();
             }
+            httpCacheInternal.set("fastest.api.http.requester", Class.forName(requesterClass));
             httpCacheInternal.set("fastest.api.http.responder", Class.forName(responderClass));
         }catch (ClassNotFoundException e){
-            throw new FastestBasicException("load class fail", e);
+            throw new InitializationException("initialization http fail", e);
         }
     }
 
@@ -66,7 +72,7 @@ public class Initialization {
         Set<Class<? extends Initialize>> initializes = reflections.getSubTypesOf(Initialize.class);
         for(Class<? extends Initialize> clazz:initializes){
             Initialize initialize = EnhanceFactory.enhance(clazz);
-            initialize.pre();
+            initialize.preHook();
         }
     }
 

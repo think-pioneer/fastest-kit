@@ -1,7 +1,6 @@
 package xyz.thinktest.fastestapi.http;
 
 import okhttp3.*;
-import xyz.thinktest.fastestapi.utils.ObjectUtil;
 import xyz.thinktest.fastestapi.utils.files.PropertyUtil;
 
 import javax.net.SocketFactory;
@@ -12,7 +11,6 @@ import java.net.Proxy;
 import java.net.ProxySelector;
 import java.time.Duration;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**

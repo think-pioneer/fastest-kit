@@ -1,5 +1,7 @@
 package xyz.thinktest.fastestapi.http;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JavaType;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import xyz.thinktest.fastestapi.http.metadata.Headers;
@@ -41,6 +43,30 @@ public interface Responder {
      * response body to json
      */
     Json bodyToJson();
+
+    /**
+     * 基于jackson的Java对象转换
+     * 如果对象的属性结构复杂，建议使用这个方法
+     */
+    <T> T bodyToObject(JavaType type);
+
+    /**
+     * 基于jackson的Java对象转换
+     * 如果对象属性为基本数据类型，可以使用这个方法
+     */
+    <T> T bodyToObject(Class<T> type);
+
+    /**
+     *基于jackson的Java对象转换
+     * 如果对象属性也时对象，可以使用这个方法
+     */
+    <T> T bodyToObject(TypeReference<T> typeReference);
+
+    /**
+     *基于jackson的Java对象转换
+     * 如果对象是个容器时，可以使用该方法
+     */
+    <T> T bodyToObject(Class<?> collectionClass, Class<?> ...elementClasses);
 
     /**
      * 获取okhttp的响应对象

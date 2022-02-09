@@ -3,6 +3,7 @@ package xyz.thinktest.fastestapi.core.internal.enhance;
 import xyz.thinktest.fastestapi.common.exceptions.EnhanceException;
 import xyz.thinktest.fastestapi.common.exceptions.FastestBasicException;
 import xyz.thinktest.fastestapi.utils.ObjectUtil;
+import xyz.thinktest.fastestapi.utils.reflects.ReflectUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
@@ -37,6 +38,9 @@ public final class EnhanceFactory {
     }
 
     public static <T> T enhance(Class<T> clazz, Class<?>[] argumentTypes, Object[] arguments){
+        if(ReflectUtil.isFinal(clazz)){
+            throw new EnhanceException("Enhanced classes cannot be finalized");
+        }
         Enhance enhance = new Enhance();
         enhance.setClass(clazz);
         enhance.setHandler(new MethodHandler());
@@ -46,7 +50,7 @@ public final class EnhanceFactory {
             }
             return (T) enhance.create(argumentTypes, arguments);
         }catch (IllegalArgumentException e){
-            throw new EnhanceException(ObjectUtil.format("{} expected type and number of construction parameters are inconsistent with the actual ones", clazz), e);
+            throw new EnhanceException(ObjectUtil.format("{} enhance failed", clazz), e);
 
         }
     }

@@ -9,7 +9,7 @@ import java.util.Map;
  * @Desc: 请求者,可以理解为一个通用的请求对象(将鉴权信息直接放入body中，每次请求时带入)，也可以理解为不同的请求对象(使用Requester(Map<String, String> authentication)构造方法)
  */
 
-final class DefaultRequester extends AbstractDefaultRequester {
+public class DefaultRequester extends AbstractDefaultRequester {
 
     /**
      * 需要在body中指定鉴权方式

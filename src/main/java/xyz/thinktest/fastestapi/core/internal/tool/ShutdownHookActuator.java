@@ -1,7 +1,7 @@
 package xyz.thinktest.fastestapi.core.internal.tool;
 
 import org.reflections.Reflections;
-import xyz.thinktest.fastestapi.core.enhance.ShutdownHook;
+import xyz.thinktest.fastestapi.core.enhance.Shutdown;
 import xyz.thinktest.fastestapi.core.internal.enhance.EnhanceFactory;
 import xyz.thinktest.fastestapi.core.internal.enhance.methodhelper.RestTempWrite;
 import xyz.thinktest.fastestapi.core.internal.scanner.ReflectionsUnit;
@@ -19,10 +19,14 @@ public final class ShutdownHookActuator {
             return;
         }
         Reflections reflections = ReflectionsUnit.INSTANCE.reflections;
-        Set<Class<? extends ShutdownHook>> shutdownHooks = reflections.getSubTypesOf(ShutdownHook.class);
+        Set<Class<? extends Shutdown>> shutdownHooks = reflections.getSubTypesOf(Shutdown.class);
         Runtime runtime = Runtime.getRuntime();
-        for(Class<? extends ShutdownHook> shutdownHook : shutdownHooks){
-            runtime.addShutdownHook(EnhanceFactory.origin(shutdownHook));
+        for(Class<? extends Shutdown> shutdownHookType : shutdownHooks){
+            Thread thread = new Thread(() -> {
+                Shutdown shutdown = EnhanceFactory.origin(shutdownHookType);
+                shutdown.postHook();
+            });
+            runtime.addShutdownHook(thread);
         }
     }
 }

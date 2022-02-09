@@ -901,9 +901,71 @@ public class CaseTest {
 }
 ```
 
-## 1.5 Step
+# 2. 插件
 
-Step为该模块定义的[测试三层](# 1.0 用例分层思想)中的step层，所有step需要继承并实现Step类。
+## 2.1 Initialize
+
+当需要在测试前进行初始化操作时，可以继承Initialize实现preHook方法。
+
+```java
+public class MyInit implements Initialize{
+    @Override
+    public void preHook(){
+        //do something
+    }
+}
+```
+
+
+
+## 2.2 Shutdown
+
+当测试完成后退出系统前需要做一些收尾工作时，可以继承Shutdown实现postHook方法。
+
+```java
+public class MyShutdown implements Shutdown{
+    @Override
+    public void postHook(){
+        //do something
+    }
+}
+```
+
+## 2.3 Requester
+
+当框架提供的Requester实现无法满足需求时，可自己实现Requester，自己实现时需要在配置文件中指定实现类的完整类名
+
+```java
+public class MyRequester implements Requester{
+    //do something
+}
+```
+
+application.properties
+
+```properties
+fastest.api.http.requester=xxx.xxx.MyRequester
+```
+
+## 2.4 Responder
+
+自定义实现Http响应解析。需要在配置文件指定实现类的完整类名
+
+```java
+public class MyResponder implements Responder{
+    //do something
+}
+```
+
+application.properties
+
+```properties
+fastest.api.http.responder=xxx.xxx.MyResponder
+```
+
+## 2.5 Step
+
+Step为该框架定义的[测试三层](# 1.0 用例分层思想)中的step层，所有step需要继承并实现Step类。
 
 继承Step类的目的是为了方便框架执行recovery操作，该继承并不是必须的操作。
 
@@ -926,9 +988,9 @@ public class MyStep implements Step {
 }
 ```
 
+# 
 
-
-# 2. 项目使用方法
+# 3. 项目使用方法
 
 ## 配置方法
 
@@ -1053,13 +1115,21 @@ mvn clean package -DskipTests -Dmaven.skip.test.exec
 java -cp fastest-test-1.0-SNAPSHOT.jar:fastest-test-1.0-SNAPSHOT-tests.jar org.testng.TestNG [testng xml path]
 ```
 
+## 本地IDEA开发
+
+Edit Configurations -> Edit Templates -> 选择TestNG -> Listeners -> 添加listener -> 搜索"org.testng.listener.TestRunListener"，选择并添加。
+
+上面的步骤操作完成之后便可以直接运行testng用例
+
 ## 系统参数
 
-| 参数                           | 是否必须 | 默认值                                                       | 说明                                                         |
+
+| 参数                           | <span style="display:inline-block;width:70px">是否必须</span> | 默认值                                                       | 说明                                                         |
 | ------------------------------ | -------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | fastest.api.config.folder.path | 否       | apiconfig                                                    | api配置文件的目录，会扫描该目录下所有的文件及子文件夹，文件类型为json、yaml、yml |
-| fastest.rest.temp.api          | 否       | apiconfig/<br>apiconfig_custom/<br>APIConfTemp_2022_01_29_23_31_01_6508.yaml | 保存RestTemp注解参数的目录及文件，文件类型为yaml             |
-| fastest.api.http.responder     | 否       | DefaultResponder                                             | 自定义responder的实现类                                      |
+| fastest.rest.temp.api          | 否       | <span style="display:inline-block;width:100px">apiconfig/apiconfig_custom/APIConfTemp_2022_01_29_23_31_01_6508.yaml</span> | 保存RestTemp注解参数的目录及文件，文件类型为yaml             |
+| fastest.api.http.requester     | 否       | DefaultRequester                                             | 自定义Requester的实现类                                      |
+| fastest.api.http.responder     | 否       | DefaultResponder                                             | 自定义Responder的实现类                                      |
 | fastest.rest.print.request     | 否       | true                                                         | 全局参数，控制打印http请求的log，单次请求可通过@HttpLog的showRequestLog覆盖该参数的值 |
-| fastest.rest.print.response    | 否       | false                                                        | 全局参数，控制打印http响应的log，单次请求可通过@HttpLog的showResponseLog覆盖该参数的值 |
+| fastest.rest.print.response    | 否       | false                                                        | 全局参数，控制打印http响应的log，单次请求可通过@HttpLog的showResponseLog覆盖该参数的值。鉴于某些响应body比较大，所以默认不打印 |
 
