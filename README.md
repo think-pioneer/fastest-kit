@@ -834,12 +834,12 @@ public interface Controller {
 
 ### 1.3.1 字段注解
 
-字段注解的功能实现类必须继承FieldAnnotationProcessable类
+字段注解的功能实现类必须继承FieldProcessable类
 
 JoinPoint是被拦截字段的一些信息，包含注解对象、被拦截字段、被拦截字段所在的对象、以及当前实现类对象
 
 ```java
-public class MyCustomFieldAnnotation implements FieldAnnotationProcessable {
+public class MyCustomFieldAnnotation implements FieldProcessable {
     @Override
     public void process(JoinPoint joinPoint) {
         //do something
@@ -849,12 +849,12 @@ public class MyCustomFieldAnnotation implements FieldAnnotationProcessable {
 
 ### 1.3.2 方法注解
 
-方法注解的功能实现类必须继承MethodAnnotationProcessable类
+方法注解的功能实现类必须继承MethodProcessable类
 
 JoinPoint是被拦截方法的信息，包含注解对象、被拦截方法、被拦截方法的参数、被代理的对象、实现类的对象、返回给被注解方法的返回值
 
 ```java
-public class MyCustomMethodAnnotation implements MethodAnnotationProcessable {
+public class MyCustomMethodAnnotation implements MethodProcessable {
 
     @Override
     public void process(JoinPoint joinPoint) {
@@ -901,7 +901,7 @@ public class CaseTest {
 }
 ```
 
-# 2. 插件
+# 2. 扩展
 
 ## 2.1 Initialize
 
@@ -916,7 +916,11 @@ public class MyInit implements Initialize{
 }
 ```
 
+方法说明
 
+| 方法名  | 返回值 | 说明                     |
+| ------- | ------ | ------------------------ |
+| preHook | void   | 会在框架初始化完成后执行 |
 
 ## 2.2 Shutdown
 
@@ -930,6 +934,12 @@ public class MyShutdown implements Shutdown{
     }
 }
 ```
+
+### 方法说明
+
+| 方法名   | 返回值 | 说明             |
+| -------- | ------ | ---------------- |
+| postHook | void   | 测试结束时会执行 |
 
 ## 2.3 Requester
 
@@ -947,6 +957,18 @@ application.properties
 fastest.api.http.requester=xxx.xxx.MyRequester
 ```
 
+### 方法说明
+
+| 方法名                      | 返回值    | 说明                                                         |
+| --------------------------- | --------- | ------------------------------------------------------------ |
+| metadata                    | Metadata  | 可以给requester添加metadata，此时会覆盖原来的metadata，也可获取requester的metadata，可以单独修改metadata的元素 |
+| metadata(Metadata metadata) | Metadata  | 传入一个metadata，替换掉原来的metadata。                     |
+| settings                    | Settings  | 框架提供的http设置项，主要有两种设置，一种时okhttp的setting，另一种是框架自身的设置 |
+| getResponder                | Responder | 获取框架提供的http响应对象，参考[Responder](# 2.4 Responder) |
+| sync                        | void      | 同步请求                                                     |
+| async                       | void      | 异步请求                                                     |
+| asserts                     | Asserts   | 直接通过requester对http响应进行断言                          |
+
 ## 2.4 Responder
 
 自定义实现Http响应解析。需要在配置文件指定实现类的完整类名
@@ -962,6 +984,28 @@ application.properties
 ```properties
 fastest.api.http.responder=xxx.xxx.MyResponder
 ```
+
+### 方法说明
+
+| 方法名                                                       | 返回值       | 说明                                         |
+| ------------------------------------------------------------ | ------------ | -------------------------------------------- |
+| stateCode                                                    | int          | http响应码，非业务响应码                     |
+| body                                                         | ResponseBody | http响应body，okhttp的ResponseBody对象       |
+| bodyToBytes                                                  | byte[]       | http响应body（二进制）                       |
+| bodyToString                                                 | String       | HTTP响应body（字符串），字符类型为utf-8      |
+| bodyToString(Charset charset)                                | String       | HTTP响应body（字符串），可以的指定字符类型   |
+| bodyToJson                                                   | Json         | http响应body（框架提供的json对象）           |
+| originalResponse                                             | Response     | 获取okhttp的响应对象                         |
+| headers                                                      | Headers      | 获取框架提供的header对象                     |
+| header(String key)                                           | String       | 获取header某个键的值                         |
+| download(String file)                                        | void         | 下载文件,参数file为文件路径                  |
+| asserts                                                      | Asserts      | 断言对象。方便拿到结果后直接断言。           |
+| bodyToObject(JavaType type)                                  | T            | 将响应转换为Java 对象，默认使用jackson来转换 |
+| bodyToObject(Class\<T> type)                                 | T            | 将响应转换为Java 对象，默认使用jackson来转换 |
+| bodyToObject(TypeReference\<T> typeReference)                | T            | 将响应转换为Java 对象，默认使用jackson来转换 |
+| bodyToObject(Class\<?> collectionClass, Class<?> ...elementClasses) | T            | 将响应转换为Java 对象，默认使用jackson来转换 |
+
+
 
 ## 2.5 Step
 
@@ -988,7 +1032,13 @@ public class MyStep implements Step {
 }
 ```
 
-# 
+### 方法说明
+
+| 方法名   | 返回值  | 说明                                                         |
+| -------- | ------- | ------------------------------------------------------------ |
+| recovery | boolean | 执行用例后用来做一些“恢复操作”，比如：测试完添加订单功能后，删除订单的操作 |
+
+
 
 # 3. 项目使用方法
 

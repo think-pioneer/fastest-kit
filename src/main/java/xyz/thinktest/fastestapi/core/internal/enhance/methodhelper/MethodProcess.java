@@ -1,7 +1,7 @@
 package xyz.thinktest.fastestapi.core.internal.enhance.methodhelper;
 
 import xyz.thinktest.fastestapi.core.enhance.joinpoint.Target;
-import xyz.thinktest.fastestapi.core.enhance.joinpoint.method.MethodAnnotationProcessable;
+import xyz.thinktest.fastestapi.core.enhance.joinpoint.method.MethodProcessable;
 import xyz.thinktest.fastestapi.core.enhance.joinpoint.method.MethodReturn;
 import xyz.thinktest.fastestapi.core.internal.enhance.AnnotationGardener;
 import xyz.thinktest.fastestapi.core.internal.tool.AnnotationTool;
@@ -28,7 +28,7 @@ public class MethodProcess {
         List<Object> methodReturnValues = new ArrayList<>();
         for (AnnotationGardener gardener : this.annotations) {
             Annotation annotation = gardener.getAnnotation();
-            MethodAnnotationProcessable process = (MethodAnnotationProcessable) gardener.getProcess();
+            MethodProcessable process = (MethodProcessable) gardener.getProcess();
             if(AnnotationTool.hasAnnotation(method.getDeclaringClass(), Component.class)) {
                 MutexAnnotation mutexAnnotation = annotation.annotationType().getDeclaredAnnotation(MutexAnnotation.class);
                 if(Objects.nonNull(mutexAnnotation)) {

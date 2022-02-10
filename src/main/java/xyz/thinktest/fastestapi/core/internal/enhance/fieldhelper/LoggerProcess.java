@@ -18,7 +18,7 @@ import java.lang.reflect.Modifier;
  * @Date: 2021/11/3
  */
 @Pointcut(annotation = LoggerJoin.class)
-public class LoggerAnnotationProcess extends AbstractFieldProcess {
+public class LoggerProcess extends AbstractFieldProcess {
 
     @Override
     public void process(JoinPoint joinPoint) {

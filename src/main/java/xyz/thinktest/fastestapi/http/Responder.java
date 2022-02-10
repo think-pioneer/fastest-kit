@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import xyz.thinktest.fastestapi.common.json.JSONFactory;
 import xyz.thinktest.fastestapi.http.metadata.Headers;
 import xyz.thinktest.fastestapi.http.metadata.Json;
 
@@ -45,30 +46,6 @@ public interface Responder {
     Json bodyToJson();
 
     /**
-     * 基于jackson的Java对象转换
-     * 如果对象的属性结构复杂，建议使用这个方法
-     */
-    <T> T bodyToObject(JavaType type);
-
-    /**
-     * 基于jackson的Java对象转换
-     * 如果对象属性为基本数据类型，可以使用这个方法
-     */
-    <T> T bodyToObject(Class<T> type);
-
-    /**
-     *基于jackson的Java对象转换
-     * 如果对象属性也时对象，可以使用这个方法
-     */
-    <T> T bodyToObject(TypeReference<T> typeReference);
-
-    /**
-     *基于jackson的Java对象转换
-     * 如果对象是个容器时，可以使用该方法
-     */
-    <T> T bodyToObject(Class<?> collectionClass, Class<?> ...elementClasses);
-
-    /**
      * 获取okhttp的响应对象
      */
     Response originalResponse();
@@ -95,4 +72,36 @@ public interface Responder {
      * 将响应填充到asserts对象中，可以直接用来进行断言
      */
     Asserts asserts();
+
+    /**
+     * 基于jackson的Java对象转换
+     * 如果对象的属性结构复杂，建议使用这个方法
+     */
+    default <T> T bodyToObject(JavaType type){
+        return JSONFactory.stringToObject(bodyToString(), type);
+    }
+
+    /**
+     * 基于jackson的Java对象转换
+     * 如果对象属性为基本数据类型，可以使用这个方法
+     */
+    default <T> T bodyToObject(Class<T> type){
+        return JSONFactory.stringToObject(bodyToString(), type);
+    }
+
+    /**
+     *基于jackson的Java对象转换
+     * 如果对象属性也时对象，可以使用这个方法
+     */
+    default <T> T bodyToObject(TypeReference<T> typeReference){
+        return JSONFactory.stringToObject(bodyToString(), typeReference);
+    }
+
+    /**
+     *基于jackson的Java对象转换
+     * 如果对象是个容器时，可以使用该方法
+     */
+    default <T> T bodyToObject(Class<?> collectionClass, Class<?> ...elementClasses){
+        return JSONFactory.stringToObject(bodyToString(), collectionClass, elementClasses);
+    }
 }

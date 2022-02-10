@@ -1,7 +1,7 @@
 package xyz.thinktest.fastestapi.core.internal.enhance.fieldhelper;
 
 import xyz.thinktest.fastestapi.core.enhance.joinpoint.Target;
-import xyz.thinktest.fastestapi.core.enhance.joinpoint.field.FieldAnnotationProcessable;
+import xyz.thinktest.fastestapi.core.enhance.joinpoint.field.FieldProcessable;
 import xyz.thinktest.fastestapi.core.enhance.joinpoint.field.JoinPoint;
 import xyz.thinktest.fastestapi.core.internal.enhance.EnhanceFactory;
 import xyz.thinktest.fastestapi.core.annotations.Component;
@@ -13,14 +13,14 @@ import java.util.Objects;
 /**
  * @Date: 2021/10/29
  */
-public class ComponentAnnotationProcess implements FieldAnnotationProcessable {
+public class ComponentProcess implements FieldProcessable {
     private final InstanceCache instanceCache = InstanceCache.CACHE;
     private final Class<?> clazz;
     private final Class<?>[] argumentTypes;
     private final Object[] arguments;
     private final boolean isOrigin;
 
-    public ComponentAnnotationProcess(Class<?> clazz, Class<?>[] argumentTypes, Object[] arguments, boolean isOrigin){
+    public ComponentProcess(Class<?> clazz, Class<?>[] argumentTypes, Object[] arguments, boolean isOrigin){
         this.clazz = clazz;
         this.argumentTypes = argumentTypes;
         this.arguments = arguments;

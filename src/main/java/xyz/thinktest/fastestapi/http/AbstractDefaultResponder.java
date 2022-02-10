@@ -1,7 +1,5 @@
 package xyz.thinktest.fastestapi.http;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JavaType;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import xyz.thinktest.fastestapi.common.exceptions.HttpException;
@@ -76,26 +74,6 @@ abstract class AbstractDefaultResponder implements Responder{
         Json json = Json.newEmpty();
         json.append(JSONFactory.stringToJson(this.bodyString));
         return json;
-    }
-
-    @Override
-    public <T> T bodyToObject(JavaType type) {
-        return JSONFactory.stringToObject(this.bodyString, type);
-    }
-
-    @Override
-    public <T> T bodyToObject(Class<T> type) {
-        return JSONFactory.stringToObject(this.bodyString, type);
-    }
-
-    @Override
-    public <T> T bodyToObject(TypeReference<T> typeReference) {
-        return JSONFactory.stringToObject(this.bodyString, typeReference);
-    }
-
-    @Override
-    public <T> T bodyToObject(Class<?> collectionClass, Class<?> ...elementClasses) {
-        return JSONFactory.stringToObject(this.bodyString, collectionClass, elementClasses);
     }
 
     @Override

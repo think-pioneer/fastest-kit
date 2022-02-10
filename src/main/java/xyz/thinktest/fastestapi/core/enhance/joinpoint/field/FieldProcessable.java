@@ -1,11 +1,11 @@
 package xyz.thinktest.fastestapi.core.enhance.joinpoint.field;
 
-import xyz.thinktest.fastestapi.core.enhance.AnnotationProcessable;
+import xyz.thinktest.fastestapi.core.enhance.Processable;
 
 /**
  * @Date: 2021/10/28
  */
-public interface FieldAnnotationProcessable extends AnnotationProcessable {
+public interface FieldProcessable extends Processable {
 
     /**
      * enhance feature process method of annotation

@@ -1,7 +1,7 @@
 package xyz.thinktest.fastestapi.core.internal.enhance.fieldhelper;
 
 import xyz.thinktest.fastestapi.core.enhance.joinpoint.Target;
-import xyz.thinktest.fastestapi.core.enhance.joinpoint.field.FieldAnnotationProcessable;
+import xyz.thinktest.fastestapi.core.enhance.joinpoint.field.FieldProcessable;
 import xyz.thinktest.fastestapi.core.internal.enhance.AnnotationGardener;
 import xyz.thinktest.fastestapi.core.internal.tool.AnnotationTool;
 import xyz.thinktest.fastestapi.core.annotations.Component;
@@ -41,7 +41,7 @@ class FieldProcess {
             return;
         }
         for(AnnotationGardener annotationGardener:entity.getBeforeAnnotations()){
-            FieldAnnotationProcessable process = (FieldAnnotationProcessable) annotationGardener.getProcess();
+            FieldProcessable process = (FieldProcessable) annotationGardener.getProcess();
             Annotation annotation = annotationGardener.getAnnotation();
             if (AnnotationTool.hasAnnotation(field.getDeclaringClass(), Component.class)) {
                 MutexAnnotation mutexAnnotation = annotation.annotationType().getDeclaredAnnotation(MutexAnnotation.class);

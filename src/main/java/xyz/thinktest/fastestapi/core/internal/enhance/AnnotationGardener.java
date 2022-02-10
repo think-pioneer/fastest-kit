@@ -1,6 +1,6 @@
 package xyz.thinktest.fastestapi.core.internal.enhance;
 
-import xyz.thinktest.fastestapi.core.enhance.AnnotationProcessable;
+import xyz.thinktest.fastestapi.core.enhance.Processable;
 
 import java.lang.annotation.Annotation;
 
@@ -15,11 +15,11 @@ public class AnnotationGardener implements Comparable<AnnotationGardener>{
     /**
      * 字段注解的hook注解
      */
-    private final AnnotationProcessable process;
+    private final Processable process;
 
     private final Integer index;
 
-    public AnnotationGardener(Annotation annotation, AnnotationProcessable process, int index){
+    public AnnotationGardener(Annotation annotation, Processable process, int index){
         this.annotation = annotation;
         this.process = process;
         this.index = index;
@@ -29,7 +29,7 @@ public class AnnotationGardener implements Comparable<AnnotationGardener>{
         return annotation;
     }
 
-    public AnnotationProcessable getProcess() {
+    public Processable getProcess() {
         return this.process;
     }
 

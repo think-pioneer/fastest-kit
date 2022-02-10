@@ -5,8 +5,8 @@ import xyz.thinktest.fastestapi.common.exceptions.InitializationException;
 import xyz.thinktest.fastestapi.core.annotations.After;
 import xyz.thinktest.fastestapi.core.annotations.Before;
 import xyz.thinktest.fastestapi.core.annotations.Pointcut;
-import xyz.thinktest.fastestapi.core.enhance.joinpoint.field.FieldAnnotationProcessable;
-import xyz.thinktest.fastestapi.core.enhance.joinpoint.method.MethodAnnotationProcessable;
+import xyz.thinktest.fastestapi.core.enhance.joinpoint.field.FieldProcessable;
+import xyz.thinktest.fastestapi.core.enhance.joinpoint.method.MethodProcessable;
 import xyz.thinktest.fastestapi.core.internal.enhance.AnnotationGardener;
 import xyz.thinktest.fastestapi.core.internal.enhance.EnhanceFactory;
 import xyz.thinktest.fastestapi.utils.reflects.ReflectUtil;
@@ -42,8 +42,8 @@ public class ScannerUnit {
     }
 
     private void methodScanHandler(){
-        Set<Class<? extends MethodAnnotationProcessable>> methodProcessClasses = reflectionsAnnotation.getSubTypesOf(MethodAnnotationProcessable.class);
-        for(Class<? extends MethodAnnotationProcessable> clazz : methodProcessClasses){
+        Set<Class<? extends MethodProcessable>> methodProcessClasses = reflectionsAnnotation.getSubTypesOf(MethodProcessable.class);
+        for(Class<? extends MethodProcessable> clazz : methodProcessClasses){
             if(!ReflectUtil.isInterface(clazz) && !ReflectUtil.isAbstract(clazz)){
                 Pointcut pointcut = clazz.getDeclaredAnnotation(Pointcut.class);
                 if(Objects.nonNull(pointcut)){
@@ -96,8 +96,8 @@ public class ScannerUnit {
     }
 
     private void fieldScanHandler(){
-        Set<Class<? extends FieldAnnotationProcessable>> fieldProcessClasses = reflectionsAnnotation.getSubTypesOf(FieldAnnotationProcessable.class);
-        for(Class<? extends FieldAnnotationProcessable> clazz : fieldProcessClasses){
+        Set<Class<? extends FieldProcessable>> fieldProcessClasses = reflectionsAnnotation.getSubTypesOf(FieldProcessable.class);
+        for(Class<? extends FieldProcessable> clazz : fieldProcessClasses){
             if(!ReflectUtil.isInterface(clazz) && !ReflectUtil.isAbstract(clazz)){
                 Pointcut pointcut = clazz.getDeclaredAnnotation(Pointcut.class);
                 if(Objects.nonNull(pointcut)){

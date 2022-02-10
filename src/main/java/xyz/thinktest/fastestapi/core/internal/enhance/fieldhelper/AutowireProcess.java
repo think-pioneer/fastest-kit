@@ -22,7 +22,7 @@ import java.util.Map;
  */
 @SuppressWarnings("unchecked")
 @Pointcut(annotation = Autowired.class)
-public class AutowireAnnotationProcess extends AbstractFieldProcess {
+public class AutowireProcess extends AbstractFieldProcess {
 
     @Override
     public void process(JoinPoint joinPoint){
@@ -65,10 +65,10 @@ public class AutowireAnnotationProcess extends AbstractFieldProcess {
                     paramTypes.add(param.getType());
                     paramObjects.add(param.getObject());
                 });
-                ComponentAnnotationProcess componentAnnotationProcess = new ComponentAnnotationProcess(tmpInstance.getClass(), paramTypes.toArray(new Class[0]), paramObjects.toArray(new Object[0]), autowired.isOrigin());
+                ComponentProcess componentAnnotationProcess = new ComponentProcess(tmpInstance.getClass(), paramTypes.toArray(new Class[0]), paramObjects.toArray(new Object[0]), autowired.isOrigin());
                 componentAnnotationProcess.process(new JoinPointImpl(autowired, null, fieldTargetManger, componentAnnotationProcess));
             } else {
-                ComponentAnnotationProcess componentAnnotationProcess = new ComponentAnnotationProcess(fieldType, null, null, autowired.isOrigin());
+                ComponentProcess componentAnnotationProcess = new ComponentProcess(fieldType, null, null, autowired.isOrigin());
                 componentAnnotationProcess.process(new JoinPointImpl(autowired, null, fieldTargetManger, componentAnnotationProcess));
             }
             Object fieldInstance = fieldTargetManger.getInstance();

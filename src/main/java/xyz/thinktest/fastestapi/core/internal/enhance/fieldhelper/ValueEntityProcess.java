@@ -22,7 +22,7 @@ import java.util.List;
  */
 @SuppressWarnings("unchecked")
 @Pointcut(annotation = ValueEntity.class)
-public class ValueEntityAnnotationProcess extends AbstractFieldProcess {
+public class ValueEntityProcess extends AbstractFieldProcess {
 
     @Override
     public void process(JoinPoint joinPoint){

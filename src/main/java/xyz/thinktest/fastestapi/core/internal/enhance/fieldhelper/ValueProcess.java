@@ -21,7 +21,7 @@ import java.util.Objects;
  * @Date: 2021/10/31
  */
 @Pointcut(annotation = Value.class)
-public class ValueAnnotationProcess extends AbstractFieldProcess {
+public class ValueProcess extends AbstractFieldProcess {
 
     @Override
     public void process(JoinPoint joinPoint) {
