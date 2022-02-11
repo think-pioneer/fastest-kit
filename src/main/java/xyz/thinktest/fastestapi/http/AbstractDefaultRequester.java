@@ -7,6 +7,7 @@ import xyz.thinktest.fastestapi.logger.FastestLoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 abstract class AbstractDefaultRequester implements Requester {
     private final static FastestLogger logger = FastestLoggerFactory.getLogger(AbstractDefaultRequester.class);
@@ -88,7 +89,16 @@ abstract class AbstractDefaultRequester implements Requester {
                 this.metadata.setHeader(String.valueOf(k), String.valueOf(v));
             });
         }
-        Sender sender = new Sender(metadata, this.settings);
+
+        OkhttpBuilder builder = new OkhttpBuilder();
+        builder.sslSocketFactory(settings.getSslType().getSslSocketFactory(),settings.getSslType().getTrustManager())
+                .followRedirects(settings.isFollowRedirects())
+                .followSslRedirects(settings.isFollowRedirects())
+                .connectTimeout(settings.getConnectTimeout(), TimeUnit.SECONDS)
+                .writeTimeout(settings.getWriteTimeout(), TimeUnit.SECONDS)
+                .readTimeout(settings.getReadTimeout(), TimeUnit.SECONDS)
+                .retryOnConnectionFailure(settings.isRetryOnConnectionFailure());
+        Sender sender = new Sender(metadata, builder.build());
         if(isSync){
             sender.sync();
         }else{
@@ -102,12 +112,11 @@ abstract class AbstractDefaultRequester implements Requester {
      * 请求结束后的清理工作
      */
     private void sendPost(){
-        Settings.RequesterSettings requesterSettings = this.settings.requester();
-        if(requesterSettings.isCleanMetadata()){
+        if(this.settings.isCleanMetadata()){
             this.metadata.recovery();
             return;
         }
-        if(requesterSettings.isCleanBody()){
+        if(this.settings.isCleanBody()){
             this.metadata.headersRecovery().parametersRecovery().formRecovery().jsonRecovery();
         }
     }

@@ -963,7 +963,7 @@ fastest.api.http.requester=xxx.xxx.MyRequester
 | --------------------------- | --------- | ------------------------------------------------------------ |
 | metadata                    | Metadata  | 可以给requester添加metadata，此时会覆盖原来的metadata，也可获取requester的metadata，可以单独修改metadata的元素 |
 | metadata(Metadata metadata) | Metadata  | 传入一个metadata，替换掉原来的metadata。                     |
-| settings                    | Settings  | 框架提供的http设置项，主要有两种设置，一种时okhttp的setting，另一种是框架自身的设置 |
+| settings                    | Settings  | 框架提供的request设置项，包含简单的http所需的设置。          |
 | getResponder                | Responder | 获取框架提供的http响应对象，参考[Responder](# 2.4 Responder) |
 | sync                        | void      | 同步请求                                                     |
 | async                       | void      | 异步请求                                                     |

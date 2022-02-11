@@ -68,8 +68,8 @@ public abstract class RunHttpRequest extends AbstractMethodProcess {
                 throw new EnhanceException(ObjectUtil.format("url:\"{}\" is not a valid url", url));
             }
             HttpLog httpLog = method.getDeclaredAnnotation(HttpLog.class);
-            boolean showRequestLog = Objects.isNull(httpLog) ? requester.settings().requester().isShowRequestLog() : httpLog.showRequestLog();
-            boolean showResponseLog = Objects.isNull(httpLog) ? requester.settings().requester().isShowResponseLog() : httpLog.showResponseLog();
+            boolean showRequestLog = Objects.isNull(httpLog) ? requester.settings().getShowRequestLog() : httpLog.showRequestLog();
+            boolean showResponseLog = Objects.isNull(httpLog) ? requester.settings().getShowResponseLog() : httpLog.showResponseLog();
             Metadata metadata = requester.metadata();
             if(showRequestLog) {
                 logger.info("**********HTTP REQUEST**********\n" +

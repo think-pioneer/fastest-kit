@@ -1,274 +1,130 @@
 package xyz.thinktest.fastestapi.http;
 
-import okhttp3.*;
+import xyz.thinktest.fastestapi.http.ssl.SSLType;
 import xyz.thinktest.fastestapi.utils.files.PropertyUtil;
-
-import javax.net.SocketFactory;
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.X509TrustManager;
-import java.net.Proxy;
-import java.net.ProxySelector;
-import java.time.Duration;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @Date: 2020/10/24
  */
-public class Settings extends OkHttpClient {
-    private final Builder builder;
-    private final RequesterSettings requesterSettings;
+public class Settings {
+    private boolean isCleanMetadata;
+    private boolean isCleanBody;
+    private Boolean showRequestLog;
+    private Boolean showResponseLog;
+    private SSLType sslType;
+    private boolean followRedirects;
+    private boolean followSslRedirects;
+    private long connectTimeout;
+    private long writeTimeout;
+    private long readTimeout;
+    private boolean retryOnConnectionFailure;
 
-    Settings(){
-        builder = new Builder();
-        requesterSettings = new RequesterSettings();
+    public Settings(){
+
+        this.isCleanMetadata = false;
+        this.isCleanBody = true;
+        String request = PropertyUtil.getOrDefault("fastest.rest.print.request", "true");
+        String response = PropertyUtil.getOrDefault("fastest.rest.print.response", "false");
+        this.showRequestLog = Boolean.parseBoolean(request);
+        this.showResponseLog = Boolean.parseBoolean(response);
+        this.sslType = SSLType.DEFAULT;
+        this.followRedirects = true;
+        this.followSslRedirects = true;
+        this.connectTimeout = 10000L;
+        this.writeTimeout = 10000L;
+        this.readTimeout = 10000L;
+        this.retryOnConnectionFailure = true;
     }
 
-    OkHttpClient http(){
-        return builder.build();
+    public boolean isCleanMetadata() {
+        return isCleanMetadata;
     }
 
-    public RequesterSettings requester(){
-        return requesterSettings;
+    public void setCleanMetadata(boolean cleanMetadata) {
+        isCleanMetadata = cleanMetadata;
     }
 
-    public Settings cleanMetadata(boolean isCleanMetadata){
-        this.requesterSettings.setCleanMetadata(isCleanMetadata);
-        return this;
+    public boolean isCleanBody() {
+        return isCleanBody;
     }
 
-    public Settings cleanBody(boolean isCleanBody){
-        this.requesterSettings.setCleanBody(isCleanBody);
-        return this;
+    public void setCleanBody(boolean cleanBody) {
+        isCleanBody = cleanBody;
     }
 
-    public Settings showRequestLog(boolean showRequestLog){
-        this.requesterSettings.setShowRequestLog(showRequestLog);
-        return this;
+    public Boolean getShowRequestLog() {
+        return showRequestLog;
     }
 
-    public Settings showResponseLog(boolean showResponseLog){
-        this.requesterSettings.setShowResponseLog(showResponseLog);
-        return this;
+    public void setShowRequestLog(Boolean showRequestLog) {
+        this.showRequestLog = showRequestLog;
     }
 
-    public Settings dispatcher(Dispatcher dispatcher){
-        this.builder.dispatcher(dispatcher);
-        return this;
+    public Boolean getShowResponseLog() {
+        return showResponseLog;
     }
 
-    public Settings connectionPool(ConnectionPool connectionPool){
-        this.builder.connectionPool(connectionPool);
-        return this;
+    public void setShowResponseLog(Boolean showResponseLog) {
+        this.showResponseLog = showResponseLog;
     }
 
-    public Settings addInterceptors(Interceptor interceptor){
-        this.builder.addInterceptor(interceptor);
-        return this;
+    public SSLType getSslType() {
+        return sslType;
     }
 
-    public Settings addNetworkInterceptor(Interceptor interceptor){
-        this.builder.addNetworkInterceptor(interceptor);
-        return this;
+    public void setSslType(SSLType sslType) {
+        this.sslType = sslType;
     }
 
-    public Settings eventListener(EventListener eventListener){
-        this.builder.eventListener(eventListener);
-        return this;
+    public static Settings create(){
+        return new Settings();
     }
 
-    public Settings eventListenerFactory(EventListener.Factory factory){
-        this.builder.eventListenerFactory(factory);
-        return this;
+    public boolean isFollowRedirects() {
+        return followRedirects;
     }
 
-    public Settings retryOnConnectionFailure(Boolean retryOnConnectionFailure){
-        this.builder.retryOnConnectionFailure(retryOnConnectionFailure);
-        return this;
+    public void setFollowRedirects(boolean followRedirects) {
+        this.followRedirects = followRedirects;
     }
 
-    public Settings authenticator(Authenticator authenticator){
-        this.builder.authenticator(authenticator);
-        return this;
+    public boolean isFollowSslRedirects() {
+        return followSslRedirects;
     }
 
-    public Settings followRedirects(Boolean followRedirects){
-        this.builder.followRedirects(followRedirects);
-        return this;
+    public void setFollowSslRedirects(boolean followSslRedirects) {
+        this.followSslRedirects = followSslRedirects;
     }
 
-    public Settings followSslRedirects(Boolean followProtocolRedirects){
-        this.builder.followSslRedirects(followProtocolRedirects);
-        return this;
+    public long getConnectTimeout() {
+        return connectTimeout;
     }
 
-    public Settings cookieJar(CookieJar cookieJar){
-        this.builder.cookieJar(cookieJar);
-        return this;
+    public void setConnectTimeout(long connectTimeout) {
+        this.connectTimeout = connectTimeout;
     }
 
-    public Settings cache(Cache cache){
-        this.builder.cache(cache);
-        return this;
+    public long getWriteTimeout() {
+        return writeTimeout;
     }
 
-    public Settings dns(Dns dns){
-        this.builder.dns(dns);
-        return this;
+    public void setWriteTimeout(long writeTimeout) {
+        this.writeTimeout = writeTimeout;
     }
 
-    public Settings proxy(Proxy proxy){
-        this.builder.proxy(proxy);
-        return this;
+    public long getReadTimeout() {
+        return readTimeout;
     }
 
-    public Settings proxySelector(ProxySelector proxySelector){
-        this.builder.proxySelector(proxySelector);
-        return this;
+    public void setReadTimeout(long readTimeout) {
+        this.readTimeout = readTimeout;
     }
 
-    public Settings proxyAuthenticator(Authenticator proxyAuthenticator){
-        this.builder.proxyAuthenticator(proxyAuthenticator);
-        return this;
+    public boolean isRetryOnConnectionFailure() {
+        return retryOnConnectionFailure;
     }
 
-    public Settings socketFactory(SocketFactory socketFactory){
-        this.builder.socketFactory(socketFactory);
-        return this;
-    }
-
-    @Deprecated
-    public Settings sslSocketFactory(SSLSocketFactory sslSocketFactory){
-        this.builder.sslSocketFactory(sslSocketFactory);
-        return this;
-    }
-
-    public Settings sslSocketFactory(SSLSocketFactory sslSocketFactory, X509TrustManager trustManager){
-        this.builder.sslSocketFactory(sslSocketFactory, trustManager);
-        return this;
-    }
-
-    public Settings connectionSpecs(List<ConnectionSpec> connectionSpecs){
-        this.builder.connectionSpecs(connectionSpecs);
-        return this;
-    }
-
-    public Settings protocols(List<Protocol> protocols){
-        this.builder.protocols(protocols);
-        return this;
-    }
-
-    public Settings hostnameVerifier(HostnameVerifier hostnameVerifier){
-        this.builder.hostnameVerifier(hostnameVerifier);
-        return this;
-    }
-
-    public Settings certificatePinner(CertificatePinner certificatePinner){
-        this.builder.certificatePinner(certificatePinner);
-        return this;
-    }
-
-    public Settings callTimeout(Long timeOut, TimeUnit unit){
-        this.builder.callTimeout(timeOut, unit);
-        return this;
-    }
-
-    public Settings callTimeout(Duration duration){
-        this.builder.callTimeout(duration);
-        return this;
-    }
-
-    public Settings connectTimeout(Long timeout, TimeUnit unit){
-        this.builder.connectTimeout(timeout, unit);
-        return this;
-    }
-
-    public Settings connectTimeout(Duration duration){
-        this.builder.connectTimeout(duration);
-        return this;
-    }
-
-    public Settings readTimeout(Long timeout, TimeUnit unit){
-        this.builder.readTimeout(timeout, unit);
-        return this;
-    }
-
-    public Settings readTimeout(Duration duration){
-        this.builder.readTimeout(duration);
-        return this;
-    }
-
-    public Settings writeTimeout(Long timeout, TimeUnit unit){
-        this.builder.writeTimeout(timeout, unit);
-        return this;
-    }
-
-    public Settings writeTimeout(Duration duration){
-        this.builder.writeTimeout(duration);
-        return this;
-    }
-
-    public Settings pingInterval(Long timeout, TimeUnit unit){
-        this.builder.pingInterval(timeout, unit);
-        return this;
-    }
-
-    public Settings pingInterval(Duration duration){
-        this.builder.pingInterval(duration);
-        return this;
-    }
-
-    public Settings minWebSocketMessageToCompress(Long bytes){
-        this.builder.minWebSocketMessageToCompress(bytes);
-        return this;
-    }
-
-    public static class RequesterSettings {
-        private boolean isCleanMetadata;
-        private boolean isCleanBody;
-        private Boolean showRequestLog;
-        private Boolean showResponseLog;
-
-        RequesterSettings(){
-            this.isCleanMetadata = false;
-            this.isCleanBody = true;
-            String request = PropertyUtil.getOrDefault("fastest.rest.print.request", "true");
-            String response = PropertyUtil.getOrDefault("fastest.rest.print.response", "false");
-            this.showRequestLog = Boolean.parseBoolean(request);
-            this.showResponseLog = Boolean.parseBoolean(response);
-        }
-
-        public boolean isCleanMetadata() {
-            return isCleanMetadata;
-        }
-
-        void setCleanMetadata(boolean cleanMetadata) {
-            isCleanMetadata = cleanMetadata;
-        }
-
-        public boolean isCleanBody() {
-            return isCleanBody;
-        }
-
-        void setCleanBody(boolean cleanBody) {
-            isCleanBody = cleanBody;
-        }
-
-        public boolean isShowRequestLog() {
-            return showRequestLog;
-        }
-
-        void setShowRequestLog(boolean showRequestLog) {
-            this.showRequestLog = showRequestLog;
-        }
-
-        public boolean isShowResponseLog() {
-            return showResponseLog;
-        }
-
-        void setShowResponseLog(boolean showResponseLog) {
-            this.showResponseLog = showResponseLog;
-        }
+    public void setRetryOnConnectionFailure(boolean retryOnConnectionFailure) {
+        this.retryOnConnectionFailure = retryOnConnectionFailure;
     }
 }
