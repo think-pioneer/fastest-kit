@@ -277,12 +277,12 @@ public enum  PropertyUtil {
         return PropertyUtil.INSTANCE.getPropertyInternal(key, path);
     }
 
-    public static Object get(String key){
-        return PropertyUtil.INSTANCE.getInternal(key);
+    public static <T> T get(String key){
+        return (T) PropertyUtil.INSTANCE.getInternal(key);
     }
 
-    public static Object get(String key, String path){
-        return PropertyUtil.INSTANCE.getInternal(key, path);
+    public static <T> T get(String key, String path){
+        return (T) PropertyUtil.INSTANCE.getInternal(key, path);
     }
 
     public static Properties getProperties(String path){

@@ -1052,7 +1052,7 @@ pom.xml
     <dependencies>
         <dependency>
             <groupId>xyz.thinktest</groupId>
-            <artifactId>fastest-web</artifactId>
+            <artifactId>fastest-api</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
@@ -1175,13 +1175,17 @@ Edit Configurations -> Edit Templates -> 选择TestNG -> Listeners -> 添加list
 
 ## 系统参数
 
+框架提供了一些功能的控制参数，方便进行功能扩展。
+
 
 |              参数              | 是否必须 |               默认值                |                             说明                             |
 | :----------------------------: | :------- | :---------------------------------: | :----------------------------------------------------------: |
 | fastest.api.config.folder.path | 否       |              apiconfig              | api配置文件的目录，会扫描该目录下所有的文件及子文件夹，文件类型为json、yaml、yml |
-|     fastest.rest.temp.api      | 否       | apiconfig/apiconfig_custom/xxx.yaml |       保存RestTemp注解参数的目录及文件，文件类型为yaml       |
+|   fastest.rest.temp.api.path   | 否       | apiconfig/apiconfig_custom/xxx.yaml |       保存RestTemp注解参数的目录及文件，文件类型为yaml       |
+|     fastest.rest.temp.save     | 否       |                false                | 全局控制是否保存RestTemp注解的参数，当不想在每一个RestTemp注解上指定isSave参数时，可以使用该参数全局配置 |
 |   fastest.api.http.requester   | 否       |          DefaultRequester           |                   自定义Requester的实现类                    |
 |   fastest.api.http.responder   | 否       |          DefaultResponder           |                   自定义Responder的实现类                    |
 |   fastest.rest.print.request   | 否       |                true                 | 全局参数，控制打印http请求的log，单次请求可通过@HttpLog的showRequestLog覆盖该参数的值 |
 |  fastest.rest.print.response   | 否       |                false                | 全局参数，控制打印http响应的log，单次请求可通过@HttpLog的showResponseLog覆盖该参数的值。鉴于某些响应body比较大，所以默认不打印 |
+|  fastest.cache.expired.period  | 否       |                10000                |        缓存管理器定时清理过期数据的时间间隔，单位毫秒        |
 

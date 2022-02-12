@@ -84,6 +84,9 @@ public class AssertsTest {
             "    \"expensive\": 10\n" +
             "}\n";
 
+    /**
+     * 断言测试
+     */
     public void assertAllEqualTest(){
         Asserts asserts = new Asserts(jsonOrigin);
         boolean flag = false;
