@@ -30,9 +30,9 @@ public class Settings {
         this.sslType = SSLType.DEFAULT;
         this.followRedirects = true;
         this.followSslRedirects = true;
-        this.connectTimeout = 10000L;
-        this.writeTimeout = 10000L;
-        this.readTimeout = 10000L;
+        this.connectTimeout = 10L;
+        this.writeTimeout = 10L;
+        this.readTimeout = 10L;
         this.retryOnConnectionFailure = true;
     }
 

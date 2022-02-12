@@ -943,6 +943,8 @@ public class MyShutdown implements Shutdown{
 
 ## 2.3 Requester
 
+需要先说明一下，框架采用的http包为okhttp3，对于[requester](# 2.3 Requester)和[responder](# 2.4 Responder)的实现需要基于okhttp3。原因是设计之初并未考虑这部分的扩展，其实okhttp3已经够好了，不需要使用其他http框架，但是大家可以基于okhttp3自定义Requester(客户端)。
+
 当框架提供的Requester实现无法满足需求时，可自己实现Requester，自己实现时需要在配置文件中指定实现类的完整类名
 
 ```java

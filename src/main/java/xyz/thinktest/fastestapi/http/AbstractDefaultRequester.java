@@ -90,7 +90,7 @@ abstract class AbstractDefaultRequester implements Requester {
             });
         }
 
-        OkhttpBuilder builder = new OkhttpBuilder();
+        HttpClientSetting builder = new HttpClientSetting();
         builder.sslSocketFactory(settings.getSslType().getSslSocketFactory(),settings.getSslType().getTrustManager())
                 .followRedirects(settings.isFollowRedirects())
                 .followSslRedirects(settings.isFollowRedirects())
@@ -98,7 +98,7 @@ abstract class AbstractDefaultRequester implements Requester {
                 .writeTimeout(settings.getWriteTimeout(), TimeUnit.SECONDS)
                 .readTimeout(settings.getReadTimeout(), TimeUnit.SECONDS)
                 .retryOnConnectionFailure(settings.isRetryOnConnectionFailure());
-        Sender sender = new Sender(metadata, builder.build());
+        Sender sender = new Sender(metadata, builder.getClient());
         if(isSync){
             sender.sync();
         }else{
