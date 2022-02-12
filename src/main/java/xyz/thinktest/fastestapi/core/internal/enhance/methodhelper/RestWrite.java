@@ -27,7 +27,7 @@ public class RestWrite implements Shutdown {
     private static final FastestLogger logger = FastestLoggerFactory.getLogger(RestWrite.class);
     @Override
     public void postHook() {
-        String defaultPath = PropertyUtil.getProperty("fastest.rest.temp.api");
+        String defaultPath = PropertyUtil.getProperty("fastest.rest.temp.api.path");
         if(Objects.isNull(defaultPath)){
             defaultPath = ObjectUtil.format("apiconfig_custom/APIConfTemp_{}_{}.yaml", DateTime.newInstance(new Date(), DateUtil.FORMAT_D).string(), new Random().nextInt(10000));
         }

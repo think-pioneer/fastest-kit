@@ -10,6 +10,9 @@ import java.util.Map;
 @Test
 public class JSONFactoryTest {
 
+    /**
+     * 字符串转map测试
+     */
     public void string2Map(){
         String json = "{\"name\":\"json\"}";
         Map<String, String> map = JSONFactory.stringToObject(json, new TypeReference<Map<String, String>>() {});
@@ -17,6 +20,9 @@ public class JSONFactoryTest {
         Assert.assertEquals(map.get("name"), "json");
     }
 
+    /**
+     * map转字符串测试
+     */
     public void map2String(){
         Map<String, String> map = new HashMap<String, String>(){{put("name", "json");}};
         String json = JSONFactory.objectToString(map);

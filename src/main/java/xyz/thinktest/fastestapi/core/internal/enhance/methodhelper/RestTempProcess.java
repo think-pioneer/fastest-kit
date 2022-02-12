@@ -31,7 +31,7 @@ public class RestTempProcess extends RunHttpRequest {
 
         Object[] args = joinPoint.getArgs();
         boolean isSave = restTemp.save();
-        Boolean globalIsSave = (Boolean) PropertyUtil.get("rest.temp.save");;
+        Boolean globalIsSave = PropertyUtil.get("fastest.rest.temp.save");
         if(Objects.isNull(globalIsSave)){
             globalIsSave = isSave;
         }
