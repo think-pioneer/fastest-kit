@@ -1,4 +1,4 @@
-package xyz.thinktest.fastestapi.http;
+package xyz.thinktest.fastestapi.http.internal;
 
 import java.util.HashMap;
 import java.util.Map;

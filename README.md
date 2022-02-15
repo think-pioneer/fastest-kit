@@ -71,24 +71,32 @@ Requester就像是一个单独的用户，理论上来说一个用户只能有�
 
 #### 1.1.1.1 创建实例
 
+框架提供RequesterFactory作为Requester的构造器，如果不使用RequesterFactory创建Requester对象，则需要创建时自己将鉴权信息到AuthManager中。
+
 作为用户时
 
 ```java
-Requester requester = RequesterFactory.create(map);
+Requester requester = RequesterFactory.create(auth);
 ```
 
 或者
 
 ```java
-Requester requester = RequesterFactory.create(header);
+Requester requester = RequesterFactory.create(auth1, auth2, auth3,...);
 ```
 
-以上两种方式都不需要在请求的header中再次指定鉴权信息
+或者
+
+```java
+Requester requester = RequesterFactory.create(auths);
+```
+
+以上三种方式都不需要在请求的header中再次指定鉴权信息
 
 作为客户端时
 
 ```java
-Requester requester = RequesterFactory.create();
+Requester requester = RequesterFactory.create();//此时header中不带任何鉴权信息
 ```
 
 #### 1.1.1.2 构建参数
@@ -96,7 +104,7 @@ Requester requester = RequesterFactory.create();
 可进行url、http method、url parameter、form body、json body设置
 
 ```java
-Requester requester = RequesterFactory.create(map);
+Requester requester = RequesterFactory.create(auth);
 requester.metadata().setUrl();
 requester.metadata().setHttpMethod();
 requester.metadata().setParameters();
@@ -107,7 +115,7 @@ requester.metadata().setJson();
 #### 1.1.1.3 发送请求
 
 ```java
-Requester requester = RequesterFactory.create(map);
+Requester requester = RequesterFactory.create(auth);
 //构建参数
 requester.metadata().setUrl();
 requester.metadata().setHttpMethod();
@@ -118,14 +126,14 @@ requester.metadata().setJson();
 requester.sync();
 ```
 
-发送请求共有sync和async两种方式。sync会阻塞进程，而async则不会阻塞进程。async一般不用。
+发送请求共有sync和async两种方式。sync会阻塞进程，而async则不会阻塞进程。一般情况下都使用sync。
 
 ### 1.1.2 Respondor
 
 重新包装后的响应信息对象。添加断言功能（该功能也添加到requester中）。通常情况我们不会直接new该对象。都是通过requester.getResponse()来获取。
 
 ```java
-Requester requester = RequesterFactory.create(map);
+Requester requester = RequesterFactory.create(auth);
 requester.sync();
 requester.getResponse();
 ```
@@ -151,7 +159,7 @@ requester.metadata(metadata);//如果之前对requester的metadate做过设置�
 等价于
 
 ```java
-Requester requester = RequesterFactory.create(map);
+Requester requester = RequesterFactory.create(auth);
 //构建参数
 requester.metadata().setUrl();
 requester.metadata().setHttpMethod();
@@ -228,6 +236,8 @@ public class CaseTest {
 
 
 ## 1.2 Enhance模块
+
+框架提供的功能增强模块，缩减代码量，提高编码效率。提供可扩展的接口，方便实现自定义的功能增强。
 
 ### 1.2.1 @Component
 

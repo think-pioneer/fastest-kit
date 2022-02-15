@@ -1,17 +1,16 @@
 package xyz.thinktest.fastestapi.http;
 
-import xyz.thinktest.fastestapi.common.exceptions.FastestBasicException;
+import org.apache.commons.collections4.CollectionUtils;
+import xyz.thinktest.fastestapi.http.metadata.Header;
+import xyz.thinktest.fastestapi.http.metadata.Headers;
 import xyz.thinktest.fastestapi.logger.FastestLogger;
 import xyz.thinktest.fastestapi.logger.FastestLoggerFactory;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 abstract class AbstractDefaultRequester implements Requester {
     private final static FastestLogger logger = FastestLoggerFactory.getLogger(AbstractDefaultRequester.class);
-    private final Map<Object, Object> authentication = new HashMap<>();
+    private final Headers authentication = Headers.newEmpty();
     private final Metadata metadata;
     private final Settings settings;
     private Responder responder;
@@ -20,7 +19,16 @@ abstract class AbstractDefaultRequester implements Requester {
      * 需要在body中指定鉴权方式
      */
     AbstractDefaultRequester(){
-        this(new HashMap<>());
+        this(Headers.newEmpty());
+    }
+
+    AbstractDefaultRequester(Header... headers){
+        if(null != headers && headers.length > 0) {
+            this.authentication.writeAll(headers);
+        }
+        AuthManager.set(this, this.authentication);
+        this.settings = new Settings();
+        this.metadata = new Metadata();
     }
 
     /**
@@ -28,11 +36,11 @@ abstract class AbstractDefaultRequester implements Requester {
      * 建议使用这种方式，如果直接放入body中，一旦在切换鉴权信息出问题时，会出现请求结果和预期不一致的情况
      * @param authentication 鉴权map
      */
-    AbstractDefaultRequester(Map<Object, Object> authentication){
-        if(Objects.isNull(authentication)){
-            throw new FastestBasicException("\"authentication\" cannot be null.");
+    AbstractDefaultRequester(Headers authentication){
+        if(CollectionUtils.isNotEmpty(authentication)) {
+            this.authentication.writeAll(authentication);
         }
-        this.authentication.putAll(authentication);
+        AuthManager.set(this, this.authentication);
         this.settings = new Settings();
         this.metadata = new Metadata();
     }
@@ -83,13 +91,6 @@ abstract class AbstractDefaultRequester implements Requester {
      * @param isSync 同步或异步
      */
     private void send(boolean isSync){
-        //如果用户在构造函数中提作为鉴权供了authentication，则始终使用authentication
-        if(!this.authentication.isEmpty()){
-            this.authentication.forEach((k, v) -> {
-                this.metadata.setHeader(String.valueOf(k), String.valueOf(v));
-            });
-        }
-
         HttpClientSetting builder = new HttpClientSetting();
         builder.sslSocketFactory(settings.getSslType().getSslSocketFactory(),settings.getSslType().getTrustManager())
                 .followRedirects(settings.isFollowRedirects())

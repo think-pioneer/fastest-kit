@@ -1,18 +1,19 @@
 package xyz.thinktest.fastestapi.core.enhance;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import xyz.thinktest.fastestapi.core.annotations.HttpLog;
 import xyz.thinktest.fastestapi.core.internal.enhance.methodhelper.AbstractMethodProcess;
 import xyz.thinktest.fastestapi.http.Metadata;
 import xyz.thinktest.fastestapi.http.Requester;
 import xyz.thinktest.fastestapi.http.Responder;
+import xyz.thinktest.fastestapi.http.AuthManager;
+import xyz.thinktest.fastestapi.http.metadata.*;
 import xyz.thinktest.fastestapi.logger.FastestLogger;
 import xyz.thinktest.fastestapi.logger.FastestLoggerFactory;
 import xyz.thinktest.fastestapi.utils.ObjectUtil;
 import xyz.thinktest.fastestapi.common.exceptions.EnhanceException;
 import xyz.thinktest.fastestapi.common.exceptions.HttpException;
-import xyz.thinktest.fastestapi.http.metadata.HttpMethod;
-import xyz.thinktest.fastestapi.http.metadata.Restfuls;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -60,10 +61,16 @@ public abstract class RunHttpRequest extends AbstractMethodProcess {
                 break;
             }
         }
-        if(isAuto){
-            if(Objects.isNull(requester)){
-                throw new HttpException(ObjectUtil.format("{}.{}use auto send needs Requester object as params,but not found",method.getDeclaringClass().getName(), method.getName()));
+        if(Objects.isNull(requester)){
+            throw new HttpException(ObjectUtil.format("{}.{}use auto send needs Requester1 object as params,but not found",method.getDeclaringClass().getName(), method.getName()));
+        }
+        Headers auth = AuthManager.get(requester);
+        if(CollectionUtils.isNotEmpty(auth)){
+            for(Meta header:auth){
+                requester.metadata().setHeader((Header) header);
             }
+        }
+        if(isAuto){
             if(!isUrl(requester.metadata().getUrl().getUrl())){
                 throw new EnhanceException(ObjectUtil.format("url:\"{}\" is not a valid url", url));
             }

@@ -78,6 +78,13 @@ public class Metadata {
         return this;
     }
 
+    public Metadata setHeaders(Header... headers){
+        if(null != headers && headers.length > 0){
+            this.headers.writeAll(headers);
+        }
+        return this;
+    }
+
     public Metadata setHeaders(List<Header> headers){
         if(CollectionUtils.isNotEmpty(headers)){
             this.headers.addAll(headers);
@@ -118,24 +125,31 @@ public class Metadata {
 
     public Metadata setParameters(MetaMap parameters){
         if(MapUtils.isNotEmpty(parameters)){
-            this.parameters.putAll(parameters);
+            this.parameters.writeAll((Parameters) parameters);
         }
         return this;
     }
 
     public Metadata setParameter(String key, Parameter parameter){
-        this.parameters.put(key, parameter);
+        this.parameters.write(key, parameter);
         return this;
     }
 
     public Metadata setParameter(Parameter parameter){
-        this.parameters.put(parameter.getKey(), parameter);
+        this.parameters.write(parameter.getKey(), parameter);
         return this;
     }
 
     public Metadata setParameters(List<Parameter> parameters){
         if(CollectionUtils.isNotEmpty(parameters)){
             parameters.forEach((parameter -> this.parameters.put(parameter.getKey(), parameter)));
+        }
+        return this;
+    }
+
+    public Metadata setParameters(Parameter... parameters){
+        if(null != parameters && parameters.length > 0){
+            this.parameters.writeAll(parameters);
         }
         return this;
     }
@@ -160,18 +174,25 @@ public class Metadata {
     }
 
     public Metadata setForm(Object key, Form form){
-        this.forms.put(key, form);
+        this.forms.write(key, form);
         return this;
     }
 
     public Metadata setForm(Form form){
-        this.forms.put(form.getKey(), form);
+        this.forms.write(form.getKey(), form);
         return this;
     }
 
     public Metadata setForms(Forms forms){
         if(MapUtils.isNotEmpty(forms)){
-            this.forms.putAll(forms);
+            this.forms.writeAll(forms);
+        }
+        return this;
+    }
+
+    public Metadata setForms(Form... forms){
+        if(null != forms && forms.length > 0){
+            this.forms.writeAll(forms);
         }
         return this;
     }

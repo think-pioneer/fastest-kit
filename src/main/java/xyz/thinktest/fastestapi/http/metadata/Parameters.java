@@ -1,5 +1,10 @@
 package xyz.thinktest.fastestapi.http.metadata;
 
+import org.apache.commons.collections4.MapUtils;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,7 +27,19 @@ public class Parameters extends MetaMap {
     }
 
     public Parameters writeAll(Parameters parameters){
-        this.putAll(parameters);
+        if(MapUtils.isNotEmpty(parameters)){
+            this.putAll(parameters);
+        }
+        return this;
+    }
+
+    public Parameters writeAll(Parameter... parameters){
+        if(null != parameters && parameters.length > 0){
+            for(Parameter parameter:parameters){
+                this.put(parameter.getKey(), parameter);
+            }
+        }
+
         return this;
     }
 

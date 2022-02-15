@@ -1,7 +1,8 @@
 package xyz.thinktest.fastestapi.http;
 
-import java.util.HashMap;
-import java.util.Map;
+import xyz.thinktest.fastestapi.http.metadata.Header;
+import xyz.thinktest.fastestapi.http.metadata.Headers;
+
 
 /**
  *
@@ -15,7 +16,7 @@ public class DefaultRequester extends AbstractDefaultRequester {
      * 需要在body中指定鉴权方式
      */
     public DefaultRequester(){
-        super(new HashMap<>());
+        super();
     }
 
     /**
@@ -23,7 +24,15 @@ public class DefaultRequester extends AbstractDefaultRequester {
      * 建议使用这种方式，如果直接放入body中，一旦在切换鉴权信息出问题时，会出现请求结果和预期不一致的情况
      * @param authentication 鉴权map
      */
-    public DefaultRequester(Map<Object, Object> authentication){
+    public DefaultRequester(Headers authentication){
         super(authentication);
+    }
+
+    public DefaultRequester(Header... headers){
+        super(headers);
+    }
+
+    public DefaultRequester(Header header){
+        super(header);
     }
 }

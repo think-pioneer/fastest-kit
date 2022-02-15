@@ -6,6 +6,7 @@ import org.testng.annotations.Test;
 import org.testng.listener.TestRunListener;
 import xyz.thinktest.fastestapi.core.annotations.Autowired;
 import xyz.thinktest.fastestapi.core.annotations.Component;
+import xyz.thinktest.fastestapi.http.metadata.Header;
 import xyz.thinktest.fastestapi.http.metadata.Restfuls;
 
 /**
@@ -42,5 +43,28 @@ public class RequesterTest {
         requester.metadata().setRestfuls(restfuls);
         controller.restTypeTestNoRestfulsParams(requester);
         Assert.assertEquals(requester.metadata().getUrl().toString(), "http://myhttp/110");
+    }
+
+    public void requesterCache(){
+        Requester requester1 = RequesterFactory.create(new Header("Cookie", "fastest"));
+        Requester requester2 = RequesterFactory.create(new Header("Cookie", "fastest"));
+        Assert.assertEquals(requester1, requester2);
+
+        Requester requester3 = RequesterFactory.create(new Header("Cookie", "fastest1"));
+        Requester requester4 = RequesterFactory.create(new Header("Cookie", "fastest2"));
+        Assert.assertNotEquals(requester3, requester4);
+    }
+
+    public void requestersCache(){
+        Header header1 = new Header("Cookie1", "fastest1");
+        Header header2 = new Header("Cookie2", "fastest2");
+        Requester requester1 = RequesterFactory.create(header1, header2);
+        Requester requester2 = RequesterFactory.create(header1, header2);
+        Assert.assertEquals(requester1, requester2);
+
+        Header header3 = new Header("Cookie1", "fastest1");
+        Requester requester3 = RequesterFactory.create(header1, header3);
+        Requester requester4 = RequesterFactory.create(header1, header2);
+        Assert.assertNotEquals(requester3, requester4);
     }
 }

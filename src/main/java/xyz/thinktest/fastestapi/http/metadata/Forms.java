@@ -1,5 +1,9 @@
 package xyz.thinktest.fastestapi.http.metadata;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
+
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +34,19 @@ public class Forms extends MetaMap {
      * write existing forms object
      */
     public Forms writeAll(Forms forms){
-        this.putAll(forms);
+        if(MapUtils.isNotEmpty(forms)) {
+            this.putAll(forms);
+        }
+        return this;
+    }
+
+    public Forms writeAll(Form... forms){
+        if(null != forms && forms.length > 0){
+            for(Form form:forms){
+                this.put(form.getKey(), form);
+            }
+        }
+
         return this;
     }
 

@@ -41,7 +41,7 @@ public class RestMetadataProcess extends RunHttpRequest {
             }
         }
         if(args.length == 0 || !paramsValid){
-            throw new EnhanceException(ObjectUtil.format("method:[{}] at least one parameter of Requester or Metadata is required"));
+            throw new EnhanceException(ObjectUtil.format("method:[{}] at least one parameter of Requester1 or Metadata is required"));
         }
         Class<?> clazz = method.getDeclaringClass();
         RestServer restServer = clazz.getAnnotation(RestServer.class);

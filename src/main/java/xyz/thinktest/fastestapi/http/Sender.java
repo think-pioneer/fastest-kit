@@ -3,11 +3,11 @@ package xyz.thinktest.fastestapi.http;
 import okhttp3.*;
 import xyz.thinktest.fastestapi.common.exceptions.HttpException;
 import xyz.thinktest.fastestapi.core.ApplicationBean;
+import xyz.thinktest.fastestapi.http.internal.HttpCacheInternal;
 import xyz.thinktest.fastestapi.utils.ObjectUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 /**
  *

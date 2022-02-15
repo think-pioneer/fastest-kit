@@ -1,6 +1,10 @@
 package xyz.thinktest.fastestapi.http.metadata;
 
+import org.apache.commons.collections4.CollectionUtils;
+
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -17,22 +21,37 @@ public class Headers extends MetaList {
     }
 
     public Headers write(Header header){
-        super.add(header);
+        if(Objects.nonNull(header)) {
+            super.add(header);
+        }
         return this;
     }
 
     public Headers write(int index, Header header){
-        super.add(index, header);
+        if(Objects.nonNull(header) && index > 0 && index < this.size()) {
+            super.add(index, header);
+        }
         return this;
     }
 
     public Headers writeAll(Headers headers){
-        super.addAll(headers);
+        if(CollectionUtils.isNotEmpty(headers)) {
+            super.addAll(headers);
+        }
+        return this;
+    }
+
+    public Headers writeAll(Header... headers){
+        if(null != headers && headers.length > 0){
+            super.addAll(Arrays.asList(headers));
+        }
         return this;
     }
 
     public Headers writeAll(int index, Headers headers){
-        super.addAll(index, headers);
+        if(CollectionUtils.isNotEmpty(headers) && index > 0 && index <= this.size()) {
+            super.addAll(index, headers);
+        }
         return this;
     }
 
