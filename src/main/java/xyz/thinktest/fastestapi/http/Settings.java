@@ -1,7 +1,10 @@
 package xyz.thinktest.fastestapi.http;
 
+import okhttp3.OkHttpClient;
 import xyz.thinktest.fastestapi.http.ssl.SSLType;
 import xyz.thinktest.fastestapi.utils.files.PropertyUtil;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Date: 2020/10/24
@@ -17,7 +20,9 @@ public class Settings {
     private long connectTimeout;
     private long writeTimeout;
     private long readTimeout;
+    private long callTimeout;
     private boolean retryOnConnectionFailure;
+    private HttpClient client;
 
     public Settings(){
 
@@ -30,10 +35,12 @@ public class Settings {
         this.sslType = SSLType.DEFAULT;
         this.followRedirects = true;
         this.followSslRedirects = true;
-        this.connectTimeout = 10L;
-        this.writeTimeout = 10L;
-        this.readTimeout = 10L;
+        this.connectTimeout = 60L;
+        this.writeTimeout = 60L;
+        this.readTimeout = 60L;
+        this.callTimeout = 120L;
         this.retryOnConnectionFailure = true;
+        this.client = new HttpClient();
     }
 
     public boolean isCleanMetadata() {
@@ -120,11 +127,34 @@ public class Settings {
         this.readTimeout = readTimeout;
     }
 
+    public long getCallTimeout() {
+        return callTimeout;
+    }
+
+    public void setCallTimeout(long callTimeout) {
+        this.callTimeout = callTimeout;
+    }
+
     public boolean isRetryOnConnectionFailure() {
         return retryOnConnectionFailure;
     }
 
     public void setRetryOnConnectionFailure(boolean retryOnConnectionFailure) {
         this.retryOnConnectionFailure = retryOnConnectionFailure;
+    }
+
+    public void setClient(HttpClient client) {
+        this.client = client;
+    }
+
+    public OkHttpClient build(){
+        this.client.sslSocketFactory(sslType.getSslSocketFactory(),sslType.getTrustManager())
+                .followRedirects(followRedirects)
+                .followSslRedirects(followSslRedirects)
+                .connectTimeout(connectTimeout, TimeUnit.SECONDS)
+                .writeTimeout(writeTimeout, TimeUnit.SECONDS)
+                .readTimeout(readTimeout, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(retryOnConnectionFailure);
+        return this.client.getClient();
     }
 }

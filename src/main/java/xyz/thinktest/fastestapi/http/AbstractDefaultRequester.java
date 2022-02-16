@@ -3,13 +3,8 @@ package xyz.thinktest.fastestapi.http;
 import org.apache.commons.collections4.CollectionUtils;
 import xyz.thinktest.fastestapi.http.metadata.Header;
 import xyz.thinktest.fastestapi.http.metadata.Headers;
-import xyz.thinktest.fastestapi.logger.FastestLogger;
-import xyz.thinktest.fastestapi.logger.FastestLoggerFactory;
-
-import java.util.concurrent.TimeUnit;
 
 abstract class AbstractDefaultRequester implements Requester {
-    private final static FastestLogger logger = FastestLoggerFactory.getLogger(AbstractDefaultRequester.class);
     private final Headers authentication = Headers.newEmpty();
     private final Metadata metadata;
     private final Settings settings;
@@ -91,34 +86,12 @@ abstract class AbstractDefaultRequester implements Requester {
      * @param isSync 同步或异步
      */
     private void send(boolean isSync){
-        HttpClientSetting builder = new HttpClientSetting();
-        builder.sslSocketFactory(settings.getSslType().getSslSocketFactory(),settings.getSslType().getTrustManager())
-                .followRedirects(settings.isFollowRedirects())
-                .followSslRedirects(settings.isFollowRedirects())
-                .connectTimeout(settings.getConnectTimeout(), TimeUnit.SECONDS)
-                .writeTimeout(settings.getWriteTimeout(), TimeUnit.SECONDS)
-                .readTimeout(settings.getReadTimeout(), TimeUnit.SECONDS)
-                .retryOnConnectionFailure(settings.isRetryOnConnectionFailure());
-        Sender sender = new Sender(metadata, builder.getClient());
+        Sender sender = new Sender(metadata, this.settings.build());
         if(isSync){
             sender.sync();
         }else{
             sender.async();
         }
         this.responder = sender.getResponse();
-        this.sendPost();
-    }
-
-    /**
-     * 请求结束后的清理工作
-     */
-    private void sendPost(){
-        if(this.settings.isCleanMetadata()){
-            this.metadata.recovery();
-            return;
-        }
-        if(this.settings.isCleanBody()){
-            this.metadata.headersRecovery().parametersRecovery().formRecovery().jsonRecovery();
-        }
     }
 }

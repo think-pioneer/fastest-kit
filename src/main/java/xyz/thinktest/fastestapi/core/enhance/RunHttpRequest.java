@@ -4,10 +4,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import xyz.thinktest.fastestapi.core.annotations.HttpLog;
 import xyz.thinktest.fastestapi.core.internal.enhance.methodhelper.AbstractMethodProcess;
-import xyz.thinktest.fastestapi.http.Metadata;
-import xyz.thinktest.fastestapi.http.Requester;
-import xyz.thinktest.fastestapi.http.Responder;
-import xyz.thinktest.fastestapi.http.AuthManager;
+import xyz.thinktest.fastestapi.http.*;
 import xyz.thinktest.fastestapi.http.metadata.*;
 import xyz.thinktest.fastestapi.logger.FastestLogger;
 import xyz.thinktest.fastestapi.logger.FastestLoggerFactory;
@@ -106,6 +103,7 @@ public abstract class RunHttpRequest extends AbstractMethodProcess {
                             "Http Response body:{}", responder.stateCode(), responder.headers(), responder.bodyToString());
                 }
             }
+            this.sendAfterRecovery(requester.settings(), requester.metadata());
         }
     }
 
@@ -119,5 +117,18 @@ public abstract class RunHttpRequest extends AbstractMethodProcess {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(url.trim());
         return matcher.matches();
+    }
+
+    /**
+     * 请求结束后的清理工作
+     */
+    private void sendAfterRecovery(Settings settings, Metadata metadata){
+        if(settings.isCleanMetadata()){
+            metadata.recovery();
+            return;
+        }
+        if(settings.isCleanBody()){
+            metadata.headersRecovery().parametersRecovery().formRecovery().jsonRecovery();
+        }
     }
 }

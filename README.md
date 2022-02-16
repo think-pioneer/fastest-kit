@@ -64,7 +64,7 @@ HTTP模块基于OkHttp。基本思想为将每个请求对象映射为一个客�
 
 ### 1.1.1 Requester
 
-Requester就像是一个单独的用户，理论上来说一个用户只能有一个用户信息。不过为了方便使用，还是开放支持在header中指定用户信息。
+Requester就像是一个单独的用户，理论上来说一个用户只能有一个用户信息。不过为了方便使用，还是开放支持在header中指定用户信息。本质是一个接口，详细参考[Requester](# 2.3 Requester)
 
 - 当理解为用户时，建议通过构造函数注入鉴权信息。如果需要其他用户，则重新实例化一个新的对象
 - 当理解为客户端时，可以通过header修改鉴权信息。不过不建议这么做，因为每次修改header数据时容易造成数据混乱，导致用例失败。
@@ -128,9 +128,9 @@ requester.sync();
 
 发送请求共有sync和async两种方式。sync会阻塞进程，而async则不会阻塞进程。一般情况下都使用sync。
 
-### 1.1.2 Respondor
+### 1.1.2 Responder
 
-重新包装后的响应信息对象。添加断言功能（该功能也添加到requester中）。通常情况我们不会直接new该对象。都是通过requester.getResponse()来获取。
+重新包装后的响应信息对象。添加断言功能（该功能也添加到requester中）。通常情况我们不会直接new该对象。都是通过requester.getResponse()来获取。本质是一个接口，详细参考[Responder](# 2.4 Responder)
 
 ```java
 Requester requester = RequesterFactory.create(auth);
@@ -194,7 +194,25 @@ public class MyStep implements Step {
 
 ### 1.1.4 Settings
 
-参考okhttp的client builder。
+从okhttp3中抽取一些常用的配置做成settings，如果觉得配置不好够的可以自行创建HttpClient对象进行完整设置。
+
+| 属性                     | 类型       | 默认值          | 说明                                                         |
+| ------------------------ | ---------- | --------------- | ------------------------------------------------------------ |
+| isCleanMetadata          | Boolean    | false           | 是否在每次请求完成后清空metadata                             |
+| isCleanBody              | Boolean    | true            | 是否在每次请求完后清空body，和清空metadata相比，没有清空url和method |
+| showRequestLog           | Boolean    | true            | 是否打印请求header、body信息                                 |
+| showResponseLog          | Boolean    | false           | 是否打印响应header、body信息，因为某些body异常的大，所以默认不打印 |
+| sslType                  | SSLType    | SSLType.DEFAULT | https的加密类型                                              |
+| followRedirects          | Boolean    | true            | 是否自动重定向（http）                                       |
+| followSslRedirects       | Boolean    | true            | 是否自动重定向（https）                                      |
+| connectTimeout           | Long       | 60              | 连接超时时间，单位秒                                         |
+| writeTimeout             | Long       | 60              | 读取超时时间，单位秒                                         |
+| readTimeout              | Long       | 60              | 写入超时时间，单位秒                                         |
+| callTimeout              | Long       | 120             | 全局的超时时间，单位秒。从DNS解析开始，到连接，到发请求体，到服务端响应，到服务端返回数据；以及可能出现的重定向，整个过程都需要在这个时间内完成，否则就算超时了，客户端会主动放弃或者断开连接。 |
+| retryOnConnectionFailure | Boolean    | true            | 是否重试                                                     |
+| client                   | HttpClient | HttpClient      | 如果需求复杂的设置，则需要自己设置好后传入client             |
+
+
 
 ### 1.1.5 Asserts
 
