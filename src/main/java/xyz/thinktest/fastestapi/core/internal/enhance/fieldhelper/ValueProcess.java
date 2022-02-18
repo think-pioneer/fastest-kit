@@ -86,7 +86,7 @@ public class ValueProcess extends AbstractFieldProcess {
     static class Parse{
         private final String type;
         private final String value;
-        private final FieldHelper<?> fieldHelper;
+        private final FieldHelper fieldHelper;
 
         private Parse(String type, String value, Object instance, Field field){
             this.type = type;
@@ -125,7 +125,7 @@ public class ValueProcess extends AbstractFieldProcess {
         private final String type;
         private final int length;
         private final String[] value;
-        private final FieldHelper<?> fieldHelper;
+        private final FieldHelper fieldHelper;
 
         public Array(String type, String[] value, Object instance, Field field){
             this.type = type;

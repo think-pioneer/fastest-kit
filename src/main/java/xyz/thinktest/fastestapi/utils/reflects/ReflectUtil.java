@@ -4,6 +4,7 @@ import xyz.thinktest.fastestapi.utils.ObjectUtil;
 import xyz.thinktest.fastestapi.common.exceptions.FastestBasicException;
 import xyz.thinktest.fastestapi.common.exceptions.ReflectionException;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.Map;
 import java.util.Objects;
@@ -121,5 +122,45 @@ public class ReflectUtil {
         }catch (Exception e){
             throw new FastestBasicException(ObjectUtil.format("get Collection element real type error:{}", e.getMessage()), e.getCause());
         }
+    }
+
+    public static Field getField(Class<?> clazz, String name){
+        try {
+            return clazz.getField(name);
+        }catch (NoSuchFieldException e){
+            throw new FastestBasicException("no such field from " + clazz.getCanonicalName());
+        }
+    }
+
+    public static Field getDeclaredField(Class<?> clazz, String name){
+        try {
+            return clazz.getDeclaredField(name);
+        }catch (NoSuchFieldException e){
+            throw new FastestBasicException("no such field from " + clazz.getCanonicalName());
+        }
+    }
+
+    public static Method getMethod(Class<?> clazz, String name){
+        try {
+            return clazz.getDeclaredMethod(name);
+        }catch (NoSuchMethodException e){
+            throw new FastestBasicException("no such method from " + clazz.getCanonicalName());
+        }
+    }
+
+    public static Method getDeclaredMethod(Class<?> clazz, String name){
+        try {
+            return clazz.getDeclaredMethod(name);
+        }catch (NoSuchMethodException e){
+            throw new FastestBasicException("no such method from " + clazz.getCanonicalName());
+        }
+    }
+
+    public static <T extends Annotation> T getMethod(Class<?> clazz, Class<T> annotation){
+        return clazz.getAnnotation(annotation);
+    }
+
+    public static <T extends Annotation> T getDeclaredMethod(Class<?> clazz, Class<T> annotation){
+        return clazz.getDeclaredAnnotation(annotation);
     }
 }

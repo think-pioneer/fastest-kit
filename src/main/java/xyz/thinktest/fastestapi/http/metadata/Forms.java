@@ -5,6 +5,7 @@ import org.apache.commons.collections4.MapUtils;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -43,7 +44,8 @@ public class Forms extends MetaMap {
     public Forms writeAll(Form... forms){
         if(null != forms && forms.length > 0){
             for(Form form:forms){
-                this.put(form.getKey(), form);
+                if(Objects.nonNull(form))
+                    this.put(form.getKey(), form);
             }
         }
 
@@ -61,7 +63,11 @@ public class Forms extends MetaMap {
      * Get the value of an element of the form
      */
     public Object readFormValue(String key){
-        return this.readForm(key).getValue();
+        Meta value = this.readForm(key);
+        if(Objects.isNull(value)){
+            return null;
+        }
+        return value.getValue();
     }
 
     /**
@@ -77,7 +83,7 @@ public class Forms extends MetaMap {
      * Get the values of all elements of the form
      */
     public List<Object> readAllFormValue(){
-        return this.values().stream().map(Meta::getValue).collect(Collectors.toList());
+        return this.values().stream().filter(Objects::nonNull).map(Meta::getValue).collect(Collectors.toList());
     }
 
     public void erasure(){

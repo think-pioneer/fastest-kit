@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
  * @date: 2022-02-11
  * 剥离出okhttp的client，提供一个专门用于对外的设置对象
  */ 
-public class HttpClient {
+class HttpClient {
     private final OkHttpClient.Builder builder;
 
     public HttpClient(){

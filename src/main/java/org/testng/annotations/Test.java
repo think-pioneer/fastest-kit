@@ -63,7 +63,7 @@ public @interface Test {
     /**
      * 是否对step进行恢复操作
      */
-    boolean recovery() default true;
+    boolean recovery() default false;
 
     /**
      *需要进行恢复操作的step类

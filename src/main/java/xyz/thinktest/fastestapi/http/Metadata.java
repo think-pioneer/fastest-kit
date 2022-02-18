@@ -25,7 +25,7 @@ public class Metadata {
     private final Json json;
     private final Restfuls restfuls;
 
-    public Metadata(){
+    private Metadata(){
         this.headers = Headers.newEmpty();
         this.parameters = Parameters.newEmpty();
         this.forms = Forms.newEmpty();
@@ -305,5 +305,9 @@ public class Metadata {
                 ", json=" + json +
                 ", restfuls=" + restfuls +
                 '}';
+    }
+
+    public static Metadata create(){
+        return new Metadata();
     }
 }

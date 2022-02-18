@@ -22,8 +22,8 @@ abstract class AbstractDefaultRequester implements Requester {
             this.authentication.writeAll(headers);
         }
         AuthManager.set(this, this.authentication);
-        this.settings = new Settings();
-        this.metadata = new Metadata();
+        this.settings = Settings.create();
+        this.metadata = Metadata.create();
     }
 
     /**
@@ -36,8 +36,8 @@ abstract class AbstractDefaultRequester implements Requester {
             this.authentication.writeAll(authentication);
         }
         AuthManager.set(this, this.authentication);
-        this.settings = new Settings();
-        this.metadata = new Metadata();
+        this.settings = Settings.create();
+        this.metadata = Metadata.create();
     }
 
     @Override

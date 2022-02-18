@@ -29,7 +29,7 @@ class HockMethodTool {
             realArgs[i] = actualArg;
             realArgsType[i] = actualArg.getClass();
         }
-        MethodHelper<T> methodHelper = MethodHelper.getInstance(targetClass.getDeclaredConstructor().newInstance(), targetMethod, realArgsType);
+        MethodHelper methodHelper = MethodHelper.getInstance(targetClass.getDeclaredConstructor().newInstance(), targetMethod, realArgsType);
         return methodHelper.invoke(realArgs);
     }
 }

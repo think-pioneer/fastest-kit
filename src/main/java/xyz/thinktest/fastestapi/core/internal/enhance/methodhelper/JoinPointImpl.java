@@ -42,6 +42,24 @@ class JoinPointImpl implements JoinPoint {
     }
 
     @Override
+    public <T> T getArg(Class<T> clazz, int index){
+        if(null == this.args || this.args.length == 0){
+            return null;
+        }
+        int flag = 0;
+        index = Math.max(index, 1);
+        for(Object arg:this.args){
+            if(arg.getClass().equals(clazz)){
+                if(flag == index - 1) {
+                    return (T) arg;
+                }
+                flag ++;
+            }
+        }
+        return null;
+    }
+
+    @Override
     public Target getTarget() {
         return this.target;
     }

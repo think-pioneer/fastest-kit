@@ -866,7 +866,20 @@ public interface Controller {
 
 JoinPoint是被拦截字段的一些信息，包含注解对象、被拦截字段、被拦截字段所在的对象、以及当前实现类对象
 
+定义注解
+
 ```java
+@Target(ElementType.FIELD)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface StringToBoolean {
+}
+```
+
+注解处理
+
+```java
+@Pointcut(annotation = StringToBoolean.class)
 public class MyCustomFieldAnnotation implements FieldProcessable {
     @Override
     public void process(JoinPoint joinPoint) {
@@ -881,7 +894,22 @@ public class MyCustomFieldAnnotation implements FieldProcessable {
 
 JoinPoint是被拦截方法的信息，包含注解对象、被拦截方法、被拦截方法的参数、被代理的对象、实现类的对象、返回给被注解方法的返回值
 
+定义注解
+
 ```java
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Before
+public @interface LogPrint {
+}
+```
+
+注解处理
+
+```java
+
+@Pointcut(annotation = LogPrint.class)
 public class MyCustomMethodAnnotation implements MethodProcessable {
 
     @Override

@@ -26,6 +26,14 @@ public interface JoinPoint {
     Object[] getArgs();
 
     /**
+     *from all args choose one arg
+     * @param clazz arg class type
+     * @param index If you have more than one parameter of the same type, select the first few parameters
+     *              start 1(default)
+     */
+    <T> T getArg(Class<T> clazz, int index);
+
+    /**
      *Represented object
      */
     Target getTarget();
@@ -39,4 +47,8 @@ public interface JoinPoint {
      *feature realization object
      */
     <T> T getThis();
+
+    default <T> T getArg(Class<T> clazz){
+        return getArg(clazz, 1);
+    }
 }

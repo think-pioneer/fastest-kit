@@ -24,7 +24,7 @@ public class Settings {
     private boolean retryOnConnectionFailure;
     private HttpClient client;
 
-    public Settings(){
+    private Settings(){
 
         this.isCleanMetadata = false;
         this.isCleanBody = true;
@@ -81,10 +81,6 @@ public class Settings {
 
     public void setSslType(SSLType sslType) {
         this.sslType = sslType;
-    }
-
-    public static Settings create(){
-        return new Settings();
     }
 
     public boolean isFollowRedirects() {
@@ -156,5 +152,9 @@ public class Settings {
                 .readTimeout(readTimeout, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(retryOnConnectionFailure);
         return this.client.getClient();
+    }
+
+    public static Settings create(){
+        return new Settings();
     }
 }

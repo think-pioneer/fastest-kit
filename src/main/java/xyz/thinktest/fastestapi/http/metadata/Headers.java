@@ -36,21 +36,21 @@ public class Headers extends MetaList {
 
     public Headers writeAll(Headers headers){
         if(CollectionUtils.isNotEmpty(headers)) {
-            super.addAll(headers);
+            super.addAll(headers.stream().filter(Objects::nonNull).collect(Collectors.toList()));
         }
         return this;
     }
 
     public Headers writeAll(Header... headers){
         if(null != headers && headers.length > 0){
-            super.addAll(Arrays.asList(headers));
+            super.addAll(Arrays.stream(headers).filter(Objects::nonNull).collect(Collectors.toList()));
         }
         return this;
     }
 
     public Headers writeAll(int index, Headers headers){
         if(CollectionUtils.isNotEmpty(headers) && index > 0 && index <= this.size()) {
-            super.addAll(index, headers);
+            super.addAll(index, headers.stream().filter(Objects::nonNull).collect(Collectors.toList()));
         }
         return this;
     }
@@ -68,7 +68,7 @@ public class Headers extends MetaList {
     }
 
     public List<String> readAllHeaderValue(){
-        return super.stream().map((val) -> String.valueOf(val.getValue())).collect(Collectors.toList());
+        return super.stream().filter(Objects::nonNull).map((val) -> String.valueOf(val.getValue())).collect(Collectors.toList());
     }
 
     public void erasure(){

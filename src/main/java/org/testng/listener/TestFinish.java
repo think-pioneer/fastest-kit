@@ -12,10 +12,13 @@ import xyz.thinktest.fastestapi.utils.reflects.FieldHelper;
 import org.testng.ITestResult;
 import org.testng.step.Step;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -29,22 +32,28 @@ class TestFinish{
             Object testInstance = result.getInstance();
             ITestNGMethod iTestNGMethod = result.getMethod();
             Test test = iTestNGMethod.getConstructorOrMethod().getMethod().getDeclaredAnnotation(Test.class);
+            if(Objects.isNull(test)){
+                test = testInstance.getClass().getDeclaredAnnotation(Test.class);
+            }
             if(Objects.nonNull(test) && test.recovery()){
                 Field[] fields = testInstance.getClass().getDeclaredFields();
                 Map<String, Class<?>> fieldTypeMap = Arrays.stream(fields).collect(Collectors.toMap(Field::getName, Field::getType));
-                Map<String, Object> fieldMap = Arrays.stream(fields).collect(Collectors.toMap(Field::getName, field -> FieldHelper.getInstance(testInstance, field)));
+                Map<String, FieldHelper> fieldMap = Arrays.stream(fields).collect(Collectors.toMap(Field::getName, field -> FieldHelper.getInstance(testInstance, field)));
                 Class<?>[] stepTypes = test.stepType();
                 Map<String, Step> stepMap;
                 if(stepTypes.length == 1 && stepTypes[0].equals(Step.class)){
                     logger.warn("{} all steps under the test class will be executed", testInstance.getClass());
                     //获得所有的step
-                    stepMap = fieldMap.entrySet().stream().filter(o -> o.getValue() instanceof Step).collect(Collectors.toMap(Map.Entry::getKey, o -> (Step) o.getValue()));
+                    stepMap = fieldMap.entrySet().stream()
+                            .filter(o -> o.getValue().get() instanceof Step)
+                            .collect(Collectors.toMap(Map.Entry::getKey, o -> (Step) o.getValue().get()));
+
                 } else {
                     //获得指定的step
                     stepMap = Arrays.stream(stepTypes)
                             .collect(Collectors.
                                     toMap(Class::getName, step ->
-                                            (Step) FieldHelper.getInstance(testInstance, fieldTypeMap.entrySet().stream()
+                                            FieldHelper.getInstance(testInstance, fieldTypeMap.entrySet().stream()
                                                     .filter(o -> o.getValue().equals(step))
                                                     .findFirst().orElseThrow(
                                                             () -> new FastestBasicException(ObjectUtil.format("not found field type:{}", step.getName())))

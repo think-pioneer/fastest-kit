@@ -14,7 +14,7 @@ import java.util.Objects;
  * @Date: 2021/12/26
  */
 @SuppressWarnings("unchecked")
-public class MethodHelper<T> {
+public class MethodHelper {
     private final Object instance;
     private final Class<?> instanceType;
     private final String methodName;
@@ -56,7 +56,7 @@ public class MethodHelper<T> {
         this.method.setAccessible(true);
     }
 
-    public T invoke(Object[] args){
+    public <T> T invoke(Object[] args){
         try {
             if (ReflectUtil.isStatic(method)) {
                 return (T) method.invoke(null, args);
@@ -68,7 +68,7 @@ public class MethodHelper<T> {
         }
     }
 
-    public boolean hasParameter(T expect){
+    public <T> boolean hasParameter(T expect){
         Type[] parameterTypes = this.method.getParameterTypes();
         for(Type type:parameterTypes){
             if (type.getTypeName().equals(expect.getClass().getName())){
@@ -78,11 +78,11 @@ public class MethodHelper<T> {
         return false;
     }
 
-    public static <T> MethodHelper<T> getInstance(Object instance, String methodName, Class<?>[] argTypes){
-        return new MethodHelper<>(instance, methodName, argTypes);
+    public static MethodHelper getInstance(Object instance, String methodName, Class<?>[] argTypes){
+        return new MethodHelper(instance, methodName, argTypes);
     }
 
-    public static <T> MethodHelper<T> getInstance(Object instance, Method method){
-        return new MethodHelper<>(instance, method);
+    public static MethodHelper getInstance(Object instance, Method method){
+        return new MethodHelper(instance, method);
     }
 }

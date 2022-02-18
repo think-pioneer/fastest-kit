@@ -6,6 +6,7 @@ import xyz.thinktest.fastestapi.utils.ObjectUtil;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,6 +38,16 @@ public class Restfuls extends MetaMap {
 
     public Restfuls writeAll(Restfuls restfuls){
         this.putAll(restfuls);
+        return this;
+    }
+
+    public Restfuls writeAll(Restful... restfuls){
+        if(null != restfuls && restfuls.length > 0){
+            for(Restful restful:restfuls){
+                if(Objects.nonNull(restful))
+                    this.put(restful.getKey(), restful);
+            }
+        }
         return this;
     }
 

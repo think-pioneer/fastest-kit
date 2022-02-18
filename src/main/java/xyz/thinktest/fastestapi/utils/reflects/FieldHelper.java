@@ -10,7 +10,7 @@ import java.util.Objects;
  * @Date: 2021/12/26
  */
 @SuppressWarnings("unchecked")
-public final class FieldHelper<T> {
+public final class FieldHelper {
 
     private final Object instance;
     private final Field field;
@@ -24,7 +24,7 @@ public final class FieldHelper<T> {
         this.field.setAccessible(true);
     }
 
-    public T get(){
+    public <T> T get(){
         try {
             return (T) this.field.get(this.instance);
         }catch (IllegalAccessException | IllegalArgumentException e){
@@ -168,11 +168,11 @@ public final class FieldHelper<T> {
         }
     }
 
-    public static <T> FieldHelper<T> getInstance(Object instance, Field field){
-        return new FieldHelper<>(instance, field);
+    public static FieldHelper getInstance(Object instance, Field field){
+        return new FieldHelper(instance, field);
     }
 
-    public static <T> FieldHelper<T> getInstance(Object instance, String fieldName){
+    public static FieldHelper getInstance(Object instance, String fieldName){
         Field field;
         Class<?> instanceType = instance.getClass();
         try{
@@ -181,6 +181,6 @@ public final class FieldHelper<T> {
         }catch (NoSuchFieldException e){
             throw new ReflectionException(ObjectUtil.format("not found filed\"{}\" from \"{}\"", fieldName, instanceType.getName()));
         }
-        return new FieldHelper<>(instance, field);
+        return new FieldHelper(instance, field);
     }
 }
