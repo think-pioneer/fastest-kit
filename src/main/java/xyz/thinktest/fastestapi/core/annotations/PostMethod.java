@@ -9,7 +9,6 @@ import java.lang.annotation.*;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@After
 public @interface PostMethod {
     Class<?> targetClass();
     String method();

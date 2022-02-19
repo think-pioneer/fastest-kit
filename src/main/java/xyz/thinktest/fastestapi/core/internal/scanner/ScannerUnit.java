@@ -2,8 +2,6 @@ package xyz.thinktest.fastestapi.core.internal.scanner;
 
 import org.reflections.Reflections;
 import xyz.thinktest.fastestapi.common.exceptions.InitializationException;
-import xyz.thinktest.fastestapi.core.annotations.After;
-import xyz.thinktest.fastestapi.core.annotations.Before;
 import xyz.thinktest.fastestapi.core.annotations.Pointcut;
 import xyz.thinktest.fastestapi.core.enhance.joinpoint.field.FieldProcessable;
 import xyz.thinktest.fastestapi.core.enhance.joinpoint.method.MethodProcessable;
@@ -54,20 +52,20 @@ public class ScannerUnit {
                             entity = new MethodAnnotationProcessEntity();
                         }
                         entity.setMethod(method);
-                        Before before = pointcut.annotation().getDeclaredAnnotation(Before.class);
-                        After after = pointcut.annotation().getDeclaredAnnotation(After.class);
+                        boolean before = pointcut.before();
+                        boolean after = pointcut.after();
                         Annotation methodAnnotation = method.getAnnotation(pointcut.annotation());
                         if(Objects.nonNull(methodAnnotation)){
-                            List<AnnotationGardener> annotationGardeners = null;
-                            if(Objects.nonNull(before)) {
-                                annotationGardeners = entity.getBeforeAnnotations();
-                            }
-                            if(Objects.nonNull(after)) {
-                                annotationGardeners = entity.getAfterAnnotations();
-                            }
+                            //注解实现类封装到AnnotationGardener中
                             AnnotationGardener annotationGardener = new AnnotationGardener(methodAnnotation, EnhanceFactory.origin(clazz), pointcut.index());
-                            if(Objects.nonNull(annotationGardeners)){
-                                annotationGardeners.add(annotationGardener);
+
+                            if(!after || before) {
+                                //默认before执行
+                                entity.setBeforeAnnotation(annotationGardener);
+                            }
+                            //如果包含After注解，则在方法执行后也要执行
+                            if(after) {
+                                entity.setAfterAnnotation(annotationGardener);
                             }
                         }
                         cacheMethod.put(method, entity);
@@ -108,13 +106,9 @@ public class ScannerUnit {
                             entity = new FieldAnnotationProcessEntity();
                         }
                         entity.setField(field);
-                        Before before = pointcut.annotation().getDeclaredAnnotation(Before.class);
                         Annotation methodAnnotation = field.getAnnotation(pointcut.annotation());
                         if(Objects.nonNull(methodAnnotation)){
-                            if(Objects.nonNull(before)) {
-                                List<AnnotationGardener> annotationGardeners = entity.getBeforeAnnotations();
-                                annotationGardeners.add(new AnnotationGardener(methodAnnotation, EnhanceFactory.origin(clazz), pointcut.index()));
-                            }
+                            entity.setBeforeAnnotation(new AnnotationGardener(methodAnnotation, EnhanceFactory.origin(clazz), pointcut.index()));
                         }
                         cacheField.put(field, entity);
                     }

@@ -8,7 +8,6 @@ import java.lang.annotation.*;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Before
 @MutexAnnotation({Autowired.class, ValueEntity.class})
 public @interface Value {
     String value() default "";

@@ -9,7 +9,6 @@ import java.lang.annotation.*;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Before
 public @interface PreMethod {
     Class<?> targetClass();
     String method();

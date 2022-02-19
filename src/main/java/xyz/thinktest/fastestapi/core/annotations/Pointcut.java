@@ -12,4 +12,6 @@ import java.lang.annotation.*;
 public @interface Pointcut {
     Class<? extends Annotation> annotation();
     int index() default 0;
+    boolean before() default true;
+    boolean after() default false;
 }

@@ -12,7 +12,7 @@ import java.lang.reflect.InvocationTargetException;
 /**
  * @Date: 2021/10/29
  */
-@Pointcut(annotation = PostMethod.class)
+@Pointcut(annotation = PostMethod.class, after = true)
 public class PostMethodProcess extends AbstractMethodProcess {
 
     public void process(JoinPoint joinPoint){

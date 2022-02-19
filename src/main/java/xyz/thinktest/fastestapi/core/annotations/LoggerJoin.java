@@ -8,7 +8,6 @@ import java.lang.annotation.*;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Before
 public @interface LoggerJoin {
     String value() default "";
 }

@@ -31,15 +31,15 @@ class TestFinish{
         try {
             Object testInstance = result.getInstance();
             ITestNGMethod iTestNGMethod = result.getMethod();
-            Test test = iTestNGMethod.getConstructorOrMethod().getMethod().getDeclaredAnnotation(Test.class);
-            if(Objects.isNull(test)){
-                test = testInstance.getClass().getDeclaredAnnotation(Test.class);
+            org.testng.annotations.Recovery recoveryAnn = iTestNGMethod.getConstructorOrMethod().getMethod().getDeclaredAnnotation(org.testng.annotations.Recovery.class);
+            if(Objects.isNull(recoveryAnn)){
+                recoveryAnn = testInstance.getClass().getDeclaredAnnotation(org.testng.annotations.Recovery.class);
             }
-            if(Objects.nonNull(test) && test.recovery()){
+            if(Objects.nonNull(recoveryAnn) && recoveryAnn.recovery()){
                 Field[] fields = testInstance.getClass().getDeclaredFields();
                 Map<String, Class<?>> fieldTypeMap = Arrays.stream(fields).collect(Collectors.toMap(Field::getName, Field::getType));
                 Map<String, FieldHelper> fieldMap = Arrays.stream(fields).collect(Collectors.toMap(Field::getName, field -> FieldHelper.getInstance(testInstance, field)));
-                Class<?>[] stepTypes = test.stepType();
+                Class<?>[] stepTypes = recoveryAnn.stepType();
                 Map<String, Step> stepMap;
                 if(stepTypes.length == 1 && stepTypes[0].equals(Step.class)){
                     logger.warn("{} all steps under the test class will be executed", testInstance.getClass());
@@ -61,7 +61,7 @@ class TestFinish{
                                                     .get()));
                 }
                 for(Step step:stepMap.values()){
-                    Recovery recovery = (Recovery) EnhanceFactory.origin(test.executor());
+                    Recovery recovery = (Recovery) EnhanceFactory.origin(recoveryAnn.executor());
                     recovery.recovery(step);
                 }
             }

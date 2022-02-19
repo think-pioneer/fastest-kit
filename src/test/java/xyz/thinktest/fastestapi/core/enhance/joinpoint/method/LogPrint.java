@@ -1,7 +1,5 @@
 package xyz.thinktest.fastestapi.core.enhance.joinpoint.method;
 
-import xyz.thinktest.fastestapi.core.annotations.Before;
-
 import java.lang.annotation.*;
 
 /**
@@ -11,6 +9,5 @@ import java.lang.annotation.*;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Before
 public @interface LogPrint {
 }

@@ -10,7 +10,6 @@ import java.lang.annotation.*;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Before
 @MutexAnnotation(RestMetadata.class)
 public @interface RestTemp {
     String name() default "";

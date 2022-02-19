@@ -21,8 +21,8 @@ public class CacheTest {
             Assert.assertEquals(String.valueOf(value1), "unit test value");
         });
         thread1.start();
-        thread2.start();
         thread1.join();
+        thread2.start();
         thread2.join();
     }
 
