@@ -29,7 +29,7 @@ public class Initialization {
     public static void init(){
         try{
             banner.print();
-            ColorPrint.GREEN.println("Project are initializing, please wait...");
+            ColorPrint.GREEN.println("Initializing, please wait...");
             CompletableFuture<Void> coffee = CompletableFuture.runAsync(Initialization::runInit);
             CompletableFuture<Void> runInit = CompletableFuture.runAsync(Initialization::realInit);
             CompletableFuture.allOf(coffee, runInit).get();

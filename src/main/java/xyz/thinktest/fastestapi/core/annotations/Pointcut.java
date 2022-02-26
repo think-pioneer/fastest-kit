@@ -11,6 +11,7 @@ import java.lang.annotation.*;
 @Documented
 public @interface Pointcut {
     Class<? extends Annotation> annotation();
+    @Deprecated
     int index() default 0;
     boolean before() default true;
     boolean after() default false;
