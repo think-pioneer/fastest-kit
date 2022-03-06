@@ -6,12 +6,12 @@ import java.util.Map;
 @SuppressWarnings("unchecked")
 public enum HttpCacheInternal {
     INSTANCE;
-    private final Map<String, Object> cache;
+    private final Map<String, Class<?>> cache;
     HttpCacheInternal(){
         cache = new HashMap<>();
     }
 
-    public void set(String key, Object value){
+    public void set(String key, Class<?> value){
         this.cache.put(key, value);
     }
 

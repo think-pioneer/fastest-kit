@@ -1,7 +1,6 @@
 package xyz.thinktest.fastestapi.utils.reflects;
 
 import xyz.thinktest.fastestapi.utils.ObjectUtil;
-import xyz.thinktest.fastestapi.common.exceptions.FastestBasicException;
 import xyz.thinktest.fastestapi.common.exceptions.ReflectionException;
 
 import java.lang.annotation.Annotation;
@@ -63,6 +62,41 @@ public class ReflectUtil {
         return Modifier.isStrict(getModifiers(object));
     }
 
+    public static <T extends Member> boolean isSynthetic(T class_){
+        return null != class_ && class_.isSynthetic();
+    }
+
+    public static boolean isSubclasses(Class<?> src, Class<?> dst){
+        return null != src && null != dst && src.isAssignableFrom(dst);
+    }
+
+    public static boolean isArray(Class<?> class_){
+        return null != class_ && class_.isArray();
+    }
+
+    public static boolean isAnnotation(Class<?> class_){
+        return null != class_ && class_.isAnnotation();
+    }
+
+    public static boolean isPrimitive(Class<?> class_){
+        return null != class_ && class_.isPrimitive();
+    }
+
+    public static boolean isInstance(Class<?> class_, Object object){
+        return null != class_ && class_.isInstance(object);
+    }
+
+    public static boolean isBridge(Method method){
+        return null != method && method.isBridge();
+    }
+
+    public static boolean isVarArgs(Method method){
+        return null != method && method.isVarArgs();
+    }
+
+    public static boolean isDefault(Method method){
+        return null != method && method.isDefault();
+    }
     /**
      * 获得字段、方法、构造方法、类等对象的修饰符
      */
@@ -118,49 +152,63 @@ public class ReflectUtil {
                 // 得到泛型里的class类型对象
                 return (Class<?>)pt.getActualTypeArguments()[0];
             }
-            throw new FastestBasicException(ObjectUtil.format("get Collection element real type error: type is null or ont inherit ParameterizedType"));
+            throw new ReflectionException(ObjectUtil.format("get Collection element real type error: type is null or ont inherit ParameterizedType"));
         }catch (Exception e){
-            throw new FastestBasicException(ObjectUtil.format("get Collection element real type error:{}", e.getMessage()), e.getCause());
+            throw new ReflectionException(ObjectUtil.format("get Collection element real type error:{}", e.getMessage()), e.getCause());
         }
     }
 
-    public static Field getField(Class<?> clazz, String name){
+    public static Field getField(Class<?> class_, String name){
         try {
-            return clazz.getField(name);
+            return class_.getField(name);
         }catch (NoSuchFieldException e){
-            throw new FastestBasicException("no such field from " + clazz.getCanonicalName());
+            throw new ReflectionException("no such field from " + class_.getCanonicalName());
         }
     }
 
-    public static Field getDeclaredField(Class<?> clazz, String name){
+    public static Field getDeclaredField(Class<?> class_, String name){
         try {
-            return clazz.getDeclaredField(name);
+            return class_.getDeclaredField(name);
         }catch (NoSuchFieldException e){
-            throw new FastestBasicException("no such field from " + clazz.getCanonicalName());
+            throw new ReflectionException("no such field from " + class_.getCanonicalName());
         }
     }
 
-    public static Method getMethod(Class<?> clazz, String name){
+    public static Method getMethod(Class<?> class_, String name){
         try {
-            return clazz.getDeclaredMethod(name);
+            return class_.getDeclaredMethod(name);
         }catch (NoSuchMethodException e){
-            throw new FastestBasicException("no such method from " + clazz.getCanonicalName());
+            throw new ReflectionException("no such method from " + class_.getCanonicalName());
         }
     }
 
-    public static Method getDeclaredMethod(Class<?> clazz, String name){
+    public static Method getDeclaredMethod(Class<?> class_, String name){
         try {
-            return clazz.getDeclaredMethod(name);
+            return class_.getDeclaredMethod(name);
         }catch (NoSuchMethodException e){
-            throw new FastestBasicException("no such method from " + clazz.getCanonicalName());
+            throw new ReflectionException("no such method from " + class_.getCanonicalName());
         }
     }
 
-    public static <T extends Annotation> T getMethod(Class<?> clazz, Class<T> annotation){
-        return clazz.getAnnotation(annotation);
+    public static <T extends Annotation> T getMethod(Class<?> class_, Class<T> annotation){
+        if(class_ == null || annotation == null){
+            throw new ReflectionException("class and annotation not could null");
+        }
+        try {
+            return class_.getAnnotation(annotation);
+        }catch (Throwable e){
+            throw new ReflectionException(ObjectUtil.format("reflect {} exception: ", class_.getCanonicalName()), e);
+        }
     }
 
-    public static <T extends Annotation> T getDeclaredMethod(Class<?> clazz, Class<T> annotation){
-        return clazz.getDeclaredAnnotation(annotation);
+    public static <T extends Annotation> T getDeclaredMethod(Class<?> class_, Class<T> annotation){
+        if(class_ == null || annotation == null){
+            throw new ReflectionException("class and annotation not could null");
+        }
+        try {
+            return class_.getDeclaredAnnotation(annotation);
+        }catch (Throwable e){
+            throw new ReflectionException(ObjectUtil.format("reflect {} exception: ", class_.getCanonicalName()), e);
+        }
     }
 }

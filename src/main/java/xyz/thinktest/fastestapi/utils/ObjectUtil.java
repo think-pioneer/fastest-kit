@@ -56,8 +56,7 @@ public final class ObjectUtil {
         try {
             ObjectMapper mapper = new ObjectMapper();
             String json = mapper.writeValueAsString(object);
-            Map<?, ?> map = mapper.readValue(json, new TypeReference<Map<?, ?>>() {});
-            return map;
+            return mapper.readValue(json, new TypeReference<Map<?, ?>>() {});
         }catch (Exception e){
             throw new FastestBasicException("entity to map fail", e);
         }
@@ -80,11 +79,14 @@ public final class ObjectUtil {
         return true;
     }
 
-    public static <T, U> T nullOfDefault(U src, T defaultValue){
+    /**
+     * 如果src为null，则返回defaultvalue
+     */
+    public static <T> T nullOfDefault(T src, T defaultValue){
         if(null == src){
             return defaultValue;
         }
-        return (T) src;
+        return src;
     }
 }
 

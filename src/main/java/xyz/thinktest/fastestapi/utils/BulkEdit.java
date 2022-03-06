@@ -25,7 +25,7 @@ public class BulkEdit {
     }
 
     /**
-     *Convert the queryparamters copied from the browser into a header object
+     *Convert the query paramters copied from the browser into a header object
      */
     public static Parameters stringToParameters(String content){
         content = content.trim();

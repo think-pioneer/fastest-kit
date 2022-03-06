@@ -576,6 +576,10 @@ Metadata{url=http://user.testdemo.com/uri/userinfo, method=GET, headers=[], para
 | sync       | bool   | true   | 是否使用同步请求，默认是                             |
 | file       | string | ""     | 执行接口所在的文件路径，从apiconfig.folderpath下读取 |
 
+注：支持直接从swagger中读取配置，但是可能会出现兼容性问题，所以不建议
+
+将swagger中的docs(json格式)，保存为.swagger文件即可。
+
 ### 1.2.8 @RestServer
 
 #### 使用说明

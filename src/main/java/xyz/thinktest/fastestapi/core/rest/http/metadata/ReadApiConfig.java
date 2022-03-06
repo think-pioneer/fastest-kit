@@ -1,6 +1,9 @@
 package xyz.thinktest.fastestapi.core.rest.http.metadata;
 
 import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import xyz.thinktest.fastestapi.common.json.JSONFactory;
 import xyz.thinktest.fastestapi.common.yaml.ListConstructor;
@@ -107,7 +110,7 @@ public final class ReadApiConfig {
         if(Objects.nonNull(apiConfName)){
             folderName = apiConfName;
         }
-        List<Server> allFileServers = new ArrayList<>();
+        List<Server> allFileServers = swagger(folderName);
         List<File> fileList = new ArrayList<>();
         FileUtil.collect(FileUtil.createFolder(root, folderName), fileList, new String[]{".yaml", ".yml", ".json"});
         ListConstructor<Server> constructor = new ListConstructor<>(Server.class);
@@ -137,6 +140,39 @@ public final class ReadApiConfig {
             allFileServers.addAll(oneFileServers);
         });
         return allFileServers;
+    }
+
+    /**
+     * 首先尝试从swagger加载配置文件，但是兼容有问题，所以不建议
+     */
+    private static List<Server> swagger(String folderName){
+        List<File> swaggerFiles = new ArrayList<>();
+        FileUtil.collect(new File(folderName), swaggerFiles, new String[]{"swagger"});
+        List<Server> servers = new ArrayList<>();
+        swaggerFiles.forEach(swagger -> {
+            JsonNode swaggerNode = JSONFactory.read(swagger);
+            String host = swaggerNode.path("info").asText("host");
+            JsonNode paths = swaggerNode.path("paths");
+            Server server = new Server();
+            server.setServerName(host);
+            for (Iterator<Map.Entry<String, JsonNode>> it = paths.fields(); it.hasNext(); ) {
+                Map.Entry<String, JsonNode> pathEntry = it.next();
+                String uriPath = pathEntry.getKey();
+                List<Uri> uris = new ArrayList<>();
+                for (Iterator<Map.Entry<String, JsonNode>> iter = pathEntry.getValue().fields(); iter.hasNext(); ) {
+                    Map.Entry<String, JsonNode> methodEntry = iter.next();
+                    String method = methodEntry.getKey();
+                    Uri uri = new Uri();
+                    uri.setUri(uriPath);
+                    uri.setMethod(method);
+                    uri.setHost(host);
+                    uris.add(uri);
+                }
+                server.setUris(uris);
+            }
+            servers.add(server);
+        });
+        return servers;
     }
 
     public static class Server{
@@ -276,4 +312,5 @@ public final class ReadApiConfig {
             return uri;
         }
     }
+
 }

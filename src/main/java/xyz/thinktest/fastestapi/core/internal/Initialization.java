@@ -10,10 +10,14 @@ import xyz.thinktest.fastestapi.core.internal.tool.Banner;
 import xyz.thinktest.fastestapi.core.internal.tool.poetry.Poetry;
 import xyz.thinktest.fastestapi.http.DefaultRequester;
 import xyz.thinktest.fastestapi.http.DefaultResponder;
+import xyz.thinktest.fastestapi.http.Requester;
+import xyz.thinktest.fastestapi.http.Responder;
 import xyz.thinktest.fastestapi.http.internal.HttpCacheInternal;
+import xyz.thinktest.fastestapi.utils.ObjectUtil;
 import xyz.thinktest.fastestapi.utils.color.ColorPrint;
 import xyz.thinktest.fastestapi.utils.dates.DateUtil;
 import xyz.thinktest.fastestapi.utils.files.PropertyUtil;
+import xyz.thinktest.fastestapi.utils.reflects.ReflectUtil;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -61,8 +65,16 @@ public class Initialization {
             if (Objects.isNull(responderClass)) {
                 responderClass = DefaultResponder.class.getCanonicalName();
             }
-            httpCacheInternal.set("fastest.api.http.requester", Class.forName(requesterClass));
-            httpCacheInternal.set("fastest.api.http.responder", Class.forName(responderClass));
+            Class<?> requester = Class.forName(requesterClass);
+            Class<?> responder = Class.forName(responderClass);
+            if(ReflectUtil.isSubclasses(requester, Requester.class)){
+                throw new InitializationException(ObjectUtil.format("fastest.api.http.requester={} is not Requester subclasses", requesterClass));
+            }
+            if(ReflectUtil.isSubclasses(responder, Responder.class)){
+                throw new InitializationException(ObjectUtil.format("fastest.api.http.requester={} is not Requester subclasses", requesterClass));
+            }
+            httpCacheInternal.set("fastest.api.http.requester", requester);
+            httpCacheInternal.set("fastest.api.http.responder", responder);
         }catch (ClassNotFoundException e){
             throw new InitializationException("initialization http fail", e);
         }
