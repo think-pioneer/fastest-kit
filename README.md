@@ -38,7 +38,7 @@ TestCase层，将一个或多个step组装成一个testcase。
 
 但是上面用例明显健壮性不足，极易可能失败，并且容易漏测，优化一下
 
-1. 找到用例 ----> getUser
+1. 找到用户 ----> getUser
 2. 判断第一步是否有找到至少一个用户，如果没有创建 ----> createUser
 3. 重新获取用户(不管第二步创建接口有没有返回用户信息，我们都重新请求查询接口) ----> getUser
 4. 删除用户 ----> deleteUser
@@ -63,6 +63,8 @@ TestCase层，将一个或多个step组装成一个testcase。
 缺点：
 
 1. 优点即缺点，那就是运行时间会特别长，原因也是也为独立出来的api层导致接口会被请求多次，导致执行时间特别长
+
+整体来说优点是大于缺点的。用例的执行时间和健壮性/稳定性比起来，肯定健壮性/稳定性更重要
 
 测试三层只是理想，大家也不用完全按照三层来做，框架也未限制必须按照测试三层来组织测试用例、测试代码。
 
@@ -1008,9 +1010,9 @@ fastest.api.http.requester=xxx.xxx.MyRequester
 | metadata                    | Metadata  | 可以给requester添加metadata，此时会覆盖原来的metadata，也可获取requester的metadata，可以单独修改metadata的元素 |
 | metadata(Metadata metadata) | Metadata  | 传入一个metadata，替换掉原来的metadata。                     |
 | settings                    | Settings  | 框架提供的request设置项，包含简单的http所需的设置。          |
+| settings(Settings settings) | Requester | 添加设置项                                                   |
 | getResponder                | Responder | 获取框架提供的http响应对象，参考[Responder](#24-responder)   |
-| sync                        | void      | 同步请求                                                     |
-| async                       | void      | 异步请求                                                     |
+| send                        | Requester | 发送请求，通过settings中的isSync控制时异步还是同步           |
 | asserts                     | Asserts   | 直接通过requester对http响应进行断言                          |
 
 ## 2.4 Responder
@@ -1081,6 +1083,79 @@ public class MyStep implements Step {
 | 方法名   | 返回值  | 说明                                                         |
 | -------- | ------- | ------------------------------------------------------------ |
 | recovery | boolean | 执行用例后用来做一些“恢复操作”，比如：测试完添加订单功能后，删除订单的操作 |
+
+## 2.6 Filter
+
+### 方法说明
+
+在发送请求时执行的过滤器，用户可添加多个过滤器，通过[FilterConfig](#27-FilterConfig)的order属性控制执行顺序
+
+Filter1.java
+
+```java
+public class Filter1 implements Filter {
+    @Override
+    public void doFilter(Requester requester, Responder responder, FilterChain filterChain) {
+        System.out.println("before1");
+        filterChain.doFilter(requester, responder);
+        System.out.println("after1");
+    }
+}
+```
+
+Filter2.java
+
+```java
+public class Filter2 implements Filter {
+    @Override
+    public void doFilter(Requester requester, Responder responder, FilterChain filterChain) {
+        System.out.println("before2");
+        requester.metadata().setParameter("id", 3);
+        filterChain.doFilter(requester, responder);
+        System.out.println("after2");
+        System.out.println(responder.bodyToString());
+    }
+}
+```
+
+TestFilter.java
+
+```java
+public static void main(String[] args) {
+        Requester requester = RequesterFactory.create();
+        requester.settings(Settings.create()
+                        .setFilter(new FilterConfig(1, new Filter1()))
+                        .setFilter(new FilterConfig(2, new Filter2())))
+                .metadata(Metadata.create()
+                        .setUrl("http://localhost:8080/hello")
+                        .setHttpMethod(HttpMethod.GET)
+                        .setParameter("id", 1)
+                        .setParameter("id", 2)
+                );
+        System.out.println(requester.send().getResponder().bodyToString());
+    }
+```
+
+执行结果
+
+```
+before1
+before2
+after2
+{"id":[1,2,3],"OK":"200"}
+after1
+{"id":[1,2,3],"OK":"200"}
+```
+
+## 2.7 FilterConfig
+
+### 方法说明
+
+每一个实例配置一个过滤器和该过滤器的序号
+
+```java
+Settings.create().setFilter(new FilterConfig(1, new Filter1()));
+```
 
 
 
@@ -1225,8 +1300,8 @@ Edit Configurations -> Edit Templates -> 选择TestNG -> Listeners -> 添加list
 | fastest.api.config.folder.path | 否       |              apiconfig              | api配置文件的目录，会扫描该目录下所有的文件及子文件夹，文件类型为json、yaml、yml |
 |   fastest.rest.temp.api.path   | 否       | apiconfig/apiconfig_custom/xxx.yaml |       保存RestTemp注解参数的目录及文件，文件类型为yaml       |
 |     fastest.rest.temp.save     | 否       |                false                | 全局控制是否保存RestTemp注解的参数，当不想在每一个RestTemp注解上指定isSave参数时，可以使用该参数全局配置 |
-|   fastest.api.http.requester   | 否       |          DefaultRequester           |                   自定义Requester的实现类                    |
-|   fastest.api.http.responder   | 否       |          DefaultResponder           |                   自定义Responder的实现类                    |
+|   fastest.api.http.requester   | 否       |          DefaultRequester           |       自定义Requester的实现类，不建议使用，后面会废弃        |
+|   fastest.api.http.responder   | 否       |          DefaultResponder           |       自定义Responder的实现类，不建议使用，后面会废弃        |
 |   fastest.rest.print.request   | 否       |                true                 | 全局参数，控制打印http请求的log，单次请求可通过@HttpLog的showRequestLog覆盖该参数的值 |
 |  fastest.rest.print.response   | 否       |                false                | 全局参数，控制打印http响应的log，单次请求可通过@HttpLog的showResponseLog覆盖该参数的值。鉴于某些响应body比较大，所以默认不打印 |
 |  fastest.cache.expired.period  | 否       |                10000                |        缓存管理器定时清理过期数据的时间间隔，单位毫秒        |

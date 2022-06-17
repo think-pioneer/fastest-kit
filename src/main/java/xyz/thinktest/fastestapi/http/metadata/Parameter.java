@@ -5,11 +5,11 @@ package xyz.thinktest.fastestapi.http.metadata;
  */
 public class Parameter extends Meta {
     private final String key;
-    private final String value;
+    private final Object value;
 
     public Parameter(Object key, Object value){
         this.key = String.valueOf(key);
-        this.value = String.valueOf(value);
+        this.value = value;
     }
 
     @Override
@@ -18,7 +18,7 @@ public class Parameter extends Meta {
     }
 
     @Override
-    public String getValue() {
+    public Object getValue() {
         return value;
     }
 

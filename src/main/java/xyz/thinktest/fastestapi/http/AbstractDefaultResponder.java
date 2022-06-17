@@ -19,15 +19,22 @@ import java.util.regex.Pattern;
 
 abstract class AbstractDefaultResponder implements Responder{
     private static final FastestLogger logger = FastestLoggerFactory.getLogger(AbstractDefaultResponder.class);
-    private final Response response;
-    private final int httpCode;
-    private final ResponseBody body;
-    private final String bodyString;
-    private final InputStream bodyInputStream;
-    private final byte[] bodyBytes;
-    public final Asserts asserts;
+    private Response response;
+    private int httpCode;
+    private ResponseBody body;
+    private String bodyString;
+    private InputStream bodyInputStream;
+    private byte[] bodyBytes;
+    public Asserts asserts;
+
+    AbstractDefaultResponder(){}
 
     AbstractDefaultResponder(Response response){
+        this.init(response);
+    }
+
+    @Override
+    public void init(Response response){
         this.response = response;
         this.httpCode = this.response.code();
         this.body = this.response.body();

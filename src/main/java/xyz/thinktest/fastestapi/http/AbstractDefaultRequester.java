@@ -46,14 +46,14 @@ abstract class AbstractDefaultRequester implements Requester {
     }
 
     @Override
-    public Metadata metadata(Metadata metadata) {
+    public Requester metadata(Metadata metadata) {
         this.metadata.recovery();
         this.metadata.setUrl(metadata.getUrl());
         this.metadata.setHttpMethod(metadata.getMethod());
         this.metadata.setParameters(metadata.getParameters());
         this.metadata.setForms(metadata.getForms());
         this.metadata.setJson(metadata.getJson());
-        return this.metadata;
+        return this;
     }
 
     @Override
@@ -62,18 +62,31 @@ abstract class AbstractDefaultRequester implements Requester {
     }
 
     @Override
+    public Requester settings(Settings settings){
+        Settings.copy(settings, this.settings);
+        return this;
+    }
+
+    @Override
+    public void setResponder(Responder responder){
+        this.responder = responder;
+    }
+
+    @Override
     public Responder getResponder() {
         return this.responder;
     }
 
     @Override
-    public void sync() {
-        this.send(true);
+    public Requester sync() {
+        this.settings.setIsSync(true);
+        return this;
     }
 
     @Override
-    public void async() {
-        this.send(false);
+    public Requester async() {
+        this.settings.setIsSync(false);
+        return this;
     }
 
     @Override
@@ -81,17 +94,4 @@ abstract class AbstractDefaultRequester implements Requester {
         return this.responder.asserts();
     }
 
-    /**
-     * 真正的请求操作
-     * @param isSync 同步或异步
-     */
-    private void send(boolean isSync){
-        Sender sender = new Sender(metadata, this.settings.build());
-        if(isSync){
-            sender.sync();
-        }else{
-            sender.async();
-        }
-        this.responder = sender.getResponse();
-    }
 }

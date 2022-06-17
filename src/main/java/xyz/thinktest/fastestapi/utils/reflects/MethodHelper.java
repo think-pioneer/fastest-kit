@@ -56,7 +56,7 @@ public class MethodHelper {
         this.method.setAccessible(true);
     }
 
-    public <T> T invoke(Object[] args){
+    public <T> T invoke(Object... args){
         try {
             if (ReflectUtil.isStatic(method)) {
                 return (T) method.invoke(null, args);
@@ -78,7 +78,7 @@ public class MethodHelper {
         return false;
     }
 
-    public static MethodHelper getInstance(Object instance, String methodName, Class<?>[] argTypes){
+    public static MethodHelper getInstance(Object instance, String methodName, Class<?>... argTypes){
         return new MethodHelper(instance, methodName, argTypes);
     }
 

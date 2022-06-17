@@ -72,8 +72,8 @@ public abstract class RunHttpRequest extends AbstractMethodProcess {
                 throw new EnhanceException(ObjectUtil.format("url:\"{}\" is not a valid url", url));
             }
             HttpLog httpLog = method.getDeclaredAnnotation(HttpLog.class);
-            boolean showRequestLog = Objects.isNull(httpLog) ? requester.settings().getShowRequestLog() : httpLog.showRequestLog();
-            boolean showResponseLog = Objects.isNull(httpLog) ? requester.settings().getShowResponseLog() : httpLog.showResponseLog();
+            boolean showRequestLog = Objects.isNull(httpLog) ? requester.settings().isShowRequestLog() : httpLog.showRequestLog();
+            boolean showResponseLog = Objects.isNull(httpLog) ? requester.settings().isShowResponseLog() : httpLog.showResponseLog();
             Metadata metadata = requester.metadata();
             if(showRequestLog) {
                 logger.info("**********HTTP REQUEST**********\n" +
@@ -84,11 +84,13 @@ public abstract class RunHttpRequest extends AbstractMethodProcess {
                         "Http Forms:{}\n" +
                         "Http Json:{}", metadata.getUrl().getFullUrl(), metadata.getMethod().getMethodName(), metadata.getHeaders(), metadata.getParameters(), metadata.getForms(), metadata.getJson());
             }
-            if(isSync){
-                requester.sync();
-            } else {
-                requester.async();
-            }
+//            if(isSync){
+//                requester.sync();
+//            } else {
+//                requester.async();
+//            }
+            requester.settings().setIsSync(isSync);
+            requester.send();
             if(showResponseLog) {
                 Responder responder = requester.getResponder();
                 if (Objects.isNull(responder)) {

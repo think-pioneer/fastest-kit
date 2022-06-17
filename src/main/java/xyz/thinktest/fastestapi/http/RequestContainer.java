@@ -6,6 +6,7 @@ import xyz.thinktest.fastestapi.http.metadata.*;
 import xyz.thinktest.fastestapi.http.metadata.Headers;
 
 import java.io.File;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -36,7 +37,7 @@ class RequestContainer {
         HttpUrl.Builder urlBuilder = this.builder.url(this.metadata.getUrl().asciiString()).build().url().newBuilder();
         if(Objects.nonNull(parameters)) {
             parameters.forEach((k, v) -> {
-                urlBuilder.addQueryParameter(String.valueOf(k), String.valueOf(v.getValue()));
+                ((List<Object>) v.getValue()).forEach(value -> urlBuilder.addQueryParameter(String.valueOf(k), String.valueOf(value)));
             });
         }
         this.httpUrl = urlBuilder.build();

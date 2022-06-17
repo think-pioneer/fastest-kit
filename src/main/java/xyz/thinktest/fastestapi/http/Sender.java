@@ -1,11 +1,9 @@
 package xyz.thinktest.fastestapi.http;
 
 import okhttp3.*;
-import xyz.thinktest.fastestapi.common.exceptions.HttpException;
-import xyz.thinktest.fastestapi.core.ApplicationBean;
-import xyz.thinktest.fastestapi.http.internal.HttpCacheInternal;
-import xyz.thinktest.fastestapi.utils.ObjectUtil;
 import org.jetbrains.annotations.NotNull;
+import xyz.thinktest.fastestapi.common.exceptions.HttpException;
+import xyz.thinktest.fastestapi.utils.ObjectUtil;
 
 import java.io.IOException;
 
@@ -17,8 +15,7 @@ import java.io.IOException;
 class Sender {
     private final OkHttpClient client;
     private final Request request;
-    private Responder responder;
-    private final HttpCacheInternal httpCacheInternal = HttpCacheInternal.INSTANCE;
+    private Response response;
 
     public Sender(Metadata metadata, OkHttpClient client){
         try {
@@ -34,17 +31,8 @@ class Sender {
      * get response
      * @return response
      */
-    public Responder getResponse(){
-        return this.responder;
-    }
-
-    /**
-     * set response when async request
-     * @param response response
-     */
-    private void setResponse(Response response){
-        Class<Responder> responderType = httpCacheInternal.get("fastest.api.http.responder");
-        this.responder = ApplicationBean.getEnhanceBean(responderType, new Class<?>[]{Response.class}, new Object[]{response});
+    public Response getResponse(){
+        return this.response;
     }
 
     /**
@@ -52,8 +40,7 @@ class Sender {
      */
     public void sync(){
         try {
-            Response response = this.client.newCall(this.request).execute();
-            this.setResponse(response);
+            this.response = this.client.newCall(this.request).execute();
         }catch (Exception e){
             throw new HttpException(ObjectUtil.format("send sync request error:{}", e.getMessage()), e.getCause());
         }
@@ -73,7 +60,7 @@ class Sender {
 
                 @Override
                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                    setResponse(response);
+                    Sender.this.response = response;
                 }
             });
         }catch (Exception e){

@@ -15,6 +15,8 @@ import java.nio.charset.Charset;
  */
 public interface Responder {
 
+    void init(Response response);
+
     /**
      *http响应码，非业务响应码
      */

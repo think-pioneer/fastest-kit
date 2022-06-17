@@ -19,7 +19,15 @@ public class Parameters extends MetaMap {
     }
 
     public Parameters write(Object key, Object value){
-        this.put(key, new Parameter(key, value));
+        Object tmp = this.get(key);
+        List<Object> values;
+        if(tmp != null){
+            values = (List<Object>) ((Meta)tmp).getValue();
+        }else{
+            values = new ArrayList<>();
+        }
+        values.add(value);
+        this.put(key, new Parameter(key, values));
         return this;
     }
 

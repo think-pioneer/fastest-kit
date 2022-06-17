@@ -176,7 +176,7 @@ public class ReflectUtil {
 
     public static Method getMethod(Class<?> class_, String name){
         try {
-            return class_.getDeclaredMethod(name);
+            return class_.getMethod(name);
         }catch (NoSuchMethodException e){
             throw new ReflectionException("no such method from " + class_.getCanonicalName());
         }

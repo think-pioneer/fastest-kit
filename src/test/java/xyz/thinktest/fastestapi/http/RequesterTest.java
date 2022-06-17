@@ -6,7 +6,11 @@ import org.testng.annotations.Test;
 import org.testng.listener.TestRunListener;
 import xyz.thinktest.fastestapi.core.annotations.Autowired;
 import xyz.thinktest.fastestapi.core.annotations.Component;
+import xyz.thinktest.fastestapi.http.filter.Filter1;
+import xyz.thinktest.fastestapi.http.filter.Filter2;
+import xyz.thinktest.fastestapi.http.filter.FilterConfig;
 import xyz.thinktest.fastestapi.http.metadata.Header;
+import xyz.thinktest.fastestapi.http.metadata.HttpMethod;
 import xyz.thinktest.fastestapi.http.metadata.Restfuls;
 
 /**
@@ -67,4 +71,19 @@ public class RequesterTest {
         Requester requester4 = RequesterFactory.create(header1, header2);
         Assert.assertNotEquals(requester3, requester4);
     }
+
+//     不适合单侧
+//    public void filter(){
+//        Requester requester = RequesterFactory.create();
+//        requester.settings(Settings.create()
+//                .setFilter(new FilterConfig(1, new Filter1()))
+//                .setFilter(new FilterConfig(2, new Filter2())))
+//                .metadata(Metadata.create()
+//                        .setUrl("http://localhost:8080/hello")
+//                        .setHttpMethod(HttpMethod.GET)
+//                        .setParameter("id", 1)
+//                        .setParameter("id", 2)
+//                );
+//        requester.send().asserts().assertEqual(3, "id[2]");
+//    }
 }

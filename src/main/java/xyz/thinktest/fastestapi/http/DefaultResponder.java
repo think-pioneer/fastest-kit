@@ -13,4 +13,8 @@ public class DefaultResponder extends AbstractDefaultResponder {
     public DefaultResponder(Response response) {
         super(response);
     }
+
+    public DefaultResponder() {
+        super();
+    }
 }
