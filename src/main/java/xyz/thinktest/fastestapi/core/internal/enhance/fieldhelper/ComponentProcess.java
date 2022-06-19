@@ -1,11 +1,11 @@
 package xyz.thinktest.fastestapi.core.internal.enhance.fieldhelper;
 
+import xyz.thinktest.fastestapi.core.annotations.Component;
+import xyz.thinktest.fastestapi.core.annotations.MultipleInstance;
 import xyz.thinktest.fastestapi.core.enhance.joinpoint.Target;
 import xyz.thinktest.fastestapi.core.enhance.joinpoint.field.FieldProcessable;
 import xyz.thinktest.fastestapi.core.enhance.joinpoint.field.JoinPoint;
 import xyz.thinktest.fastestapi.core.internal.enhance.EnhanceFactory;
-import xyz.thinktest.fastestapi.core.annotations.Component;
-import xyz.thinktest.fastestapi.core.annotations.MultipleInstance;
 
 import java.lang.reflect.Field;
 import java.util.Objects;

@@ -1,6 +1,5 @@
 package xyz.thinktest.fastestapi.http;
 
-import okhttp3.Response;
 import xyz.thinktest.fastestapi.core.ApplicationBean;
 import xyz.thinktest.fastestapi.http.filter.HttpFilter;
 import xyz.thinktest.fastestapi.http.internal.HttpCacheInternal;

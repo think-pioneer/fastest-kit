@@ -1,9 +1,7 @@
 package xyz.thinktest.fastestapi.utils.reflects;
 
-import org.apache.commons.lang3.StringUtils;
-import xyz.thinktest.fastestapi.utils.ObjectUtil;
-import xyz.thinktest.fastestapi.common.exceptions.EnhanceException;
 import xyz.thinktest.fastestapi.common.exceptions.ReflectionException;
+import xyz.thinktest.fastestapi.utils.string.StringUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -30,28 +28,24 @@ public class MethodHelper {
         if(Objects.isNull(argTypes)){
             throw new ReflectionException("method params type could not null");
         }
-        this.instance = instance;
+        this.instance = instance instanceof Class ? null : instance;
         this.methodName = methodName;
-        this.instanceType = instance.getClass();
-        try {
-            if (argTypes.length == 0) {
-                this.method = this.instanceType.getMethod(methodName);
-            } else {
-                this.method = this.instanceType.getMethod(methodName, argTypes);
-            }
-            this.method.setAccessible(true);
-        }catch (NoSuchMethodException e) {
-            throw new EnhanceException(ObjectUtil.format("not found method:{} in class:{}", methodName, this.instanceType.getName()), e);
+        this.instanceType = instance instanceof Class ? (Class<?>) instance : instance.getClass();
+        if (argTypes.length == 0) {
+            this.method = ReflectUtil.getDeclaredMethod(this.instanceType, methodName);
+        } else {
+            this.method = ReflectUtil.getDeclaredMethod(this.instanceType, methodName, argTypes);
         }
+        this.method.setAccessible(true);
     }
 
     private MethodHelper(Object instance, Method method){
         if(Objects.isNull(instance) || Objects.isNull(method)){
             throw new ReflectionException("The instance where the method is located cannot be null");
         }
-        this.instance = instance;
+        this.instance = instance instanceof Class ? null : instance;;
         this.methodName = method.getName();
-        this.instanceType = instance.getClass();
+        this.instanceType = instance instanceof Class ? (Class<?>) instance : instance.getClass();
         this.method = method;
         this.method.setAccessible(true);
     }
@@ -64,7 +58,7 @@ public class MethodHelper {
                 return (T) method.invoke(instance, args);
             }
         } catch (IllegalAccessException | InvocationTargetException e){
-            throw new EnhanceException(ObjectUtil.format("exception executing method:{} in class{}", this.methodName, instanceType.getName()));
+            throw new RuntimeException(StringUtils.format("exception executing method:{0} in class{1}", this.methodName, instanceType.getName()));
         }
     }
 

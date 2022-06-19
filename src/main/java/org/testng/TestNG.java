@@ -1,72 +1,39 @@
 package org.testng;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.ServiceLoader;
-import java.util.Set;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
-
+import com.beust.jcommander.JCommander;
+import com.beust.jcommander.ParameterException;
 import org.testng.annotations.ITestAnnotation;
 import org.testng.collections.Lists;
 import org.testng.collections.Maps;
 import org.testng.collections.Sets;
-import org.testng.internal.ClassHelper;
-import org.testng.internal.Configuration;
-import org.testng.internal.DynamicGraph;
-import org.testng.internal.ExitCode;
-import org.testng.internal.IConfiguration;
-import org.testng.internal.InstanceCreator;
-import org.testng.internal.OverrideProcessor;
-import org.testng.internal.ReporterConfig;
 import org.testng.internal.RuntimeBehavior;
-import org.testng.internal.SuiteRunnerMap;
-import org.testng.internal.Systematiser;
-import org.testng.internal.Utils;
-import org.testng.internal.Version;
+import org.testng.internal.*;
 import org.testng.internal.annotations.DefaultAnnotationTransformer;
 import org.testng.internal.annotations.IAnnotationFinder;
 import org.testng.internal.annotations.JDK15AnnotationFinder;
+import org.testng.internal.thread.graph.SuiteWorkerFactory;
+import org.testng.junit.JUnitTestFinder;
 import org.testng.listener.TestRunListener;
+import org.testng.log4testng.Logger;
+import org.testng.reporters.*;
+import org.testng.reporters.jq.Main;
 import org.testng.thread.IExecutorFactory;
 import org.testng.thread.ITestNGThreadPoolExecutor;
 import org.testng.thread.IThreadWorkerFactory;
-import org.testng.internal.thread.graph.SuiteWorkerFactory;
-import org.testng.junit.JUnitTestFinder;
-import org.testng.log4testng.Logger;
-import org.testng.reporters.EmailableReporter;
-import org.testng.reporters.EmailableReporter2;
-import org.testng.reporters.FailedReporter;
-import org.testng.reporters.JUnitReportReporter;
-import org.testng.reporters.SuiteHTMLReporter;
-import org.testng.reporters.VerboseReporter;
-import org.testng.reporters.XMLReporter;
-import org.testng.reporters.jq.Main;
 import org.testng.util.Strings;
-import org.testng.xml.IPostProcessor;
-import org.testng.xml.Parser;
-import org.testng.xml.XmlClass;
-import org.testng.xml.XmlInclude;
 import org.testng.xml.XmlMethodSelector;
-import org.testng.xml.XmlSuite;
-import org.testng.xml.XmlTest;
-
-import com.beust.jcommander.JCommander;
-import com.beust.jcommander.ParameterException;
-
+import org.testng.xml.*;
 import org.testng.xml.internal.TestNamesMatcher;
 import org.testng.xml.internal.XmlSuiteUtils;
 
-import static org.testng.internal.Utils.defaultIfStringEmpty;
-import static org.testng.internal.Utils.isStringEmpty;
-import static org.testng.internal.Utils.isStringNotEmpty;
+import java.io.File;
+import java.io.IOException;
+import java.net.URLClassLoader;
+import java.util.*;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
+
+import static org.testng.internal.Utils.*;
 
 /**
  * This class is the main entry point for running tests in the TestNG framework. Users can create

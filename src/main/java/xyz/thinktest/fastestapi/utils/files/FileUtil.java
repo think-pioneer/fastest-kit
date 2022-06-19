@@ -1,7 +1,7 @@
 package xyz.thinktest.fastestapi.utils.files;
 
-import xyz.thinktest.fastestapi.utils.ObjectUtil;
 import xyz.thinktest.fastestapi.common.exceptions.FileException;
+import xyz.thinktest.fastestapi.utils.ObjectUtil;
 
 import java.io.*;
 import java.net.URL;

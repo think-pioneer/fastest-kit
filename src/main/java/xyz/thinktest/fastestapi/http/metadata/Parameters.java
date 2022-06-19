@@ -2,7 +2,9 @@ package xyz.thinktest.fastestapi.http.metadata;
 
 import org.apache.commons.collections4.MapUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**

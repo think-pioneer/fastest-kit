@@ -2,14 +2,13 @@ package xyz.thinktest.fastestapi.utils;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import xyz.thinktest.fastestapi.common.exceptions.FastestBasicException;
+import xyz.thinktest.fastestapi.utils.string.StringUtils;
 
-import java.util.*;
+import java.io.*;
+import java.util.Map;
 import java.util.Map.Entry;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @Date: 2020/10/25
@@ -23,28 +22,11 @@ public final class ObjectUtil {
      * @param format origin string, contain placeholder
      * @param contents fill in the string of the placeholder。if not String, will call toString()
      * @return string
+     * 建议使用StringUtils.format
      */
+    @Deprecated
     public static String format(String format, Object ...contents){
-        List<Object> contentList = new ArrayList<>(Arrays.asList(contents));
-        Pattern pattern = Pattern.compile("(\\{\\})+");
-        Matcher matcher = pattern.matcher(format);
-        String tmp = null;
-        while (matcher.find()){
-            String value = String.valueOf(contentList.get(0));
-            if("{}".equals(value)){
-                value = "{;SEAT;}";
-            }
-            tmp = matcher.replaceFirst(value);
-            matcher = pattern.matcher(tmp);
-            contentList.remove(0);
-            if(CollectionUtils.isEmpty(contentList)){
-                contentList.add("{;SEAT;}");
-            }
-        }
-        if(Objects.nonNull(tmp)){
-            tmp = tmp.replace("{;SEAT;}", "{}");
-        }
-        return tmp;
+        return StringUtils.format2(format, contents);
     }
 
     /**
@@ -87,6 +69,28 @@ public final class ObjectUtil {
             return defaultValue;
         }
         return src;
+    }
+
+    /**
+     * 深拷贝
+     */
+    public static <T> T deepCopy(T src){
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeObject(src);
+            ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+            ObjectInputStream ois = new ObjectInputStream(bais);
+            @SuppressWarnings("unchecked")
+            T deepObj = (T) ois.readObject();
+            ois.close();
+            bais.close();
+            oos.close();
+            baos.close();
+            return deepObj;
+        }catch (IOException | ClassNotFoundException e){
+            throw new FastestBasicException("deep copy object fail", e);
+        }
     }
 }
 

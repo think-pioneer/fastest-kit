@@ -6,11 +6,7 @@ import org.testng.annotations.Test;
 import org.testng.listener.TestRunListener;
 import xyz.thinktest.fastestapi.core.annotations.Autowired;
 import xyz.thinktest.fastestapi.core.annotations.Component;
-import xyz.thinktest.fastestapi.http.filter.Filter1;
-import xyz.thinktest.fastestapi.http.filter.Filter2;
-import xyz.thinktest.fastestapi.http.filter.FilterConfig;
 import xyz.thinktest.fastestapi.http.metadata.Header;
-import xyz.thinktest.fastestapi.http.metadata.HttpMethod;
 import xyz.thinktest.fastestapi.http.metadata.Restfuls;
 
 /**

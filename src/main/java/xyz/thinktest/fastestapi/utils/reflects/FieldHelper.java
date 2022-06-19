@@ -1,6 +1,5 @@
 package xyz.thinktest.fastestapi.utils.reflects;
 
-import xyz.thinktest.fastestapi.utils.ObjectUtil;
 import xyz.thinktest.fastestapi.common.exceptions.ReflectionException;
 
 import java.lang.reflect.Field;
@@ -173,14 +172,6 @@ public final class FieldHelper {
     }
 
     public static FieldHelper getInstance(Object instance, String fieldName){
-        Field field;
-        Class<?> instanceType = instance.getClass();
-        try{
-            field = instanceType.getDeclaredField(fieldName);
-            field.setAccessible(true);
-        }catch (NoSuchFieldException e){
-            throw new ReflectionException(ObjectUtil.format("not found filed\"{}\" from \"{}\"", fieldName, instanceType.getName()));
-        }
-        return new FieldHelper(instance, field);
+        return new FieldHelper(instance, ReflectUtil.getDeclaredField(instance, fieldName));
     }
 }

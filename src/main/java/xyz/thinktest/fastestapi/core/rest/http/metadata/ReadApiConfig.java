@@ -2,15 +2,13 @@ package xyz.thinktest.fastestapi.core.rest.http.metadata;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.type.TypeFactory;
+import org.yaml.snakeyaml.TypeDescription;
 import xyz.thinktest.fastestapi.common.json.JSONFactory;
 import xyz.thinktest.fastestapi.common.yaml.ListConstructor;
 import xyz.thinktest.fastestapi.utils.files.FileUtil;
 import xyz.thinktest.fastestapi.utils.files.PropertyUtil;
 import xyz.thinktest.fastestapi.utils.files.YamlUtil;
-import org.yaml.snakeyaml.TypeDescription;
 
 import java.io.File;
 import java.util.*;

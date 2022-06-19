@@ -1,7 +1,10 @@
 package xyz.thinktest.fastestapi.common.json.jsonpath;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.jayway.jsonpath.*;
+import com.jayway.jsonpath.Configuration;
+import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.Predicate;
+import com.jayway.jsonpath.TypeRef;
 import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;
 import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
 import org.apache.commons.lang3.StringUtils;
