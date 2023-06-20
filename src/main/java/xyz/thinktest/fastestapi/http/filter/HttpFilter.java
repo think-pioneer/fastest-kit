@@ -10,5 +10,5 @@ import java.util.List;
  * @date: 2022-06-16
  */
 public interface HttpFilter {
-    void handleRequest(Requester requester, Responder responder, List<List<Filter>> filters);
+    void handleRequest(Requester requester, Responder responder, List<Filter> filters);
 }

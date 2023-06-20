@@ -815,7 +815,7 @@ LogPringImpl.java
 
 ```java
 @Pointcut(annotation = LogPrint.class)
-public class LogPrintImpl<T> implements MethodAnnotationProcessable<T> {
+public class LogPrintImpl<T> implements MethodProcessable<T> {
     @Override
     public void process(JoinPoint joinPoint) {
         System.out.println("print log");
@@ -1151,7 +1151,7 @@ after1
 
 ### 方法说明
 
-每一个实例配置一个过滤器和该过滤器的序号
+每个FilterConfig实例管理一个过滤器和该过滤器的序号，序号用来控制执行顺序
 
 ```java
 Settings.create().setFilter(new FilterConfig(1, new Filter1()));

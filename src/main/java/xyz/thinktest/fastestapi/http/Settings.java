@@ -25,7 +25,7 @@ public class Settings {
     private long callTimeout;
     private boolean retryOnConnectionFailure;
     private HttpClient client;
-    private final List<List<Filter>> filters;
+    private final List<Filter> filters;
     private boolean isSync;
 
     private Settings(){
@@ -170,24 +170,14 @@ public class Settings {
         return this.client;
     }
 
-    Settings setFilters(List<List<Filter>> filters){
+    Settings setFilters(List<Filter> filters){
         this.filters.addAll(filters);
         return this;
     }
 
     public Settings setFilter(FilterConfig filterConfig){
-        int order = Math.max(filterConfig.getOrder(), 0);
-        Filter filter = filterConfig.getFilter();
-        List<Filter> filters;
-        int size = this.filters.size();
-        int index = Math.min(size, order);
-        if(size <= 0 || order >= size){
-            filters = new ArrayList<>();
-        }else{
-            filters = this.filters.get(order);
-        }
-        filters.add(filter);
-        this.filters.add(index, filters);
+        int index = Math.max(Math.min(filterConfig.getOrder(), this.filters.size()), 0);
+        this.filters.add(index, filterConfig.getFilter());
         return this;
 
     }
@@ -201,7 +191,7 @@ public class Settings {
         return this;
     }
 
-    List<List<Filter>> getFilters(){
+    List<Filter> getFilters(){
         return this.filters;
     }
 

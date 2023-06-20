@@ -12,16 +12,16 @@ import java.util.List;
  */
 public class HttpFilterHandler implements HttpFilter {
     @Override
-    public void handleRequest(Requester requester, Responder responder, List<List<Filter>> filters) {
+    public void handleRequest(Requester requester, Responder responder, List<Filter> filters) {
         FilterChainHandler filterChainHandler = new FilterChainHandler(filters);
         filterChainHandler.doFilter(requester, responder);
     }
 
     static class FilterChainHandler implements FilterChain {
-        private final List<List<Filter>> filters;
+        private final List<Filter> filters;
         private int location;
 
-        public FilterChainHandler(List<List<Filter>> filters){
+        public FilterChainHandler(List<Filter> filters){
             this.filters = filters;
             this.location = 0;
         }
@@ -29,10 +29,10 @@ public class HttpFilterHandler implements HttpFilter {
         @Override
         public void doFilter(Requester requester, Responder responder) {
             if(this.location < this.filters.size()){
-                List<Filter> filtersByLocation = this.filters.get(this.location++);
-                if(filtersByLocation != null && filtersByLocation.size() > 0){
+                Filter filterByLocation = this.filters.get(this.location++);
+                if(filterByLocation != null){
                     try {
-                        filtersByLocation.forEach(filter -> filter.doFilter(requester, responder, this));
+                        filterByLocation.doFilter(requester, responder, this);
                     }finally {
                         this.location--;
                     }
