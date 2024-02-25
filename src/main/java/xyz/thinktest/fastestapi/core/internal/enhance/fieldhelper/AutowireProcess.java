@@ -3,21 +3,20 @@ package xyz.thinktest.fastestapi.core.internal.enhance.fieldhelper;
 import xyz.thinktest.fastestapi.common.exceptions.EnhanceException;
 import xyz.thinktest.fastestapi.core.annotations.Autowired;
 import xyz.thinktest.fastestapi.core.annotations.Pointcut;
-import xyz.thinktest.fastestapi.core.enhance.constructor.AutowireConstructor;
+import xyz.thinktest.fastestapi.core.enhance.constructor.ConstructorProperty;
 import xyz.thinktest.fastestapi.core.enhance.joinpoint.Target;
 import xyz.thinktest.fastestapi.core.enhance.joinpoint.field.JoinPoint;
 import xyz.thinktest.fastestapi.core.internal.enhance.EnhanceFactory;
-import xyz.thinktest.fastestapi.utils.ObjectUtil;
 import xyz.thinktest.fastestapi.utils.reflects.FieldHelper;
+import xyz.thinktest.fastestapi.utils.string.StringUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
+ * 处理自动装载
+ * 只有使用了Autowired注解的字段才会进行自动装配
  * @Date: 2021/10/29
  */
 @SuppressWarnings("unchecked")
@@ -29,7 +28,7 @@ public class AutowireProcess extends AbstractFieldProcess {
         Class<?> declaringClass = joinPoint.getField().getDeclaringClass();
         Class<?> fieldType = joinPoint.getField().getType();
         if(checkCircularReference(declaringClass, fieldType)){
-            throw new EnhanceException(ObjectUtil.format("exist circular reference: {}->{}", declaringClass, fieldType));
+            throw new EnhanceException(StringUtils.format("exist circular reference: {}->{}", declaringClass, fieldType));
         }
         this.exec(joinPoint);
     }
@@ -51,30 +50,27 @@ public class AutowireProcess extends AbstractFieldProcess {
         Class<?> fieldType = field.getType();
         try{
             Target fieldTargetManger = new Target();
-            if(!"".equals(autowired.method().trim()) && !Autowired.class.equals(autowired.targetClass())){
+            if(!"".equals(autowired.constructor().trim())){
                 Object tmpInstance = EnhanceFactory.origin(fieldType);
-                Method fieldInstanceConstructorParams = tmpInstance.getClass().getDeclaredMethod(autowired.method());
-                Object object = fieldInstanceConstructorParams.invoke(tmpInstance);
-                if(!(object instanceof Map<?, ?>) && ObjectUtil.checkMapElementType(object, Class.class, Object.class)){
-                    throw new EnhanceException(ObjectUtil.format("Constructor error:{}.{} return type export Map<Class, Object>, got {}", field.getType().getName(), fieldInstanceConstructorParams.getName(), object.getClass().getSimpleName()));
+                Method fieldInstanceConstructorParams = tmpInstance.getClass().getDeclaredMethod(autowired.constructor());
+                Object constructorPropertyObj = fieldInstanceConstructorParams.invoke(tmpInstance);
+                if(constructorPropertyObj == null){
+                    throw new EnhanceException(StringUtils.format("Constructor error:{}.{} return type export ConstructorProperty type, got null", field.getType().getName(), fieldInstanceConstructorParams.getName()));
                 }
-                List<AutowireConstructor> params = (List<AutowireConstructor>) object;
-                List<Class<?>> paramTypes = new ArrayList<>();
-                List<Object> paramObjects = new ArrayList<>();
-                params.forEach(param -> {
-                    paramTypes.add(param.getType());
-                    paramObjects.add(param.getObject());
-                });
-                ComponentProcess componentAnnotationProcess = new ComponentProcess(tmpInstance.getClass(), paramTypes.toArray(new Class[0]), paramObjects.toArray(new Object[0]), autowired.isOrigin());
-                componentAnnotationProcess.process(new JoinPointImpl(autowired, null, fieldTargetManger, componentAnnotationProcess));
+                if(!(constructorPropertyObj instanceof ConstructorProperty)){
+                    throw new EnhanceException(StringUtils.format("Constructor error:{}.{} return type export ConstructorProperty type, got {}", field.getType().getName(), fieldInstanceConstructorParams.getName(), constructorPropertyObj.getClass().getSimpleName()));
+                }
+                ConstructorProperty constructorProperty = (ConstructorProperty) constructorPropertyObj;
+                ComponentProcess componentAnnotationProcess = new ComponentProcess(tmpInstance.getClass(), constructorProperty.getTypes().toArray(new Class[0]), constructorProperty.getObjects().toArray(new Object[0]), autowired.isOrigin());
+                componentAnnotationProcess.process(new JoinPointMeta(autowired, null, fieldTargetManger, componentAnnotationProcess));
             } else {
                 ComponentProcess componentAnnotationProcess = new ComponentProcess(fieldType, null, null, autowired.isOrigin());
-                componentAnnotationProcess.process(new JoinPointImpl(autowired, null, fieldTargetManger, componentAnnotationProcess));
+                componentAnnotationProcess.process(new JoinPointMeta(autowired, null, fieldTargetManger, componentAnnotationProcess));
             }
             Object fieldInstance = fieldTargetManger.getInstance();
             FieldHelper.getInstance(instance, field).set(fieldInstance);
         }catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e){
-            throw new EnhanceException(ObjectUtil.format("Autowired error: {}.{} build instance error", instance.getClass().getName(), field.getName()), e);
+            throw new EnhanceException(StringUtils.format("Autowired error: {}.{} build instance error", instance.getClass().getName(), field.getName()), e);
         }
 
     }

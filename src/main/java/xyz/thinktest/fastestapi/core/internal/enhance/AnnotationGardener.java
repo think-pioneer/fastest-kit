@@ -9,11 +9,11 @@ import java.lang.annotation.Annotation;
  */
 public class AnnotationGardener implements Comparable<AnnotationGardener>{
     /**
-     * 字段上的注解
+     * 字段/方法上的注解
      */
     private final Annotation annotation;
     /**
-     * 字段注解的hook注解
+     * 字段/方法注解的hook注解
      */
     private final Processable process;
 

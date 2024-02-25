@@ -18,10 +18,17 @@ public class MethodProcessableTest {
     @Autowired
     Biz biz;
 
-    public void customAnnTest(){
+    public void customAnnTest1(){
         Num num = new Num(0);
         num.add(1);
-        biz.biz(num);
+        biz.biz1(num);
         Assert.assertEquals(3, num.getValue());
+    }
+
+    public void customAnnTest2(){
+        Num num = new Num(0);
+        num.add(1);
+        biz.biz2(num);
+        Assert.assertEquals(2, num.getValue());
     }
 }

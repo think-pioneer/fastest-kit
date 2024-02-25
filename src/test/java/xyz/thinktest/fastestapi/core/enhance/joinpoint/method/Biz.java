@@ -1,6 +1,7 @@
 package xyz.thinktest.fastestapi.core.enhance.joinpoint.method;
 
 import xyz.thinktest.fastestapi.core.annotations.Component;
+import xyz.thinktest.fastestapi.core.annotations.Value;
 
 /**
  * @author: aruba
@@ -8,8 +9,15 @@ import xyz.thinktest.fastestapi.core.annotations.Component;
  */
 @Component
 public class Biz {
+    @Value("k")
+    String user;
+
     @LogPrint
-    public void biz(Num num){
+    public void biz1(Num num){
+        num.add(1);
+    }
+
+    public void biz2(Num num){
         num.add(1);
     }
 }

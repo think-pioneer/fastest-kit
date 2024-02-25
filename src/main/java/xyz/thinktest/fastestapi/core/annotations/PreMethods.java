@@ -9,5 +9,9 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface PreMethods {
+    /**
+     * @see PreMethod
+     * @return
+     */
     PreMethod[] value();
 }

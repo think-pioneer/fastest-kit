@@ -18,15 +18,15 @@ import java.util.Objects;
  * @Date: 2021/11/29
  */
 public class MethodProcess {
-    private final List<AnnotationGardener> annotations;
+    private final List<AnnotationGardener> annotationGardeners;
 
-    public MethodProcess(List<AnnotationGardener> annotations){
-        this.annotations = annotations;
+    public MethodProcess(List<AnnotationGardener> annotationGardeners){
+        this.annotationGardeners = annotationGardeners;
     }
 
     public void process(Target target, Method method, Object[] args) {
         List<Object> methodReturnValues = new ArrayList<>();
-        for (AnnotationGardener gardener : this.annotations) {
+        for (AnnotationGardener gardener : this.annotationGardeners) {
             Annotation annotation = gardener.getAnnotation();
             MethodProcessable process = (MethodProcessable) gardener.getProcess();
             if(AnnotationTool.hasAnnotation(method.getDeclaringClass(), Component.class)) {
@@ -34,7 +34,7 @@ public class MethodProcess {
                 if(Objects.nonNull(mutexAnnotation)) {
                     AnnotationTool.checkIsOnly(method, annotation.getClass(), mutexAnnotation.value());
                 }
-                JoinPointImpl joinPoint = new JoinPointImpl(annotation, method, args, target, process);
+                JoinPointMeta joinPoint = new JoinPointMeta(annotation, method, args, target, process);
                 process.process(joinPoint);
                 methodReturnValues.add(joinPoint.getReturnValue());
             }

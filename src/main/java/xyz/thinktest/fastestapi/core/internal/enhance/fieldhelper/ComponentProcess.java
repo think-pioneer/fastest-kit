@@ -11,6 +11,8 @@ import java.lang.reflect.Field;
 import java.util.Objects;
 
 /**
+ * 处理Component
+ * 只要启用了Component注解的类才会进行注入
  * @Date: 2021/10/29
  */
 public class ComponentProcess implements FieldProcessable {
@@ -37,7 +39,7 @@ public class ComponentProcess implements FieldProcessable {
         Object instance = null;
         boolean hasArguments = Objects.nonNull(argumentTypes) && Objects.nonNull(arguments);
         MultipleInstance multipleInstance = clazz.getAnnotation(MultipleInstance.class);
-        //如果未启用多实例，则默认按照单例来处理  # 优化新能，频繁创建实例影响性能
+        //如果未启用多实例，则默认按照单例来处理  # 优化性能，频繁创建实例影响性能
         if (Objects.isNull(multipleInstance)) {
             instance = instanceCache.get(clazz.hashCode());
         }

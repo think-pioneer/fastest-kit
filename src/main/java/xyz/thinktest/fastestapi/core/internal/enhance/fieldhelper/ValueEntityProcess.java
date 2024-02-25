@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
+ * 用于将配置文件的内容直接赋值给实体对象
  * @Date: 2021/11/27
  */
 @SuppressWarnings("unchecked")

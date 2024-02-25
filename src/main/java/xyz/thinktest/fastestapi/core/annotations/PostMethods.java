@@ -9,5 +9,9 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface PostMethods {
+
+    /**
+     * @see PostMethod
+     */
     PostMethod[] value();
 }

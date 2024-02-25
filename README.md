@@ -140,7 +140,7 @@ requester.sync();
 
 ### 1.1.2 Responder
 
-重新包装后的响应信息对象。添加断言功能（该功能也添加到requester中）。通常情况我们不会直接new该对象。都是通过requester.getResponse()来获取。本质是一个接口，详细参考[Responder](#24-responder)
+HTTP响应信息。添加断言功能（该功能也添加到requester中）。通常情况我们不会直接new该对象。都是通过requester.getResponse()来获取。本质是一个接口，详细参考[Responder](#24-responder)
 
 ```java
 Requester requester = RequesterFactory.create(auth);
@@ -271,7 +271,7 @@ public class CaseTest {
 
 #### 用法说明
 
-该注解用来判断被注解类是否进行功能增强。
+该注解用来判断被注解类是否进行功能增强。所有后续注解都依赖于该注解。只有添加了该注解的类才会托管于框架。
 
 ```java
 @Component
@@ -285,7 +285,7 @@ public class HelloController {
 }
 ```
 
-HelloController被增强后，可以使用[RestMetadata](#127-restmetadata)功能及类似功能。
+例：HelloController被增强后，可以使用[RestMetadata](#127-restmetadata)功能及类似功能。
 
 ### 1.2.2 @Autowired
 
@@ -305,11 +305,12 @@ public class MyStep implements Step {
 
 ##### 有参构造
 
-待构造类
+构造参数的参数类型及参数值需要放在ConstructorProperty中，每一个ConstructorProperty就是一个参数，添加ConstructorProperty时需要按照构造参数的顺序添加，否则会创建失败。
 
-构造参数的参数类型及参数值需要放在ConstructorProperty中，每一个ConstructorProperty就是一个参数，添加ConstructorProperty时需要按照构造参数的顺序添加，否则会创建失败
+不建议进行有参构造。
 
 ```java
+// 待构造类
 @Component
 public class MyStep implements Step {
     public MyStep(Auth auth){}
@@ -332,7 +333,7 @@ public class MyStep implements Step {
 ```java
 @Component
 public class CaseTest {
-    @Autowired(targetClass = MyStep.class, method = "create")
+    @Autowired(constructor = "create")
     MyStep myStep;
 }
 ```
@@ -351,11 +352,10 @@ public class CaseTest {
 
 #### 参数说明
 
-| 参数        | 类型   | 默认值          | 说明                                                         |
-| ----------- | ------ | --------------- | ------------------------------------------------------------ |
-| targetClass | Class  | Autowired.class | 如果是有参构造，则需要指定获取构造参数的类，参考[Autowired-有参构造](#有参构造) |
-| method      | String | ""              | 如果是有参构造，则需要指定获取构造参数的类的处理方法，参考[Autowired-有参构造](#有参构造) |
-| isOrigin    | bool   | false           | 本次注入增强实例还是普通实例                                 |
+| 参数        | 类型   | 默认值 | 说明                                                         |
+| ----------- | ------ | ------ | ------------------------------------------------------------ |
+| constructor | String | ""     | 如果是有参构造，则需要指定获取构造参数的类的处理方法，参考[Autowired-有参构造](#有参构造) |
+| isOrigin    | bool   | false  | 本次注入增强实例还是普通实例                                 |
 
 
 
@@ -720,10 +720,11 @@ public class MyStep implements Step {
 
 user.yaml
 
-```properties
-name: luohongyao
-age: 30
-sex: man
+```yaml
+user:
+    name: Faker
+    age: 30
+    sex: man
 ```
 
 UserEntity.java
@@ -1169,7 +1170,7 @@ pom.xml
     <dependencies>
         <dependency>
             <groupId>xyz.thinktest</groupId>
-            <artifactId>fastest-api</artifactId>
+            <artifactId>fastest-kit</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
@@ -1281,7 +1282,7 @@ mvn clean package -DskipTests -Dmaven.skip.test.exec
 执行测试
 
 ```shell
-java -cp fastest-test-1.0-SNAPSHOT.jar:fastest-test-1.0-SNAPSHOT-tests.jar org.testng.TestNG [testng xml path]
+java -cp fastest-kit-1.0-SNAPSHOT.jar:fastest-test-1.0-SNAPSHOT-tests.jar org.testng.TestNG [testng xml path]
 ```
 
 ## 本地IDEA开发

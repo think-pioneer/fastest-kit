@@ -32,6 +32,7 @@ public class TestRunListener implements ITestListener {
         Initialization.init();
         for(ITestNGMethod method:context.getAllTestMethods()){
             Class<?> caseClazz = method.getRealClass();
+            // 将测试类托管给本框架
             if(Objects.nonNull(caseClazz)){
                 Target manger = new Target();
                 manger.setInstance(method.getInstance());

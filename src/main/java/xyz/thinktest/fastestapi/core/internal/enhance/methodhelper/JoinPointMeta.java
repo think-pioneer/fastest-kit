@@ -10,7 +10,7 @@ import java.lang.reflect.Method;
  * @Date: 2021/12/6
  */
 @SuppressWarnings("unchecked")
-class JoinPointImpl implements JoinPoint {
+class JoinPointMeta implements JoinPoint {
     private final Annotation annotation;
     private final Method method;
     private final Object[] args;
@@ -18,7 +18,7 @@ class JoinPointImpl implements JoinPoint {
     private final Object self;
     private Object returnValue;
 
-    public JoinPointImpl(Annotation annotation, Method method, Object[] args, Target target, Object self){
+    public JoinPointMeta(Annotation annotation, Method method, Object[] args, Target target, Object self){
         this.annotation = annotation;
         this.method = method;
         this.args = args;

@@ -15,6 +15,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 /**
+ * 自动注入FastestLogger对象到变量中。log类型为xyz.thinktest.fastest.logger.FastestLogger
+ * @see FastestLogger
  * @Date: 2021/11/3
  */
 @Pointcut(annotation = LoggerJoin.class)

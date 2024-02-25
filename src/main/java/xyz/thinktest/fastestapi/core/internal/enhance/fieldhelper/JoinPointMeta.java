@@ -7,16 +7,17 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
 /**
+ * 切面元数据
  * @Date: 2021/12/6
  */
 @SuppressWarnings("unchecked")
-class JoinPointImpl implements JoinPoint {
+class JoinPointMeta implements JoinPoint {
     private final Annotation annotation;
     private final Field field;
     private final Target target;
     private final Object self;
 
-    public JoinPointImpl(Annotation annotation, Field field, Target target, Object self){
+    public JoinPointMeta(Annotation annotation, Field field, Target target, Object self){
         this.annotation = annotation;
         this.field = field;
         this.target = target;

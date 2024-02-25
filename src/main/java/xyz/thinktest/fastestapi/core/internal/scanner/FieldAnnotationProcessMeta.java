@@ -8,15 +8,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 字段注解的元数据
  * @author: aruba
  * @date: 2022-01-27
  */
-public class FieldAnnotationProcessEntity implements Serializable {
+public class FieldAnnotationProcessMeta implements Serializable {
     private static final long serialVersionUID = -5234607711819228521L;
+    /**
+     * 处理字段注解时的前置注解
+     */
     private final List<AnnotationGardener> beforeAnnotations;
     private Field field;
 
-    public FieldAnnotationProcessEntity(){
+    public FieldAnnotationProcessMeta(){
         this.beforeAnnotations = new ArrayList<>();
     }
 
@@ -42,7 +46,7 @@ public class FieldAnnotationProcessEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "FieldAnnotationProcessEntity{" +
+        return "FieldAnnotationProcessMeta{" +
                 "beforeAnnotations=" + beforeAnnotations +
                 ", field=" + field +
                 '}';

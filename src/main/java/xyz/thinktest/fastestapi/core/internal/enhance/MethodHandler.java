@@ -9,12 +9,13 @@ import xyz.thinktest.fastestapi.core.annotations.Capture;
 import xyz.thinktest.fastestapi.core.enhance.joinpoint.Target;
 import xyz.thinktest.fastestapi.core.internal.enhance.methodhelper.MethodProcess;
 import xyz.thinktest.fastestapi.core.internal.scanner.MethodAnnotationProcessCache;
-import xyz.thinktest.fastestapi.core.internal.scanner.MethodAnnotationProcessEntity;
+import xyz.thinktest.fastestapi.core.internal.scanner.MethodAnnotationProcessMeta;
 import xyz.thinktest.fastestapi.logger.FastestLogger;
 import xyz.thinktest.fastestapi.logger.FastestLoggerFactory;
 import xyz.thinktest.fastestapi.utils.ObjectUtil;
 import xyz.thinktest.fastestapi.utils.reflects.ReflectUtil;
 
+import java.lang.annotation.Annotation;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -54,12 +55,12 @@ public class MethodHandler implements MethodEnhancer {
     }
 
     private Object proxy(Target target, Method method, Object[] args, MethodProxy methodProxy){
-        MethodAnnotationProcessEntity entity = cache.get(method);
+        MethodAnnotationProcessMeta meta = cache.get(method);
         List<AnnotationGardener> beforeAnnotations = Lists.newArrayList();
         List<AnnotationGardener> afterAnnotations = Lists.newArrayList();
-        if(Objects.nonNull(entity)){
-            beforeAnnotations = entity.getBeforeAnnotations();
-            afterAnnotations = entity.getAfterAnnotations();
+        if(Objects.nonNull(meta)){
+            beforeAnnotations = meta.getBeforeAnnotations();
+            afterAnnotations = meta.getAfterAnnotations();
         }
 
         if(CollectionUtils.isNotEmpty(beforeAnnotations)) {

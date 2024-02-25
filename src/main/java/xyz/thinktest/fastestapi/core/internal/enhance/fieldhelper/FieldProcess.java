@@ -6,7 +6,7 @@ import xyz.thinktest.fastestapi.core.enhance.joinpoint.Target;
 import xyz.thinktest.fastestapi.core.enhance.joinpoint.field.FieldProcessable;
 import xyz.thinktest.fastestapi.core.internal.enhance.AnnotationGardener;
 import xyz.thinktest.fastestapi.core.internal.scanner.FieldAnnotationProcessCache;
-import xyz.thinktest.fastestapi.core.internal.scanner.FieldAnnotationProcessEntity;
+import xyz.thinktest.fastestapi.core.internal.scanner.FieldAnnotationProcessMeta;
 import xyz.thinktest.fastestapi.core.internal.tool.AnnotationTool;
 
 import java.lang.annotation.Annotation;
@@ -36,11 +36,12 @@ class FieldProcess {
             return;
         }
         field.setAccessible(true);
-        FieldAnnotationProcessEntity entity = cache.get(field);
-        if(Objects.isNull(entity)){
+        FieldAnnotationProcessMeta meta = cache.get(field);
+        if(Objects.isNull(meta)){
             return;
         }
-        for(AnnotationGardener annotationGardener:entity.getBeforeAnnotations()){
+        // 获取字段的前置注解，并执行前置注解对应的功能实现类
+        for(AnnotationGardener annotationGardener:meta.getBeforeAnnotations()){
             FieldProcessable process = (FieldProcessable) annotationGardener.getProcess();
             Annotation annotation = annotationGardener.getAnnotation();
             if (AnnotationTool.hasAnnotation(field.getDeclaringClass(), Component.class)) {
@@ -48,7 +49,7 @@ class FieldProcess {
                 if(Objects.nonNull(mutexAnnotation)){
                     AnnotationTool.checkIsOnly(field, annotation.getClass(), mutexAnnotation.value());
                 }
-                process.process(new JoinPointImpl(annotation, field, target, process));
+                process.process(new JoinPointMeta(annotation, field, target, process));
             }
         }
     }

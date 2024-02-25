@@ -8,17 +8,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 方法注解的元数据
  * @author: aruba
  * @date: 2022-01-25
  */
-public class MethodAnnotationProcessEntity implements Serializable {
+public class MethodAnnotationProcessMeta implements Serializable {
     private static final long serialVersionUID = 3636090623704190498L;
 
     private final List<AnnotationGardener> beforeAnnotations;
     private final List<AnnotationGardener> afterAnnotations;
     private Method method;
 
-    public MethodAnnotationProcessEntity(){
+    public MethodAnnotationProcessMeta(){
         this.beforeAnnotations = new ArrayList<>();
         this.afterAnnotations = new ArrayList<>();
     }
@@ -57,7 +58,7 @@ public class MethodAnnotationProcessEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "MethodAnnotationProcessEntity{" +
+        return "MethodAnnotationProcessMeta{" +
                 "beforeAnnotations=" + beforeAnnotations +
                 ", afterAnnotations=" + afterAnnotations +
                 ", method=" + method +

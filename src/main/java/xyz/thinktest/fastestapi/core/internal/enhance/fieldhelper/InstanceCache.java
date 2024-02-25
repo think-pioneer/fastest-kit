@@ -3,6 +3,8 @@ package xyz.thinktest.fastestapi.core.internal.enhance.fieldhelper;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * 内部模块
+ * 缓存托管的实例
  * @Date: 2021/10/31
  */
 enum InstanceCache {

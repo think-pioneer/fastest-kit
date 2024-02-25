@@ -5,6 +5,7 @@ import xyz.thinktest.fastestapi.utils.string.StringUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -126,7 +127,7 @@ public class ReflectUtil {
         }
     }
 
-    public static <T> T getValue(Field field, Object obj){
+    public static <T> T getFiledValue(Field field, Object obj){
         try{
             return (T) field.get(obj);
         } catch (IllegalAccessException e) {
@@ -134,11 +135,11 @@ public class ReflectUtil {
         }
     }
 
-    public static <T> T getValue(String fieldName, Object obj){
-        return getValue(getDeclaredField(obj, fieldName), obj);
+    public static <T> T getFiledValue(String fieldName, Object obj){
+        return getFiledValue(getDeclaredField(obj, fieldName), obj);
     }
 
-    public static <T> Class<T> forName(String name){
+    public static <T> Class<T> classForName(String name){
         try{
             return (Class<T>) Class.forName(name);
         }catch (Exception e){
@@ -146,7 +147,7 @@ public class ReflectUtil {
         }
     }
 
-    public static <T> Class<T> forName(String name, boolean initialize, ClassLoader loader){
+    public static <T> Class<T> classForName(String name, boolean initialize, ClassLoader loader){
         try{
             return (Class<T>) Class.forName(name, initialize, loader);
         }catch (Exception e){
@@ -170,7 +171,6 @@ public class ReflectUtil {
         }
     }
 
-
     public static Class<?> getCollectionGenericRealType(Object obj, String collectionName){
         return getCollectionGenericRealType(getDeclaredField(obj, collectionName).getGenericType());
     }
@@ -180,7 +180,7 @@ public class ReflectUtil {
      * @param o     接口
      * @param index 泛型索引
      */
-    public static Class<?> getInterfaceT(Object o, int index) {
+    public static Class<?> getInterfaceGenericsType(Object o, int index) {
         Type[] types = o.getClass().getGenericInterfaces();
         ParameterizedType parameterizedType = (ParameterizedType) types[index];
         Type type = parameterizedType.getActualTypeArguments()[index];
@@ -194,7 +194,7 @@ public class ReflectUtil {
      * @param o     接口
      * @param index 泛型索引
      */
-    public static Class<?> getClassT(Object o, int index) {
+    public static Class<?> getClassGenericsType(Object o, int index) {
         Type type = o.getClass().getGenericSuperclass();
         return checkType(type, index);
     }
@@ -211,6 +211,46 @@ public class ReflectUtil {
             throw new IllegalArgumentException("Expected a Class, ParameterizedType"
                     + ", but <" + type + "> is of type " + className);
         }
+    }
+
+    /**
+     * get class all field, and save field name and field type to map
+     * @param clz class
+     * @return field map
+     */
+    public static Map<String, Class<?>> getFieldMap(Class<?> clz) {
+        Map<String, Class<?>> map = new HashMap<>();
+        for (Field field : clz.getFields()) {
+            map.put(field.getName(), field.getType());
+        }
+        return map;
+    }
+
+    /**
+     * @see #getFieldMap(Class)
+     */
+    public static Map<String, Class<?>> getFieldMap(Object obj) {
+        return getFieldMap(obj.getClass());
+    }
+
+    /**
+     * get class all declared field, and save field name and filed type to map
+     * @param clz class
+     * @return field map
+     */
+    public static Map<String, Class<?>> getDeclaredFieldMap(Class<?> clz) {
+        Map<String, Class<?>> map = new HashMap<>();
+        for(Field field:clz.getDeclaredFields()) {
+            map.put(field.getName(), field.getType());
+        }
+        return map;
+    }
+
+    /**
+     * @see #getDeclaredFieldMap(Class)
+     * */
+    public static Map<String, Class<?>> getDeclaredFieldMap(Object obj) {
+        return getDeclaredFieldMap(obj.getClass());
     }
 
     public static Field getField(Class<?> clazz, String name){

@@ -9,6 +9,7 @@ import xyz.thinktest.fastestapi.core.internal.scanner.ReflectionsUnit;
 import java.util.Set;
 
 /**
+ * 拦截程序结束的操作，并处理一些额外的事务，之后在进行真正的shutdown
  * @Date: 2021/10/31
  */
 public final class ShutdownHookActuator {

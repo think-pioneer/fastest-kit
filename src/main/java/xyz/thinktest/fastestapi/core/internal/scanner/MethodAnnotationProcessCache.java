@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * 缓存方法注解元数据
  * @author: aruba
  * @date: 2022-01-25
  */
@@ -13,20 +14,20 @@ import java.util.concurrent.ConcurrentHashMap;
 public enum MethodAnnotationProcessCache {
     INSTANCE;
 
-    private final ConcurrentHashMap<String, MethodAnnotationProcessEntity> map;
+    private final ConcurrentHashMap<String, MethodAnnotationProcessMeta> map;
     MethodAnnotationProcessCache(){
         this.map = new ConcurrentHashMap<>();
     }
 
-    public MethodAnnotationProcessEntity get(Method method){
+    public MethodAnnotationProcessMeta get(Method method){
         return this.map.get(buildKey(method));
     }
 
-    public void put(Method method, MethodAnnotationProcessEntity entity){
+    public void put(Method method, MethodAnnotationProcessMeta entity){
         this.map.put(buildKey(method), entity);
     }
 
-    public Collection<MethodAnnotationProcessEntity> allValue(){
+    public Collection<MethodAnnotationProcessMeta> allValue(){
         return this.map.values();
     }
 

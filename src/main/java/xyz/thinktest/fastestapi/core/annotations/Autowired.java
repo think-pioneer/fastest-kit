@@ -10,7 +10,6 @@ import java.lang.annotation.*;
 @Documented
 @MutexAnnotation({Value.class, ValueEntity.class})
 public @interface Autowired {
-    Class<?> targetClass() default Autowired.class;
-    String method() default "";
+    String constructor() default "";
     boolean isOrigin() default false;
 }

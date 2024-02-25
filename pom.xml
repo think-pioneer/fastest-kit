@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>xyz.thinktest</groupId>
-    <artifactId>fastest-api</artifactId>
+    <artifactId>fastest-kit</artifactId>
     <version>${revision}</version>
 
     <properties>

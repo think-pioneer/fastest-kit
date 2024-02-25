@@ -49,11 +49,11 @@ public class ScannerUnit {
                 if(Objects.nonNull(pointcut)){
                     Set<Method> methods = this.reflectionsAnnotation.getMethodsAnnotatedWith(pointcut.annotation());
                     for(Method method:methods){
-                        MethodAnnotationProcessEntity entity = cacheMethod.get(method);
-                        if(Objects.isNull(entity)){
-                            entity = new MethodAnnotationProcessEntity();
+                        MethodAnnotationProcessMeta meta = cacheMethod.get(method);
+                        if(Objects.isNull(meta)){
+                            meta = new MethodAnnotationProcessMeta();
                         }
-                        entity.setMethod(method);
+                        meta.setMethod(method);
                         boolean before = pointcut.before();
                         boolean after = pointcut.after();
                         Annotation methodAnnotation = method.getAnnotation(pointcut.annotation());
@@ -61,21 +61,21 @@ public class ScannerUnit {
                             //注解实现类封装到AnnotationGardener中
                             AnnotationGardener annotationGardener = new AnnotationGardener(methodAnnotation, EnhanceFactory.origin(clazz), pointcut.index());
 
-                            if(!after || before) {
-                                //默认before执行
-                                entity.setBeforeAnnotation(annotationGardener);
+                            // 对于切面而言，既可以在方法执行前执行，也可以在方法执行后助兴
+                            if(before) {
+                                meta.setBeforeAnnotation(annotationGardener);
                             }
-                            //如果包含After注解，则在方法执行后也要执行
+                            //如果包含after标记，则在方法执行后也要执行
                             if(after) {
-                                entity.setAfterAnnotation(annotationGardener);
+                                meta.setAfterAnnotation(annotationGardener);
                             }
                         }
-                        cacheMethod.put(method, entity);
+                        cacheMethod.put(method, meta);
                     }
                 }
             }
         }
-        for(MethodAnnotationProcessEntity entity:cacheMethod.allValue()){
+        for(MethodAnnotationProcessMeta entity:cacheMethod.allValue()){
             List<AnnotationGardener> beforeAnnotations = entity.getBeforeAnnotations();
             List<AnnotationGardener> afterAnnotations = entity.getAfterAnnotations();
             beforeAnnotations.sort((o1, o2) -> {
@@ -103,22 +103,22 @@ public class ScannerUnit {
                 if(Objects.nonNull(pointcut)){
                     Set<Field> fields = this.reflectionsAnnotation.getFieldsAnnotatedWith(pointcut.annotation());
                     for(Field field:fields){
-                        FieldAnnotationProcessEntity entity = cacheField.get(field);
-                        if(Objects.isNull(entity)){
-                            entity = new FieldAnnotationProcessEntity();
+                        FieldAnnotationProcessMeta meta  = cacheField.get(field);
+                        if(Objects.isNull(meta)){
+                            meta = new FieldAnnotationProcessMeta();
                         }
-                        entity.setField(field);
+                        meta.setField(field);
                         Annotation methodAnnotation = field.getAnnotation(pointcut.annotation());
                         if(Objects.nonNull(methodAnnotation)){
-                            entity.setBeforeAnnotation(new AnnotationGardener(methodAnnotation, EnhanceFactory.origin(clazz), pointcut.index()));
+                            meta.setBeforeAnnotation(new AnnotationGardener(methodAnnotation, EnhanceFactory.origin(clazz), pointcut.index()));
                         }
-                        cacheField.put(field, entity);
+                        cacheField.put(field, meta);
                     }
                 }
             }
         }
-        for(FieldAnnotationProcessEntity entity: cacheField.allValue()){
-            List<AnnotationGardener> beforeAnnotations = entity.getBeforeAnnotations();
+        for(FieldAnnotationProcessMeta meta: cacheField.allValue()){
+            List<AnnotationGardener> beforeAnnotations = meta.getBeforeAnnotations();
             beforeAnnotations.sort((o1, o2) -> {
                 int nameRet = o1.getAnnotation().getClass().getCanonicalName().compareTo(o2.getAnnotation().getClass().getCanonicalName());
                 if (nameRet == 0) {
