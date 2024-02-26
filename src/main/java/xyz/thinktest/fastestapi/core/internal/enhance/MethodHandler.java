@@ -12,10 +12,9 @@ import xyz.thinktest.fastestapi.core.internal.scanner.MethodAnnotationProcessCac
 import xyz.thinktest.fastestapi.core.internal.scanner.MethodAnnotationProcessMeta;
 import xyz.thinktest.fastestapi.logger.FastestLogger;
 import xyz.thinktest.fastestapi.logger.FastestLoggerFactory;
-import xyz.thinktest.fastestapi.utils.ObjectUtil;
 import xyz.thinktest.fastestapi.utils.reflects.ReflectUtil;
+import xyz.thinktest.fastestapi.utils.string.StringUtils;
 
-import java.lang.annotation.Annotation;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -92,7 +91,7 @@ public class MethodHandler implements MethodEnhancer {
             }
             return methodProxy.invokeSuper(object, args);
         }catch (Throwable cause){
-            throw new EnhanceException(ObjectUtil.format("run method error: {}->{}",method.getDeclaringClass().getName(), method.getName()), cause);
+            throw new EnhanceException(StringUtils.format("run method error: {0}->{1}",method.getDeclaringClass().getName(), method.getName()), cause);
         }
     }
 }

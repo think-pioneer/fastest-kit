@@ -3,7 +3,7 @@ package xyz.thinktest.fastestapi.http;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 import xyz.thinktest.fastestapi.common.exceptions.HttpException;
-import xyz.thinktest.fastestapi.utils.ObjectUtil;
+import xyz.thinktest.fastestapi.utils.string.StringUtils;
 
 import java.io.IOException;
 
@@ -42,7 +42,7 @@ class Sender {
         try {
             this.response = this.client.newCall(this.request).execute();
         }catch (Exception e){
-            throw new HttpException(ObjectUtil.format("send sync request error:{}", e.getMessage()), e.getCause());
+            throw new HttpException(StringUtils.format("send sync request error:{0}", e.getMessage()), e.getCause());
         }
     }
 

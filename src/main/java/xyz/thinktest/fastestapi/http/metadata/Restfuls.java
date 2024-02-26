@@ -1,7 +1,7 @@
 package xyz.thinktest.fastestapi.http.metadata;
 
 import xyz.thinktest.fastestapi.common.exceptions.EnhanceException;
-import xyz.thinktest.fastestapi.utils.ObjectUtil;
+import xyz.thinktest.fastestapi.utils.string.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -81,7 +81,7 @@ public class Restfuls extends MetaMap {
             restParams.put(matcher.group(1), matcher.group());
         }
         if(restParams.isEmpty()){
-            throw new EnhanceException(ObjectUtil.format("url:[{}] not restful url", url));
+            throw new EnhanceException(StringUtils.format("url:[{0}] not restful url", url));
         }
         AtomicReference<String> newUrl = new AtomicReference<>();
         this.forEach((key, value) -> newUrl.set(url.replace(restParams.get(key), String.valueOf(value.getValue()))));

@@ -838,12 +838,12 @@ public interface Controller {
 
 #### 参数说明
 
-| 参数       | 类型    | 默认值 | 说明                                                         |
-| ---------- | ------- | ------ | ------------------------------------------------------------ |
-| annotation | Class   | 必填   | 用来将实现类和注解绑定到一起。                               |
-| index      | int     | 0      | 如果一个注解有多个实现类，则通过该参数指定执行顺序。         |
-| before     | boolean | true   | 表示绑定的注解将在方法执行前执行，默认所有的注解都是在方法执行前生效。 |
-| after      | boolean | false  | 表示绑定的注解将在方法执行后执行。                           |
+| 参数       | 类型    | 默认值 | 说明                                                 |
+| ---------- | ------- | ------ | ---------------------------------------------------- |
+| annotation | Class   | 必填   | 用来将实现类和注解绑定到一起。                       |
+| index      | int     | 0      | 如果一个注解有多个实现类，则通过该参数指定执行顺序。 |
+| before     | boolean | false  | 表示绑定的注解将在方法执行前执行。                   |
+| after      | boolean | false  | 表示绑定的注解将在方法执行后执行。                   |
 
 ## 1.3 自定义注解
 
@@ -950,12 +950,17 @@ public class CaseTest {
 
 ## 2.1 Initialize
 
-当需要在测试前进行初始化操作时，可以继承Initialize实现preHook方法。
+当需要在测试前进行初始化操作时，可以继承Initialize实现executor方法。
 
 ```java
 public class MyInit implements Initialize{
     @Override
-    public void preHook(){
+    public int order() {
+        return 0;
+    }
+    
+    @Override
+    public void executor(){
         //do something
     }
 }
@@ -963,16 +968,22 @@ public class MyInit implements Initialize{
 
 方法说明
 
-| 方法名  | 返回值 | 说明                     |
-| ------- | ------ | ------------------------ |
-| preHook | void   | 会在框架初始化完成后执行 |
+| 方法名   | 返回值 | 说明                                                     |
+| -------- | ------ | -------------------------------------------------------- |
+| order    | int    | 多个初始化操作的执行顺序，遇到相同的order则由jvm控制顺序 |
+| executor | void   | 会在框架初始化完成后执行                                 |
 
 ## 2.2 Shutdown
 
-当测试完成后退出系统前需要做一些收尾工作时，可以继承Shutdown实现postHook方法。
+当框架完成后退出系统前需要做一些收尾工作时，可以继承Shutdown实现executor方法。
 
 ```java
 public class MyShutdown implements Shutdown{
+    @Override
+    public int order() {
+        return 0;
+    }
+    
     @Override
     public void postHook(){
         //do something
@@ -982,9 +993,10 @@ public class MyShutdown implements Shutdown{
 
 ### 方法说明
 
-| 方法名   | 返回值 | 说明             |
-| -------- | ------ | ---------------- |
-| postHook | void   | 测试结束时会执行 |
+| 方法名   | 返回值 | 说明                                                   |
+| -------- | ------ | ------------------------------------------------------ |
+| order    | int    | 多个关闭操作的执行顺序，遇到相同的order则由jvm控制顺序 |
+| executor | void   | 框架结束时会执行                                       |
 
 ## 2.3 Requester
 

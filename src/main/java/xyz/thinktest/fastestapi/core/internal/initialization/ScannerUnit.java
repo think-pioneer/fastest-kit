@@ -1,4 +1,4 @@
-package xyz.thinktest.fastestapi.core.internal.scanner;
+package xyz.thinktest.fastestapi.core.internal.initialization;
 
 import org.reflections.Reflections;
 import xyz.thinktest.fastestapi.common.exceptions.InitializationException;
@@ -7,6 +7,7 @@ import xyz.thinktest.fastestapi.core.enhance.joinpoint.field.FieldProcessable;
 import xyz.thinktest.fastestapi.core.enhance.joinpoint.method.MethodProcessable;
 import xyz.thinktest.fastestapi.core.internal.enhance.AnnotationGardener;
 import xyz.thinktest.fastestapi.core.internal.enhance.EnhanceFactory;
+import xyz.thinktest.fastestapi.core.internal.scanner.*;
 import xyz.thinktest.fastestapi.utils.reflects.ReflectUtil;
 
 import java.lang.annotation.Annotation;
@@ -22,13 +23,23 @@ import java.util.concurrent.CompletableFuture;
  * @date: 2022-01-27
  */
 @SuppressWarnings("unchecked")
-public class ScannerUnit {
+public class ScannerUnit implements InitializeInternal {
     private final MethodAnnotationProcessCache cacheMethod = MethodAnnotationProcessCache.INSTANCE;
     private final FieldAnnotationProcessCache cacheField = FieldAnnotationProcessCache.INSTANCE;
     private final Reflections reflectionsAnnotation;
 
-    private ScannerUnit(){
+    public ScannerUnit(){
         this.reflectionsAnnotation = ReflectionsUnit.INSTANCE.reflections;
+    }
+
+    @Override
+    public int order() {
+        return InitOrderInternalManager.getInstance().consumer(ScannerUnit.class);
+    }
+
+    @Override
+    public void executor() {
+        this.scanner();
     }
 
     private void scanner(){
@@ -59,7 +70,7 @@ public class ScannerUnit {
                         Annotation methodAnnotation = method.getAnnotation(pointcut.annotation());
                         if(Objects.nonNull(methodAnnotation)){
                             //注解实现类封装到AnnotationGardener中
-                            AnnotationGardener annotationGardener = new AnnotationGardener(methodAnnotation, EnhanceFactory.origin(clazz), pointcut.index());
+                            AnnotationGardener annotationGardener = new AnnotationGardener(methodAnnotation, EnhanceFactory.origin(clazz), pointcut.order());
 
                             // 对于切面而言，既可以在方法执行前执行，也可以在方法执行后助兴
                             if(before) {
@@ -110,7 +121,7 @@ public class ScannerUnit {
                         meta.setField(field);
                         Annotation methodAnnotation = field.getAnnotation(pointcut.annotation());
                         if(Objects.nonNull(methodAnnotation)){
-                            meta.setBeforeAnnotation(new AnnotationGardener(methodAnnotation, EnhanceFactory.origin(clazz), pointcut.index()));
+                            meta.setBeforeAnnotation(new AnnotationGardener(methodAnnotation, EnhanceFactory.origin(clazz), pointcut.order()));
                         }
                         cacheField.put(field, meta);
                     }
@@ -127,9 +138,5 @@ public class ScannerUnit {
                 return nameRet;
             });
         }
-    }
-
-    public static void scan(){
-        new ScannerUnit().scanner();
     }
 }

@@ -1,7 +1,7 @@
 package xyz.thinktest.fastestapi.utils.files;
 
 import xyz.thinktest.fastestapi.common.exceptions.FileException;
-import xyz.thinktest.fastestapi.utils.ObjectUtil;
+import xyz.thinktest.fastestapi.utils.string.StringUtils;
 
 import java.io.*;
 import java.net.URL;
@@ -48,7 +48,7 @@ public enum  FileUtil {
                 createFolder(file.getParent());
                 return file.createNewFile() ? file : null;
             }catch (IOException e){
-                throw new FileException(ObjectUtil.format("create path fail:{}", path), e);
+                throw new FileException(StringUtils.format("create path fail:{0}", path), e);
             }
         }
         return file;
@@ -63,7 +63,7 @@ public enum  FileUtil {
                 createFolder(file.getParent());
                 return file.createNewFile() ? file : null;
             }catch (IOException e){
-                throw new FileException(ObjectUtil.format("create path fail:{}", file.getAbsolutePath()), e);
+                throw new FileException(StringUtils.format("create path fail:{0}", file.getAbsolutePath()), e);
             }
         }
         return file;

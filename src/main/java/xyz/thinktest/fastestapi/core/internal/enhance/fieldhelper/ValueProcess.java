@@ -1,15 +1,14 @@
 package xyz.thinktest.fastestapi.core.internal.enhance.fieldhelper;
 
-import org.apache.commons.lang3.StringUtils;
 import xyz.thinktest.fastestapi.common.exceptions.ValueException;
 import xyz.thinktest.fastestapi.core.annotations.Pointcut;
 import xyz.thinktest.fastestapi.core.annotations.Value;
 import xyz.thinktest.fastestapi.core.enhance.joinpoint.Target;
 import xyz.thinktest.fastestapi.core.enhance.joinpoint.field.JoinPoint;
-import xyz.thinktest.fastestapi.utils.ObjectUtil;
 import xyz.thinktest.fastestapi.utils.files.PropertyUtil;
 import xyz.thinktest.fastestapi.utils.reflects.FieldHelper;
 import xyz.thinktest.fastestapi.utils.reflects.ReflectUtil;
+import xyz.thinktest.fastestapi.utils.string.StringUtils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -21,7 +20,7 @@ import java.util.Objects;
  * 处理Value注解
  * @Date: 2021/10/31
  */
-@Pointcut(annotation = Value.class)
+@Pointcut(annotation = Value.class, before = true)
 public class ValueProcess extends AbstractFieldProcess {
 
     @Override
@@ -80,7 +79,7 @@ public class ValueProcess extends AbstractFieldProcess {
                 parse.parse();
             }
         }catch (IllegalArgumentException e){
-            throw new ValueException(ObjectUtil.format("set value error: {} {} {} expect type {}, value {}",field.getDeclaringClass().getName(), field.getType().getName(), field.getName(), fieldType, value), e.getCause());
+            throw new ValueException(StringUtils.format("set value error: {0} {1} {2} expect type {3}, value {4}",field.getDeclaringClass().getName(), field.getType().getName(), field.getName(), fieldType, value), e.getCause());
         }
     }
 

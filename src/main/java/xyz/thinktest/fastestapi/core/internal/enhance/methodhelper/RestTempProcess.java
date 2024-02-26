@@ -7,8 +7,8 @@ import xyz.thinktest.fastestapi.core.enhance.RunHttpRequest;
 import xyz.thinktest.fastestapi.core.enhance.joinpoint.method.JoinPoint;
 import xyz.thinktest.fastestapi.core.rest.http.metadata.ReadApiConfig;
 import xyz.thinktest.fastestapi.http.metadata.HttpMethod;
-import xyz.thinktest.fastestapi.utils.ObjectUtil;
 import xyz.thinktest.fastestapi.utils.files.PropertyUtil;
+import xyz.thinktest.fastestapi.utils.string.StringUtils;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ import java.util.Objects;
 /**
  * @Date: 2021/11/28
  */
-@Pointcut(annotation = RestTemp.class)
+@Pointcut(annotation = RestTemp.class, before = true)
 public class RestTempProcess extends RunHttpRequest {
 
     @Override
@@ -42,7 +42,7 @@ public class RestTempProcess extends RunHttpRequest {
         boolean isSync = restTemp.sync();
         String url = host+api;
         if(args.length == 0){
-            throw  new EnhanceException(ObjectUtil.format("method:[{}] haven't no parameters.", method.getName()));
+            throw  new EnhanceException(StringUtils.format("method:[{0}] haven't no parameters.", method.getName()));
         }
         run(method, args, url, httpMethodType, isAuto, isSync);
         ReadApiConfig.Server server = ReadApiConfig.Server.init();

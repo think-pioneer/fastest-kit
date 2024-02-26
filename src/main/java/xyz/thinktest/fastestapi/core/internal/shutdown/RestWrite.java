@@ -1,14 +1,14 @@
-package xyz.thinktest.fastestapi.core.internal.enhance.methodhelper;
+package xyz.thinktest.fastestapi.core.internal.shutdown;
 
 import xyz.thinktest.fastestapi.common.exceptions.FileException;
-import xyz.thinktest.fastestapi.core.enhance.Shutdown;
+import xyz.thinktest.fastestapi.core.internal.enhance.methodhelper.RestTempWrite;
 import xyz.thinktest.fastestapi.logger.FastestLogger;
 import xyz.thinktest.fastestapi.logger.FastestLoggerFactory;
-import xyz.thinktest.fastestapi.utils.ObjectUtil;
 import xyz.thinktest.fastestapi.utils.dates.DateTime;
 import xyz.thinktest.fastestapi.utils.dates.DateUtil;
 import xyz.thinktest.fastestapi.utils.files.FileUtil;
 import xyz.thinktest.fastestapi.utils.files.PropertyUtil;
+import xyz.thinktest.fastestapi.utils.string.StringUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -23,13 +23,22 @@ import java.util.Random;
  *
  * @date: 2022-01-28
  */
-public class RestWrite implements Shutdown {
+public class RestWrite implements ShutdownInternal {
     private static final FastestLogger logger = FastestLoggerFactory.getLogger(RestWrite.class);
+
     @Override
-    public void postHook() {
+    public int order() {
+        return ShutdownOrderInternalManager.getInstance().consumer(RestWrite.class);
+    }
+
+    @Override
+    public void executor() {
+        if(RestTempWrite.getAllApi().isEmpty()){
+            return;
+        }
         String defaultPath = PropertyUtil.getProperty("fastest.rest.temp.api.path");
         if(Objects.isNull(defaultPath)){
-            defaultPath = ObjectUtil.format("apiconfig_custom/APIConfTemp_{}_{}.yaml", DateTime.newInstance(new Date(), DateUtil.FORMAT_D).string(), new Random().nextInt(10000));
+            defaultPath = StringUtils.format("apiconfig_custom/APIConfTemp_{0}_{1}.yaml", DateTime.newInstance(new Date(), DateUtil.FORMAT_D).string(), new Random().nextInt(10000));
         }
         File file = FileUtil.createFile(defaultPath);
         if(Objects.isNull(file) || !file.exists()){

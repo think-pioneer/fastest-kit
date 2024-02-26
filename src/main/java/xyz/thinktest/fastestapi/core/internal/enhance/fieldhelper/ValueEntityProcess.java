@@ -22,7 +22,7 @@ import java.util.List;
  * @Date: 2021/11/27
  */
 @SuppressWarnings("unchecked")
-@Pointcut(annotation = ValueEntity.class)
+@Pointcut(annotation = ValueEntity.class, before = true)
 public class ValueEntityProcess extends AbstractFieldProcess {
 
     @Override

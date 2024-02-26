@@ -6,7 +6,7 @@ import xyz.thinktest.fastestapi.core.annotations.Pointcut;
  * @author: aruba
  * @date: 2022-02-18
  */
-@Pointcut(annotation = LogPrint.class, before = true)
+@Pointcut(annotation = LogPrint.class, before = true, after = true)
 public class MethodProcessableAnn implements MethodProcessable{
     @Override
     public void process(JoinPoint joinPoint) {

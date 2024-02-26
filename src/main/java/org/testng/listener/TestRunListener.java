@@ -5,10 +5,10 @@ import org.testng.ITestListener;
 import org.testng.ITestNGMethod;
 import org.testng.ITestResult;
 import xyz.thinktest.fastestapi.core.enhance.joinpoint.Target;
-import xyz.thinktest.fastestapi.core.internal.Initialization;
 import xyz.thinktest.fastestapi.core.internal.configuration.SystemConfig;
 import xyz.thinktest.fastestapi.core.internal.enhance.fieldhelper.TestNGProcess;
-import xyz.thinktest.fastestapi.core.internal.tool.ShutdownHookActuator;
+import xyz.thinktest.fastestapi.core.internal.initialization.InitializationActuator;
+import xyz.thinktest.fastestapi.core.internal.shutdown.ShutdownActuator;
 
 import java.util.Objects;
 
@@ -29,7 +29,7 @@ public class TestRunListener implements ITestListener {
     @Override
     public void onStart(ITestContext context){
         SystemConfig.config();
-        Initialization.init();
+        InitializationActuator.init();
         for(ITestNGMethod method:context.getAllTestMethods()){
             Class<?> caseClazz = method.getRealClass();
             // 将测试类托管给本框架
@@ -44,6 +44,6 @@ public class TestRunListener implements ITestListener {
 
     @Override
     public void onFinish(ITestContext context){
-        ShutdownHookActuator.execute();
+        ShutdownActuator.execute();
     }
 }

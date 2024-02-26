@@ -1,6 +1,5 @@
 package xyz.thinktest.fastestapi.core.internal.enhance.methodhelper;
 
-import org.apache.commons.lang3.StringUtils;
 import xyz.thinktest.fastestapi.common.exceptions.EnhanceException;
 import xyz.thinktest.fastestapi.common.exceptions.JsonException;
 import xyz.thinktest.fastestapi.core.annotations.Pointcut;
@@ -13,7 +12,7 @@ import xyz.thinktest.fastestapi.http.Metadata;
 import xyz.thinktest.fastestapi.http.Requester;
 import xyz.thinktest.fastestapi.http.metadata.HttpMethod;
 import xyz.thinktest.fastestapi.http.metadata.HttpMethodBuilder;
-import xyz.thinktest.fastestapi.utils.ObjectUtil;
+import xyz.thinktest.fastestapi.utils.string.StringUtils;
 
 import java.lang.reflect.Method;
 import java.util.Objects;
@@ -21,7 +20,7 @@ import java.util.Objects;
 /**
  * @Date: 2021/11/28
  */
-@Pointcut(annotation = RestMetadata.class)
+@Pointcut(annotation = RestMetadata.class, before = true)
 public class RestMetadataProcess extends RunHttpRequest {
 
     @Override
@@ -41,7 +40,7 @@ public class RestMetadataProcess extends RunHttpRequest {
             }
         }
         if(args.length == 0 || !paramsValid){
-            throw new EnhanceException(ObjectUtil.format("method:[{}] at least one parameter of Requester1 or Metadata is required"));
+            throw new EnhanceException(StringUtils.format("method:[{0}] at least one parameter of Requester1 or Metadata is required"));
         }
         Class<?> clazz = method.getDeclaringClass();
         RestServer restServer = clazz.getAnnotation(RestServer.class);
@@ -63,14 +62,14 @@ public class RestMetadataProcess extends RunHttpRequest {
         ReadApiConfig.Uri uriObj = ReadApiConfig.getApi(serverName, apiName, file);
         if(Objects.isNull(uriObj)){
             if(Objects.nonNull(file)) {
-                throw new JsonException(ObjectUtil.format("form api conf not fount {}.{} from {}", serverName, apiName, file));
+                throw new JsonException(StringUtils.format("form api conf not fount {0}.{1} from {2}", serverName, apiName, file));
             }
-            throw new JsonException(ObjectUtil.format("form api conf not fount {}.{}", serverName, apiName));
+            throw new JsonException(StringUtils.format("form api conf not fount {0}.{1}", serverName, apiName));
         }
         String url = uriObj.getUrl();
         HttpMethod httpMethodType = HttpMethodBuilder.build(uriObj.getMethod().trim().toUpperCase());
         if(StringUtils.isEmpty(url)){
-            throw new EnhanceException(ObjectUtil.format("Class={}, method={} url is empty", clazz.getName(), method.getName()));
+            throw new EnhanceException(StringUtils.format("Class={0}, method={1} url is empty", clazz.getName(), method.getName()));
         }
         run(method, args, url, httpMethodType, isAuto, isSync);
     }

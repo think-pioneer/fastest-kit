@@ -8,8 +8,8 @@ import xyz.thinktest.fastestapi.common.exceptions.FastestBasicException;
 import xyz.thinktest.fastestapi.core.internal.enhance.EnhanceFactory;
 import xyz.thinktest.fastestapi.logger.FastestLogger;
 import xyz.thinktest.fastestapi.logger.FastestLoggerFactory;
-import xyz.thinktest.fastestapi.utils.ObjectUtil;
 import xyz.thinktest.fastestapi.utils.reflects.FieldHelper;
+import xyz.thinktest.fastestapi.utils.string.StringUtils;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -52,7 +52,7 @@ class TestFinish{
                                             FieldHelper.getInstance(testInstance, fieldTypeMap.entrySet().stream()
                                                     .filter(o -> o.getValue().equals(step))
                                                     .findFirst().orElseThrow(
-                                                            () -> new FastestBasicException(ObjectUtil.format("not found field type:{}", step.getName())))
+                                                            () -> new FastestBasicException(StringUtils.format("not found field type:{0}", step.getName())))
                                                     .getKey())
                                                     .get()));
                 }

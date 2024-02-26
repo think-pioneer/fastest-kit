@@ -1,7 +1,7 @@
 package xyz.thinktest.fastestapi.utils.dates;
 
 import xyz.thinktest.fastestapi.common.exceptions.DateException;
-import xyz.thinktest.fastestapi.utils.ObjectUtil;
+import xyz.thinktest.fastestapi.utils.string.StringUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -110,7 +110,7 @@ public class DateTime {
             SimpleDateFormat sf = new SimpleDateFormat(format);
             return sf.parse(date);
         }catch (ParseException e){
-            throw new DateException(ObjectUtil.format("Invalid date:\"{}\" or format:\"{}\"", date, format));
+            throw new DateException(StringUtils.format("Invalid date:\"{0}\" or format:\"{1}\"", date, format));
         }
     }
 
@@ -119,7 +119,7 @@ public class DateTime {
             SimpleDateFormat sf = new SimpleDateFormat(format);
             return sf.format(date);
         }catch (Exception e){
-            throw new DateException(ObjectUtil.format("Invalid date:\"{}\" or format:\"{}\"", date.toString(), format));
+            throw new DateException(StringUtils.format("Invalid date:\"{0}\" or format:\"{1}\"", date.toString(), format));
         }
     }
 }

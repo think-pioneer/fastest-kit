@@ -107,6 +107,6 @@ public final class StringUtils extends org.apache.commons.lang3.StringUtils {
      * format2("a{}c{}", "b", "d") => "abcd"
      */
     public static String format2(String pattern, Object... arguments){
-        return StringFormat.format(pattern, arguments);
+        return StringFormat.format2(pattern, arguments);
     }
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 记录被代理方法的返回值
  * @Date: 2021/12/27
  */
 public class MethodReturn {

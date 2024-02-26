@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
  * @Date: 2021/10/29
  */
 @SuppressWarnings("unchecked")
-@Pointcut(annotation = Autowired.class)
+@Pointcut(annotation = Autowired.class, before = true)
 public class AutowireProcess extends AbstractFieldProcess {
 
     @Override
@@ -28,7 +28,7 @@ public class AutowireProcess extends AbstractFieldProcess {
         Class<?> declaringClass = joinPoint.getField().getDeclaringClass();
         Class<?> fieldType = joinPoint.getField().getType();
         if(checkCircularReference(declaringClass, fieldType)){
-            throw new EnhanceException(StringUtils.format("exist circular reference: {}->{}", declaringClass, fieldType));
+            throw new EnhanceException(StringUtils.format("exist circular reference: {0}->{1}", declaringClass, fieldType));
         }
         this.exec(joinPoint);
     }
@@ -55,10 +55,10 @@ public class AutowireProcess extends AbstractFieldProcess {
                 Method fieldInstanceConstructorParams = tmpInstance.getClass().getDeclaredMethod(autowired.constructor());
                 Object constructorPropertyObj = fieldInstanceConstructorParams.invoke(tmpInstance);
                 if(constructorPropertyObj == null){
-                    throw new EnhanceException(StringUtils.format("Constructor error:{}.{} return type export ConstructorProperty type, got null", field.getType().getName(), fieldInstanceConstructorParams.getName()));
+                    throw new EnhanceException(StringUtils.format("Constructor error:{0}.{1} return type export ConstructorProperty type, got null", field.getType().getName(), fieldInstanceConstructorParams.getName()));
                 }
                 if(!(constructorPropertyObj instanceof ConstructorProperty)){
-                    throw new EnhanceException(StringUtils.format("Constructor error:{}.{} return type export ConstructorProperty type, got {}", field.getType().getName(), fieldInstanceConstructorParams.getName(), constructorPropertyObj.getClass().getSimpleName()));
+                    throw new EnhanceException(StringUtils.format("Constructor error:{0}.{1} return type export ConstructorProperty type, got {}", field.getType().getName(), fieldInstanceConstructorParams.getName(), constructorPropertyObj.getClass().getSimpleName()));
                 }
                 ConstructorProperty constructorProperty = (ConstructorProperty) constructorPropertyObj;
                 ComponentProcess componentAnnotationProcess = new ComponentProcess(tmpInstance.getClass(), constructorProperty.getTypes().toArray(new Class[0]), constructorProperty.getObjects().toArray(new Object[0]), autowired.isOrigin());
@@ -70,7 +70,7 @@ public class AutowireProcess extends AbstractFieldProcess {
             Object fieldInstance = fieldTargetManger.getInstance();
             FieldHelper.getInstance(instance, field).set(fieldInstance);
         }catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e){
-            throw new EnhanceException(StringUtils.format("Autowired error: {}.{} build instance error", instance.getClass().getName(), field.getName()), e);
+            throw new EnhanceException(StringUtils.format("Autowired error: {0}.{1} build instance error", instance.getClass().getName(), field.getName()), e);
         }
 
     }

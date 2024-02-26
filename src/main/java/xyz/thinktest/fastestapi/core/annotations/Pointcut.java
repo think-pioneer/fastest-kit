@@ -13,17 +13,25 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Pointcut {
+    /**
+     * 待切面的注解
+     */
     Class<? extends Annotation> annotation();
-    @Deprecated
-    int index() default 0;
 
     /**
-     * 处理切面前执行
+     * 多个实现类时的执行顺序，序号一样的直接延后
+     */
+    int order() default 0;
+
+    /**
+     * 标志位，执行时机
+     * annotation注解的对象执行前执行
      */
     boolean before() default false;
 
     /**
-     * 处理切面后执行
+     * 标志位，执行时机
+     * annotation注解的对象执行后执行
      */
     boolean after() default false;
 }

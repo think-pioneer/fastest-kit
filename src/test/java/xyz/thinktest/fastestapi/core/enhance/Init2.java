@@ -6,7 +6,13 @@ package xyz.thinktest.fastestapi.core.enhance;
  */
 public class Init2 implements Initialize{
     @Override
-    public void preHook() {
+    public int order() {
+        return 1;
+    }
+
+    @Override
+    public void executor() {
+        System.out.println("init2");
         MyObj.INSTANCE.setFlag(MyObj.INSTANCE.getFlag() + 1);
     }
 }

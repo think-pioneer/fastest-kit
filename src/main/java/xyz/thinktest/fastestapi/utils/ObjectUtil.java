@@ -23,6 +23,7 @@ public final class ObjectUtil {
      * @param contents fill in the string of the placeholder。if not String, will call toString()
      * @return string
      * 建议使用StringUtils.format
+     * @see StringUtils#format(String, Object...)
      */
     @Deprecated
     public static String format(String format, Object ...contents){

@@ -10,7 +10,7 @@ import xyz.thinktest.fastestapi.http.*;
 import xyz.thinktest.fastestapi.http.metadata.*;
 import xyz.thinktest.fastestapi.logger.FastestLogger;
 import xyz.thinktest.fastestapi.logger.FastestLoggerFactory;
-import xyz.thinktest.fastestapi.utils.ObjectUtil;
+import xyz.thinktest.fastestapi.utils.string.StringUtils;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -62,7 +62,7 @@ public abstract class RunHttpRequest extends AbstractMethodProcess {
             }
         }
         if(Objects.isNull(requester)){
-            throw new HttpException(ObjectUtil.format("{}.{}use auto send needs Requester1 object as params,but not found",method.getDeclaringClass().getName(), method.getName()));
+            throw new HttpException(StringUtils.format("{0}.{1}use auto send needs Requester1 object as params,but not found",method.getDeclaringClass().getName(), method.getName()));
         }
         Headers auth = AuthManager.get(requester);
         if(CollectionUtils.isNotEmpty(auth)){
@@ -72,7 +72,7 @@ public abstract class RunHttpRequest extends AbstractMethodProcess {
         }
         if(isAuto){
             if(!isUrl(requester.metadata().getUrl().getUrl())){
-                throw new EnhanceException(ObjectUtil.format("url:\"{}\" is not a valid url", url));
+                throw new EnhanceException(StringUtils.format("url:\"{0}\" is not a valid url", url));
             }
             HttpLog httpLog = method.getDeclaredAnnotation(HttpLog.class);
             boolean showRequestLog = Objects.isNull(httpLog) ? requester.settings().isShowRequestLog() : httpLog.showRequestLog();

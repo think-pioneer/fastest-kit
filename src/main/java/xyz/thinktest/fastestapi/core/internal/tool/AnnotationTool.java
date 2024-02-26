@@ -1,7 +1,7 @@
 package xyz.thinktest.fastestapi.core.internal.tool;
 
 import xyz.thinktest.fastestapi.common.exceptions.EnhanceException;
-import xyz.thinktest.fastestapi.utils.ObjectUtil;
+import xyz.thinktest.fastestapi.utils.string.StringUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -45,7 +45,7 @@ public class AnnotationTool {
         List<Class<? extends Annotation>> realAnnType = Arrays.stream(annotations).map(Annotation::getClass).collect(Collectors.toList());
         for(Class<?> excludeType:excludeTypes){
             if(realAnnType.contains(excludeType)){
-                throw new EnhanceException(ObjectUtil.format("@{} and @{} cannot annotate {}.{} at the same time", expectTypeName, excludeType.getSimpleName(), className, name));
+                throw new EnhanceException(StringUtils.format("@{0} and @{1} cannot annotate {2}.{3} at the same time", expectTypeName, excludeType.getSimpleName(), className, name));
             }
         }
     }

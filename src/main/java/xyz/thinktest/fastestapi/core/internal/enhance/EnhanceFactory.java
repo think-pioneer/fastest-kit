@@ -2,8 +2,8 @@ package xyz.thinktest.fastestapi.core.internal.enhance;
 
 import xyz.thinktest.fastestapi.common.exceptions.EnhanceException;
 import xyz.thinktest.fastestapi.common.exceptions.FastestBasicException;
-import xyz.thinktest.fastestapi.utils.ObjectUtil;
 import xyz.thinktest.fastestapi.utils.reflects.ReflectUtil;
+import xyz.thinktest.fastestapi.utils.string.StringUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
@@ -21,7 +21,7 @@ public final class EnhanceFactory {
 
     public static <T> T origin(Class<T> clazz, Class<?>[] argumentTypes, Object[] arguments){
         if(clazz.isInterface()){
-            throw new FastestBasicException(ObjectUtil.format("{} is interface, could not instantiation", clazz));
+            throw new FastestBasicException(StringUtils.format("{0} is interface, could not instantiation", clazz));
         }
         try{
             if(Objects.isNull(argumentTypes) && Objects.isNull(arguments)){
@@ -29,7 +29,7 @@ public final class EnhanceFactory {
             }
             return clazz.getDeclaredConstructor(argumentTypes).newInstance(arguments);
         } catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
-            throw new FastestBasicException(ObjectUtil.format("create {} instance error", clazz), e);
+            throw new FastestBasicException(StringUtils.format("create {0} instance error", clazz), e);
         }
     }
 
@@ -50,7 +50,7 @@ public final class EnhanceFactory {
             }
             return (T) enhance.create(argumentTypes, arguments);
         }catch (IllegalArgumentException e){
-            throw new EnhanceException(ObjectUtil.format("{} enhance failed", clazz), e);
+            throw new EnhanceException(StringUtils.format("{0} enhance failed", clazz), e);
 
         }
     }

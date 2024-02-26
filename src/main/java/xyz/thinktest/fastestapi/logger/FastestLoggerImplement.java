@@ -1,6 +1,6 @@
 package xyz.thinktest.fastestapi.logger;
 
-import xyz.thinktest.fastestapi.utils.ObjectUtil;
+import xyz.thinktest.fastestapi.utils.string.StringUtils;
 
 import java.io.BufferedWriter;
 import java.io.PrintWriter;
@@ -124,9 +124,9 @@ class FastestLoggerImplement implements FastestLogger {
                     String msg;
                     if(objects.length > 1){
                         Object[] notThrowables = Arrays.copyOfRange(objects, 0, objects.length - 2);
-                        msg = ObjectUtil.format(format,notThrowables);
+                        msg = StringUtils.format2(format,notThrowables);
                     }else {
-                        msg = ObjectUtil.format(format,((Throwable) exception).getMessage());
+                        msg = StringUtils.format2(format,((Throwable) exception).getMessage());
                     }
                     return new LogRecord(logLevel, msg, buildExceptionWriter(e),curr, getTargetStackTraceElement());
 
@@ -139,7 +139,7 @@ class FastestLoggerImplement implements FastestLogger {
                     }
                     format = sb.toString();
                 }
-                String msg = ObjectUtil.format(format,objects);
+                String msg = StringUtils.format2(format,objects);
                 return new LogRecord(logLevel, msg, null, curr, getTargetStackTraceElement());
             }
         }
