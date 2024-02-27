@@ -46,9 +46,9 @@ public final class EnhanceFactory {
         enhance.setHandler(new MethodHandler());
         try {
             if (Objects.isNull(argumentTypes) && Objects.isNull(arguments)) {
-                return (T) enhance.create();
+                return clazz.cast(enhance.create());
             }
-            return (T) enhance.create(argumentTypes, arguments);
+            return clazz.cast(enhance.create(argumentTypes, arguments));
         }catch (IllegalArgumentException e){
             throw new EnhanceException(StringUtils.format("{0} enhance failed", clazz), e);
 

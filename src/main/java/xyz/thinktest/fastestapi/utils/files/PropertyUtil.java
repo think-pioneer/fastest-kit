@@ -232,7 +232,11 @@ public enum  PropertyUtil {
     * @return the value to which the specified key is mapped
     * */
     private Object getOrDefaultInternal(String key, Object defaultValue){
-        return this.properties.getOrDefault(key, defaultValue);
+        try {
+            return this.properties.getOrDefault(key, defaultValue);
+        }catch (Throwable e){
+            return defaultValue;
+        }
     }
 
     /**
@@ -265,7 +269,7 @@ public enum  PropertyUtil {
                 }
             }
         }
-        return null;
+        return defaultValue;
 
     }
 
@@ -290,10 +294,20 @@ public enum  PropertyUtil {
     }
 
     public static <T> T getOrDefault(String key, T defaultValue){
-        return (T) PropertyUtil.INSTANCE.getOrDefaultInternal(key, defaultValue);
+        try {
+            Object value = PropertyUtil.INSTANCE.getOrDefaultInternal(key, defaultValue);
+            return (T) defaultValue.getClass().cast(value);
+        }catch (Throwable ignored){
+            return defaultValue;
+        }
     }
 
     public static <T> T getOrDefault(String key, T defaultValue, String path){
-        return (T) PropertyUtil.INSTANCE.getOrDefaultInternal(key, defaultValue,path);
+        try {
+            Object value = PropertyUtil.INSTANCE.getOrDefaultInternal(key, defaultValue, path);
+            return (T) defaultValue.getClass().cast(value);
+        }catch (Throwable ignored){
+            return defaultValue;
+        }
     }
 }

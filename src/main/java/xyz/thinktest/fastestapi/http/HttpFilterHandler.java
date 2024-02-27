@@ -10,7 +10,7 @@ import java.util.List;
  * @author: aruba
  * @date: 2022-06-16
  */
-public class HttpFilterHandler implements HttpFilter {
+public final class HttpFilterHandler implements HttpFilter {
     @Override
     public void handleRequest(Requester requester, Responder responder, List<Filter> filters) {
         FilterChainHandler filterChainHandler = new FilterChainHandler(filters);

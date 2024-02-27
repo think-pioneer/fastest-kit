@@ -10,6 +10,7 @@ import xyz.thinktest.fastestapi.core.internal.tool.Banner;
 import xyz.thinktest.fastestapi.core.internal.tool.poetry.Poetry;
 import xyz.thinktest.fastestapi.utils.color.ColorPrint;
 import xyz.thinktest.fastestapi.utils.dates.DateUtil;
+import xyz.thinktest.fastestapi.utils.files.PropertyUtil;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -25,34 +26,57 @@ public class InitializationActuator {
         try{
             banner.print();
             ColorPrint.GREEN.println("Initializing, please wait...");
-            CompletableFuture<Void> coffee = CompletableFuture.runAsync(InitializationActuator::runInit);
-            CompletableFuture<Void> runInit = CompletableFuture.runAsync(InitializationActuator::realInit);
-            CompletableFuture.allOf(coffee, runInit).get();
-            ColorPrint.GREEN.println("InitializationActuator complete!!!");
+            CompletableFuture<Void> loading = CompletableFuture.runAsync(InitializationActuator::loading);
+            CompletableFuture<Void> working = CompletableFuture.runAsync(InitializationActuator::working);
+            CompletableFuture.allOf(loading, working).get();
+            ColorPrint.GREEN.println("Initialize complete!!!");
         }catch (Throwable e){
-            throw new InitializationException("initialization fail", e);
+            throw new InitializationException("Initialize fail", e);
         }
     }
-    private static void runInit(){
+
+    /**
+     * 执行初始化操作时，会打印一些诗词
+     */
+    private static void loading(){
+        // 如果读取诗词失败，则直接sleep3秒
         try {
+            boolean disable = PropertyUtil.getOrDefault("fasttest.poetry.disable", false);
+            if (disable) {
+                return;
+            }
             poetry();
-        }catch (Throwable ignored){}
-        DateUtil.SECOND.sleep(3);
+        }catch (Throwable ignored){
+            DateUtil.SECOND.sleep(3);
+        }
     }
 
+    /**
+     * 执行初始化操作
+     */
+    private static void working(){
+        systemInit();
+        userInit();
+    }
+
+    /**
+     * 执行框架自身的初始化操作
+     * 会在用户初始化操作之前执行
+     * 用户初始化{@link #userInit()}
+     */
     private static void systemInit() {
         Set<Class<? extends InitializeInternal>> initializeTypes = reflections.getSubTypesOf(InitializeInternal.class);
         initializeTypes.stream().map(EnhanceFactory::enhance).sorted(Comparator.comparing(Initializable::order)).forEach(Initializable::executor);
     }
+
+    /**
+     * 执行用户的初始化操作
+     * 会在框架初始化完成之后执行
+     * 框架初始化{@link #systemInit()}
+     */
     private static void userInit(){
         Set<Class<? extends Initialize>> initializeTypes = reflections.getSubTypesOf(Initialize.class);
         initializeTypes.stream().map(EnhanceFactory::enhance).sorted(Comparator.comparing(Initialize::order)).forEach(Initialize::executor);
-    }
-
-
-    private static void realInit(){
-        systemInit();
-        userInit();
     }
 
     /**

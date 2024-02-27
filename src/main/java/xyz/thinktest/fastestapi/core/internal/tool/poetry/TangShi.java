@@ -12,7 +12,7 @@ import java.util.Random;
  * @date: 2022-02-01
  */
 public class TangShi implements Poetry{
-    private List<TangShiEntity> tangShiEntity;
+    private final List<TangShiEntity> tangShiEntity;
     public TangShi(){
         Random rand = new Random();
         String[] prefixes = {"poet.tang", "poet.song"};

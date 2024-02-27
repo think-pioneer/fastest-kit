@@ -11,6 +11,10 @@ public final class SystemConfig {
         disableSlf4jBindingWarning();
     }
 
+    /**
+     * 禁止slf4j的warning信息出现
+     * 多个slf4j的实现类存在时会有告警信息。
+     */
     private static void disableWarning(){
         try {
             Field theUnsafe = Unsafe.class.getDeclaredField("theUnsafe");
@@ -25,6 +29,10 @@ public final class SystemConfig {
         }
     }
 
+    /**
+     * 禁止Android平台上的slf4j的告警
+     * @see #disableWarning()
+     */
     private static void disableSlf4jBindingWarning(){
         System.setProperty("java.vendor.url", "android");
     }

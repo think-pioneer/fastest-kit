@@ -1318,4 +1318,5 @@ Edit Configurations -> Edit Templates -> 选择TestNG -> Listeners -> 添加list
 |   fastest.rest.print.request   | 否       |                true                 | 全局参数，控制打印http请求的log，单次请求可通过@HttpLog的showRequestLog覆盖该参数的值 |
 |  fastest.rest.print.response   | 否       |                false                | 全局参数，控制打印http响应的log，单次请求可通过@HttpLog的showResponseLog覆盖该参数的值。鉴于某些响应body比较大，所以默认不打印 |
 |  fastest.cache.expired.period  | 否       |                10000                |        缓存管理器定时清理过期数据的时间间隔，单位毫秒        |
+|    fasttest.poetry.disable     | 否       |                false                |       初始化阶段禁止打印诗词。默认值false，会打印诗词        |
 

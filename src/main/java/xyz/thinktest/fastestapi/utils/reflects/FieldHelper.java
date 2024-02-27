@@ -3,6 +3,7 @@ package xyz.thinktest.fastestapi.utils.reflects;
 import xyz.thinktest.fastestapi.common.exceptions.ReflectionException;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Objects;
 
 /**
@@ -19,6 +20,9 @@ public final class FieldHelper {
         this.field = field;
         if(Objects.isNull(this.instance) || Objects.isNull(this.field)){
             throw new ReflectionException("instance or field could not null");
+        }
+        if(Modifier.isFinal(this.field.getModifiers())) {
+            throw new ReflectionException("field is final.");
         }
         this.field.setAccessible(true);
     }
