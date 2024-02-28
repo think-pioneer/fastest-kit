@@ -204,7 +204,7 @@ public class MyStep implements Step {
 
 ### 1.1.4 Settings
 
-从okhttp3中抽取一些常用的配置做成settings，如果觉得配置不好够的可以自行创建HttpClient对象进行完整设置。
+requester设置。
 
 | 属性                     | 类型       | 默认值          | 说明                                                         |
 | ------------------------ | ---------- | --------------- | ------------------------------------------------------------ |
@@ -220,13 +220,13 @@ public class MyStep implements Step {
 | readTimeout              | Long       | 60              | 写入超时时间，单位秒                                         |
 | callTimeout              | Long       | 120             | 全局的超时时间，单位秒。从DNS解析开始，到连接，到发请求体，到服务端响应，到服务端返回数据；以及可能出现的重定向，整个过程都需要在这个时间内完成，否则就算超时了，客户端会主动放弃或者断开连接。 |
 | retryOnConnectionFailure | Boolean    | true            | 是否重试                                                     |
-| client                   | HttpClient | HttpClient      | 如果需求复杂的设置，则需要自己设置好后传入client             |
+| client                   | HttpClient | HttpClient      | 客户端的更详细设置                                           |
 
 
 
 ### 1.1.5 Asserts
 
-断言工具
+断言工具。将断言和responder绑定在一起，可进行高效的断言操作。
 
 ```java
 @Component
@@ -490,7 +490,7 @@ public class MyStep implements Step {
 
 #### 用法说明
 
-自动注入FastestLogger对象到变量中。log类型为xyz.thinktest.fastest.logger.FastestLogger
+自动注入FastestLogger对象到变量中。log类型为xyz.think.fastest.logger.FastestLogger
 
 ```java
 public class CaseTest {
@@ -520,9 +520,9 @@ public class CaseTest {
 
 自动装载api配置文件中的host、uri，httpmethod信息
 
-配置文件的位置默认在apiconfig下，会读取该目录下(包括子目录)所有的配置文件，所以该目录请只放api配置文件(yaml格式)。如需自定义apiconf目录的路径，则在配置文件（yaml）中加入节点api.config.folder.path=YOURPATH
+配置文件的位置默认在apiconfig下，会读取该目录下(包括子目录)所有的配置文件，所以该目录请只放api配置文件(yaml格式)。如需自定义apiconf目录的路径，则在配置文件（yaml）中加入节点api.config.folder.path=YOUR_PATH
 
-api配置文件模板可通过"ReadApiConfig.printTemplate();"查看，该方法也会返回该模板
+api配置文件模板可通过"ApiConfigTemplate.printTemplate();"查看，该方法也会返回该模板
 
 uri.yaml
 
@@ -641,7 +641,7 @@ public class HelloController {
 | uri    | string     | 必填   | 接口                                                         |
 | method | HttpMethod | 必填   | 接口方法                                                     |
 | desc   | string     | ""     | 接口描述                                                     |
-| save   | boolean    | false  | 是否保存，默认不保存。如果设置全局参数rest.temp.save则忽略该参数的值。rest.temp.save可通过在properties文件中配置或者java启动参数中配置 |
+| save   | boolean    | false  | 是否保存，默认不保存。全局参数（fastest.rest.temp.save）和该参数任意一个true都将保存。fastest.rest.temp.save可通过在properties文件中配置或者java启动参数中配置 |
 | auto   | boolean    | true   | 是否自动发起请求，默认是                                     |
 | sync   | boolean    | true   | 是否使用同步请求，默认是                                     |
 
@@ -1013,7 +1013,7 @@ public class MyRequester implements Requester{
 application.properties
 
 ```properties
-fastest.api.http.requester=xxx.xxx.MyRequester
+fastest.http.requester=xxx.xxx.MyRequester
 ```
 
 ### 方法说明
@@ -1041,7 +1041,7 @@ public class MyResponder implements Responder{
 application.properties
 
 ```properties
-fastest.api.http.responder=xxx.xxx.MyResponder
+fastest.http.responder=xxx.xxx.MyResponder
 ```
 
 ### 方法说明
@@ -1181,7 +1181,7 @@ pom.xml
 ```xml
     <dependencies>
         <dependency>
-            <groupId>xyz.thinktest</groupId>
+            <groupId>xyz.think</groupId>
             <artifactId>fastest-kit</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
@@ -1313,8 +1313,8 @@ Edit Configurations -> Edit Templates -> 选择TestNG -> Listeners -> 添加list
 | fastest.api.config.folder.path | 否       |              apiconfig              | api配置文件的目录，会扫描该目录下所有的文件及子文件夹，文件类型为json、yaml、yml |
 |   fastest.rest.temp.api.path   | 否       | apiconfig/apiconfig_custom/xxx.yaml |       保存RestTemp注解参数的目录及文件，文件类型为yaml       |
 |     fastest.rest.temp.save     | 否       |                false                | 全局控制是否保存RestTemp注解的参数，当不想在每一个RestTemp注解上指定isSave参数时，可以使用该参数全局配置 |
-|   fastest.api.http.requester   | 否       |          DefaultRequester           |       自定义Requester的实现类，不建议使用，后面会废弃        |
-|   fastest.api.http.responder   | 否       |          DefaultResponder           |       自定义Responder的实现类，不建议使用，后面会废弃        |
+|   fastest.http.requester   | 否       |          DefaultRequester           |       自定义Requester的实现类，不建议使用，后面会废弃        |
+|   fastest.http.responder   | 否       |          DefaultResponder           |       自定义Responder的实现类，不建议使用，后面会废弃        |
 |   fastest.rest.print.request   | 否       |                true                 | 全局参数，控制打印http请求的log，单次请求可通过@HttpLog的showRequestLog覆盖该参数的值 |
 |  fastest.rest.print.response   | 否       |                false                | 全局参数，控制打印http响应的log，单次请求可通过@HttpLog的showResponseLog覆盖该参数的值。鉴于某些响应body比较大，所以默认不打印 |
 |  fastest.cache.expired.period  | 否       |                10000                |        缓存管理器定时清理过期数据的时间间隔，单位毫秒        |

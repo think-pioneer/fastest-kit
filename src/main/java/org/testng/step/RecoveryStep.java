@@ -1,7 +1,7 @@
 package org.testng.step;
 
-import xyz.thinktest.fastestapi.logger.FastestLogger;
-import xyz.thinktest.fastestapi.logger.FastestLoggerFactory;
+import xyz.think.fastest.logger.FastestLogger;
+import xyz.think.fastest.logger.FastestLoggerFactory;
 
 /**
  * @Date: 2021/10/30
