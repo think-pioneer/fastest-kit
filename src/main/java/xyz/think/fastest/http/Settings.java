@@ -24,9 +24,9 @@ public class Settings {
     private long readTimeout;
     private long callTimeout;
     private boolean retryOnConnectionFailure;
-    private HttpClient client;
     private final List<Filter> filters;
     private boolean isSync;
+    private HttpClient client;
 
     private Settings(){
         this.isShowRequestLog = true;
@@ -41,9 +41,9 @@ public class Settings {
         this.readTimeout = 60L;
         this.callTimeout = 120L;
         this.retryOnConnectionFailure = true;
-        this.client = new HttpClient();
         this.filters = new ArrayList<>();
         this.isSync = true;
+        this.client = new HttpClient();
     }
 
     public boolean isShowRequestLog(){

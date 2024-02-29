@@ -29,39 +29,27 @@ public enum RestTempCache {
     private final ConcurrentLinkedQueue<ReadApiConfig.Server> cacheOfCache = new ConcurrentLinkedQueue<>();
     private final ConcurrentHashMap<String, ReadApiConfig.Server> cache = new ConcurrentHashMap<>();
     private volatile Boolean lock;
+    private Timer cleanTimer;
+    private Timer saveTimer;
 
     RestTempCache(){
         boolean timing = PropertyUtil.getOrDefault("fastest.rest.temp.api.save.timing", true);
         if (timing) {
             long period = PropertyUtil.getOrDefault("fastest.rest.temp.api.save.period", 60*1000);
             // 定时把http信息写入到文件
-            Timer clean = new Timer(true);
-            clean.schedule(new TimerTask() {
+            this.saveTimer = new Timer(true);
+            this.saveTimer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    save();
+                    innerSave();
                 }
             }, 10000, period);
             // 定期将cacheOfCache中的元素消费到cache中。
-            Timer consumer = new Timer(true);
-            consumer.schedule(new TimerTask() {
+            this.cleanTimer = new Timer(true);
+            this.cleanTimer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    if (lock) {
-                        return;
-                    }
-                    for (;;) {
-                        ReadApiConfig.Server server = cacheOfCache.poll();
-                        if (server == null) {
-                            break;
-                        }
-                        String key = server.getHost();
-                        if(cache.containsKey(key)){
-                            cache.get(key).getUris().addAll(server.getUris());
-                        }else{
-                            cache.put(key, server);
-                        }
-                    }
+                    INSTANCE.consumer();
                 }
             }, 10000, 30*1000);
         }
@@ -80,7 +68,7 @@ public enum RestTempCache {
         return this.cache.isEmpty();
     }
 
-    synchronized void innerSave(OutputStreamWriter writer) throws IOException {
+    synchronized void write(OutputStreamWriter writer) throws IOException {
         lock = true;
         DumperOptions options = new DumperOptions();
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
@@ -92,6 +80,24 @@ public enum RestTempCache {
         writer.write(String.valueOf(sw).replace(CLASS_TAG, "").trim());
         cache.clear();
         lock = false;
+    }
+
+    private synchronized void consumer() {
+        if (lock) {
+            return;
+        }
+        for (;;) {
+            ReadApiConfig.Server server = cacheOfCache.poll();
+            if (server == null) {
+                break;
+            }
+            String key = server.getHost();
+            if(cache.containsKey(key)){
+                cache.get(key).getUris().addAll(server.getUris());
+            }else{
+                cache.put(key, server);
+            }
+        }
     }
 
     public static void add(ReadApiConfig.Server server){
@@ -106,7 +112,10 @@ public enum RestTempCache {
         return RestTempCache.INSTANCE.innerIsEmpty();
     }
 
-    public static void save() {
+    private void innerSave() {
+        if (innerIsEmpty()) {
+            return;
+        }
         String defaultPath = PropertyUtil.getProperty("fastest.rest.temp.api.path");
         if(Objects.isNull(defaultPath)){
             defaultPath = StringUtils.format("apiconfig_custom/APIConfTemp_{0}_{1}.yaml", DateTime.newInstance(new Date(), DateUtil.FORMAT_D).string(), new Random().nextInt(10000));
@@ -118,7 +127,7 @@ public enum RestTempCache {
         OutputStreamWriter writer = null;
         try{
             writer = new OutputStreamWriter(new FileOutputStream(file));
-            RestTempCache.INSTANCE.innerSave(writer);
+            write(writer);
         }catch (IOException e){
             throw new FileException("write rest temp api json file of fail:" + file.getAbsolutePath());
         }finally {
@@ -132,4 +141,17 @@ public enum RestTempCache {
             }
         }
     }
+
+
+    /**
+     * 框架shutdown时调用
+     * 先取消定时任务，在手动消费堆积的任务。
+     */
+    public static void save() {
+        RestTempCache.INSTANCE.saveTimer.cancel();
+        RestTempCache.INSTANCE.cleanTimer.cancel();
+        RestTempCache.INSTANCE.consumer();
+        RestTempCache.INSTANCE.innerSave();
+    }
+
 }
