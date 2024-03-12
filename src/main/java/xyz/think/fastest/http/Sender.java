@@ -17,13 +17,13 @@ class Sender {
     private final Request request;
     private Response response;
 
-    public Sender(Metadata metadata, OkHttpClient client){
+    public Sender(Requester requester){
         try {
-            this.request = new RequestContainer(metadata).build();
+            this.request = new RequestContainer(requester.metadata()).build();
         }catch (Exception e){
             throw new HttpException(e.getMessage(), e);
         }
-        this.client = client;
+        this.client = requester.httpClient().build();
 
     }
 

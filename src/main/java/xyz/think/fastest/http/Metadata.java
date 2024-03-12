@@ -294,6 +294,17 @@ public class Metadata {
         return this;
     }
 
+    public void copy(Metadata metadata){
+        this.recovery();
+        this.setUrl(metadata.getUrl());
+        this.setHttpMethod(metadata.getMethod());
+        this.setHeaders(metadata.getHeaders());
+        this.setParameters(metadata.getParameters());
+        this.setForms(metadata.getForms());
+        this.setJson(metadata.getJson());
+        this.setRestfuls(metadata.getRestfuls());
+    }
+
     @Override
     public String toString() {
         return "Metadata{" +

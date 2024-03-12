@@ -38,7 +38,7 @@ public final class HttpFilterHandler implements HttpFilter {
                     }
                 }
             }else{
-                Sender sender = new Sender(requester.metadata(), requester.settings().getClient().getClient());
+                Sender sender = new Sender(requester);
                 if(requester.settings().isSync()){
                     sender.sync();
                 }else{

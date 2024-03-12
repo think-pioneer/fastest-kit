@@ -1,6 +1,7 @@
 package xyz.think.fastest.utils.reflects;
 
 import xyz.think.fastest.common.exceptions.ReflectionException;
+import xyz.think.fastest.utils.string.StringUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -22,7 +23,7 @@ public final class FieldHelper {
             throw new ReflectionException("instance or field could not null");
         }
         if(Modifier.isFinal(this.field.getModifiers())) {
-            throw new ReflectionException("field is final.");
+            throw new ReflectionException(String.format("field '%s#%s' is final.", instance.getClass().getName(), field.getName()));
         }
         this.field.setAccessible(true);
     }

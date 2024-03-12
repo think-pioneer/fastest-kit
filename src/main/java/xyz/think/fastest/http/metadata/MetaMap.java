@@ -10,6 +10,11 @@ public class MetaMap extends Hashtable<Object, Meta> {
 
     MetaMap(){}
 
+    public void copy(MetaMap map){
+        this.clear();
+        this.putAll(map);
+    }
+
     public static MetaMap newEmpty(){
         return new MetaMap();
     }

@@ -16,6 +16,7 @@ public interface Requester {
 
     /**
      * 设置http元数据
+     * 等价于metadata().copy(metadata);
      */
     Requester metadata(Metadata metadata);
 
@@ -26,9 +27,20 @@ public interface Requester {
 
 
     /**
-     * 获取客户端的设置项
+     * 设置客户端的设置项
+     * 等价于settings().copy(settings)
      */
     Requester settings(Settings settings);
+    /**
+     * 获取客户端
+     */
+    HttpClient httpClient();
+
+    /**
+     * 设置客户端
+     * 等价于httpClient().copy(httpClient)
+     */
+    Requester httpClient(HttpClient httpClient);
 
     /**
      * 设置同步请求

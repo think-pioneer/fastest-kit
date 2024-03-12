@@ -1,6 +1,9 @@
 package xyz.think.fastest.http.ssl;
 
-import javax.net.ssl.*;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.X509TrustManager;
 import java.security.SecureRandom;
 import java.util.Objects;
 
@@ -16,7 +19,6 @@ public enum SSLType {
 
     private SSLSocketFactory sslSocketFactory;
     private final HostnameVerifier hostnameVerifier;
-    private TrustManager[] trustManagers;
     private final X509TrustManager trustManager;
 
     SSLType(SSLContext sslContext, X509TrustManager trustManager){

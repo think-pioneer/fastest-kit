@@ -1,5 +1,7 @@
 package xyz.think.fastest.utils.string;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -20,15 +22,19 @@ class StringFormat extends MessageFormat {
         super(pattern, locale);
     }
 
+    public String format(Object... arguments){
+        return super.format(arguments);
+    }
+
     public static String format(String pattern, Object[] arguments){
-        if(null == pattern || "".equals(pattern.trim())){
-            return pattern;
+        if(StringUtils.isBlank(pattern)){
+            return "";
         }
-        return MessageFormat.format(pattern, arguments);
+        return new StringFormat(pattern).format(arguments);
     }
 
     public static String format2(String pattern, Object[] arguments){
-        return MessageFormat.format(buildPattern(pattern), arguments);
+        return new StringFormat(buildPattern(pattern)).format(arguments);
     }
 
     private static String buildPattern(String pattern){

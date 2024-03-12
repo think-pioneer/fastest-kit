@@ -8,6 +8,11 @@ public class MetaList extends ArrayList<Meta>{
 
     MetaList(){}
 
+    public void copy(Headers headers){
+        this.clear();
+        this.addAll(headers);
+    }
+
     public static MetaList newEmpty(){
         return new MetaList();
     }

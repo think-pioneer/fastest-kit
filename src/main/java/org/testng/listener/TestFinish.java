@@ -9,6 +9,7 @@ import xyz.think.fastest.core.internal.enhance.EnhanceFactory;
 import xyz.think.fastest.logger.FastestLogger;
 import xyz.think.fastest.logger.FastestLoggerFactory;
 import xyz.think.fastest.utils.reflects.FieldHelper;
+import xyz.think.fastest.utils.reflects.ReflectUtil;
 import xyz.think.fastest.utils.string.StringUtils;
 
 import java.lang.reflect.Field;
@@ -34,7 +35,7 @@ class TestFinish{
             if(Objects.nonNull(recoveryAnn) && recoveryAnn.recovery()){
                 Field[] fields = testInstance.getClass().getDeclaredFields();
                 Map<String, Class<?>> fieldTypeMap = Arrays.stream(fields).collect(Collectors.toMap(Field::getName, Field::getType));
-                Map<String, FieldHelper> fieldMap = Arrays.stream(fields).collect(Collectors.toMap(Field::getName, field -> FieldHelper.getInstance(testInstance, field)));
+                Map<String, FieldHelper> fieldMap = Arrays.stream(fields).filter(field -> !ReflectUtil.isFinal(field)).collect(Collectors.toMap(Field::getName, field -> FieldHelper.getInstance(testInstance, field)));
                 Class<?>[] stepTypes = recoveryAnn.stepType();
                 Map<String, Step> stepMap;
                 if(stepTypes.length == 1 && stepTypes[0].equals(Step.class)){
@@ -42,7 +43,7 @@ class TestFinish{
                     //获得所有的step
                     stepMap = fieldMap.entrySet().stream()
                             .filter(o -> o.getValue().get() instanceof Step)
-                            .collect(Collectors.toMap(Map.Entry::getKey, o -> (Step) o.getValue().get()));
+                            .collect(Collectors.toMap(Map.Entry::getKey, o -> o.getValue().get()));
 
                 } else {
                     //获得指定的step
@@ -63,6 +64,7 @@ class TestFinish{
             }
         }catch (Throwable e){
             logger.error("run Step recovery method error:",e);
+            throw e;
         }
     }
 }

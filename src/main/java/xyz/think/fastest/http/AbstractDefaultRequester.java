@@ -8,6 +8,7 @@ abstract class AbstractDefaultRequester implements Requester {
     private final Headers authentication = Headers.newEmpty();
     private final Metadata metadata;
     private final Settings settings;
+    private final HttpClient httpClient;
     private Responder responder;
 
     /**
@@ -24,6 +25,7 @@ abstract class AbstractDefaultRequester implements Requester {
         AuthManager.set(this, this.authentication);
         this.settings = Settings.create();
         this.metadata = Metadata.create();
+        this.httpClient = HttpClient.create();
     }
 
     /**
@@ -38,6 +40,7 @@ abstract class AbstractDefaultRequester implements Requester {
         AuthManager.set(this, this.authentication);
         this.settings = Settings.create();
         this.metadata = Metadata.create();
+        this.httpClient = HttpClient.create();
     }
 
     @Override
@@ -47,12 +50,7 @@ abstract class AbstractDefaultRequester implements Requester {
 
     @Override
     public Requester metadata(Metadata metadata) {
-        this.metadata.recovery();
-        this.metadata.setUrl(metadata.getUrl());
-        this.metadata.setHttpMethod(metadata.getMethod());
-        this.metadata.setParameters(metadata.getParameters());
-        this.metadata.setForms(metadata.getForms());
-        this.metadata.setJson(metadata.getJson());
+        this.metadata.copy(metadata);
         return this;
     }
 
@@ -63,7 +61,19 @@ abstract class AbstractDefaultRequester implements Requester {
 
     @Override
     public Requester settings(Settings settings){
-        Settings.copy(settings, this.settings);
+        this.settings.copy(settings);
+        return this;
+    }
+
+
+    @Override
+    public HttpClient httpClient() {
+        return this.httpClient;
+    }
+
+    @Override
+    public Requester httpClient(HttpClient httpClient) {
+        this.httpClient.copy(httpClient);
         return this;
     }
 
