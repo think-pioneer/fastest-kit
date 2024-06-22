@@ -2,6 +2,7 @@ package xyz.think.fastest.core.internal.initialization;
 
 import org.reflections.Reflections;
 import xyz.think.fastest.common.exceptions.InitializationException;
+import xyz.think.fastest.core.annotations.Component;
 import xyz.think.fastest.core.annotations.Pointcut;
 import xyz.think.fastest.core.enhance.joinpoint.field.FieldProcessable;
 import xyz.think.fastest.core.enhance.joinpoint.method.MethodProcessable;
@@ -23,6 +24,7 @@ import java.util.concurrent.CompletableFuture;
  * @date: 2022-01-27
  */
 @SuppressWarnings("unchecked")
+@Component
 public class ScannerUnit implements InitializeInternal {
     private final MethodAnnotationProcessCache cacheMethod = MethodAnnotationProcessCache.INSTANCE;
     private final FieldAnnotationProcessCache cacheField = FieldAnnotationProcessCache.INSTANCE;
@@ -57,7 +59,8 @@ public class ScannerUnit implements InitializeInternal {
         for(Class<? extends MethodProcessable> clazz : methodProcessClasses){
             if(!ReflectUtil.isInterface(clazz) && !ReflectUtil.isAbstract(clazz)){
                 Pointcut pointcut = clazz.getDeclaredAnnotation(Pointcut.class);
-                if(Objects.nonNull(pointcut)){
+                Component component = clazz.getDeclaredAnnotation(Component.class);
+                if(Objects.nonNull(pointcut) && Objects.nonNull(component)){
                     Set<Method> methods = this.reflectionsAnnotation.getMethodsAnnotatedWith(pointcut.annotation());
                     for(Method method:methods){
                         MethodAnnotationProcessMeta meta = cacheMethod.get(method);
@@ -111,7 +114,8 @@ public class ScannerUnit implements InitializeInternal {
         for(Class<? extends FieldProcessable> clazz : fieldProcessClasses){
             if(!ReflectUtil.isInterface(clazz) && !ReflectUtil.isAbstract(clazz)){
                 Pointcut pointcut = clazz.getDeclaredAnnotation(Pointcut.class);
-                if(Objects.nonNull(pointcut)){
+                Component component = clazz.getDeclaredAnnotation(Component.class);
+                if(Objects.nonNull(pointcut) && Objects.nonNull(component)){
                     Set<Field> fields = this.reflectionsAnnotation.getFieldsAnnotatedWith(pointcut.annotation());
                     for(Field field:fields){
                         FieldAnnotationProcessMeta meta  = cacheField.get(field);

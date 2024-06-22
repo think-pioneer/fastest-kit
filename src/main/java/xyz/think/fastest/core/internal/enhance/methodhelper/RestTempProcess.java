@@ -1,6 +1,7 @@
 package xyz.think.fastest.core.internal.enhance.methodhelper;
 
 import xyz.think.fastest.common.exceptions.EnhanceException;
+import xyz.think.fastest.core.annotations.Component;
 import xyz.think.fastest.core.annotations.Pointcut;
 import xyz.think.fastest.core.annotations.RestTemp;
 import xyz.think.fastest.core.enhance.RunHttpRequest;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 /**
  * @Date: 2021/11/28
  */
+@Component
 @Pointcut(annotation = RestTemp.class, before = true)
 public class RestTempProcess extends RunHttpRequest {
 

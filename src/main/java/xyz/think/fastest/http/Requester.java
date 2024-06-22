@@ -70,11 +70,10 @@ public interface Requester {
     /**
      * 发起请求
      */
-    default Requester send(){
+    static void send(Requester requester){
         HttpFilter httpFilter = new HttpFilterHandler();
         Class<Responder> responderType = HttpCacheInternal.INSTANCE.get("fastest.http.responder");
         Responder responder = ApplicationBean.getEnhanceBean(responderType);
-        httpFilter.handleRequest(this, responder,this.settings().getFilters());
-        return this;
+        httpFilter.handleRequest(requester, responder,requester.settings().getFilters());
     }
 }

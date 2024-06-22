@@ -22,7 +22,7 @@ public class MethodProcessableTest {
         Num num = new Num(0);
         num.add(1);
         biz.biz1(num);
-        Assert.assertEquals(3, num.getValue());
+        Assert.assertEquals(4, num.getValue());
     }
 
     public void customAnnTest2(){

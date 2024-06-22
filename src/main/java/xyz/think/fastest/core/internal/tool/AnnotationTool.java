@@ -1,6 +1,7 @@
 package xyz.think.fastest.core.internal.tool;
 
 import xyz.think.fastest.common.exceptions.EnhanceException;
+import xyz.think.fastest.core.annotations.Component;
 import xyz.think.fastest.utils.string.StringUtils;
 
 import java.lang.annotation.Annotation;
@@ -60,5 +61,16 @@ public class AnnotationTool {
     public static <T extends Annotation> boolean hasAnnotation(Class<?> clazz, Class<T> expected){
         T annotation = clazz.getAnnotation(expected);
         return Objects.nonNull(annotation);
+    }
+
+    public static boolean hasComponentAnnotation(Class<?> clz){
+        return clz.isAnnotationPresent(Component.class);
+
+    }
+
+    public static void checkComponentAnnotation(Class<?> clz){
+        if(!clz.isAnnotationPresent(Component.class)){
+            throw new EnhanceException(String.format("%s need @Component annotation.", clz.getCanonicalName()));
+        }
     }
 }

@@ -15,6 +15,7 @@ import java.util.Objects;
  * 只要启用了Component注解的类才会进行注入
  * @Date: 2021/10/29
  */
+@Component
 public class ComponentProcess implements FieldProcessable {
     private final InstanceCache instanceCache = InstanceCache.CACHE;
     private final Class<?> clazz;

@@ -1,5 +1,6 @@
 package xyz.think.fastest.core.internal.shutdown;
 
+import xyz.think.fastest.core.annotations.Component;
 import xyz.think.fastest.core.internal.enhance.methodhelper.RestTempCache;
 
 /**
@@ -7,6 +8,7 @@ import xyz.think.fastest.core.internal.enhance.methodhelper.RestTempCache;
  *
  * @date: 2022-01-28
  */
+@Component
 public class RestWrite implements ShutdownInternal {
 
     @Override

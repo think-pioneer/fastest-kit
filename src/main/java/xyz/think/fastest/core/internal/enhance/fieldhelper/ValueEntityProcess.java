@@ -4,6 +4,7 @@ import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.lang3.StringUtils;
 import xyz.think.fastest.common.exceptions.EnhanceException;
 import xyz.think.fastest.common.json.JSONFactory;
+import xyz.think.fastest.core.annotations.Component;
 import xyz.think.fastest.core.annotations.Pointcut;
 import xyz.think.fastest.core.annotations.ValueEntity;
 import xyz.think.fastest.core.enhance.joinpoint.field.JoinPoint;
@@ -22,6 +23,7 @@ import java.util.List;
  * @Date: 2021/11/27
  */
 @SuppressWarnings("unchecked")
+@Component
 @Pointcut(annotation = ValueEntity.class, before = true)
 public class ValueEntityProcess extends AbstractFieldProcess {
 

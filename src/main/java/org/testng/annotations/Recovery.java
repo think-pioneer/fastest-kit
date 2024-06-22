@@ -1,6 +1,6 @@
 package org.testng.annotations;
 
-import org.testng.step.RecoveryStep;
+import org.testng.step.RecoveryExecutorStep;
 import org.testng.step.Step;
 
 import java.lang.annotation.*;
@@ -19,6 +19,11 @@ public @interface Recovery {
     boolean recovery() default true;
 
     /**
+     * 超时时间
+     */
+    long timeout() default 60 * 1000;
+
+    /**
      *需要进行恢复操作的step类
      * 如果为Step.class则对测试类下的所有step进行恢复操作
      */
@@ -27,5 +32,10 @@ public @interface Recovery {
     /**
      *进行step操作的执行类
      */
-    Class<?> executor() default RecoveryStep.class;
+    Class<?> executor() default RecoveryExecutorStep.class;
+
+    /**
+     * use thread.stop() exit recovery task if task timeout.
+     */
+    boolean forceStop() default false;
 }

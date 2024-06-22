@@ -2,6 +2,7 @@ package xyz.think.fastest.core.internal.enhance.methodhelper;
 
 import xyz.think.fastest.common.exceptions.FastestBasicException;
 import xyz.think.fastest.common.exceptions.ReflectionException;
+import xyz.think.fastest.core.annotations.Component;
 import xyz.think.fastest.core.annotations.Pointcut;
 import xyz.think.fastest.core.annotations.PostMethod;
 import xyz.think.fastest.core.enhance.joinpoint.method.JoinPoint;
@@ -12,6 +13,7 @@ import java.lang.reflect.InvocationTargetException;
 /**
  * @Date: 2021/10/29
  */
+@Component
 @Pointcut(annotation = PostMethod.class, after = true)
 public class PostMethodProcess extends AbstractMethodProcess {
 

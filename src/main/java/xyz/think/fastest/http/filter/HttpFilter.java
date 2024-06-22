@@ -6,6 +6,7 @@ import xyz.think.fastest.http.Responder;
 import java.util.List;
 
 /**
+ * 处理http filter，使之能够通过FilterChain执行Filter
  * @author: aruba
  * @date: 2022-06-16
  */

@@ -1,6 +1,7 @@
 package xyz.think.fastest.core.internal.enhance.fieldhelper;
 
 import xyz.think.fastest.common.exceptions.ValueException;
+import xyz.think.fastest.core.annotations.Component;
 import xyz.think.fastest.core.annotations.Pointcut;
 import xyz.think.fastest.core.annotations.Value;
 import xyz.think.fastest.core.enhance.joinpoint.Target;
@@ -20,6 +21,7 @@ import java.util.Objects;
  * 处理Value注解
  * @Date: 2021/10/31
  */
+@Component
 @Pointcut(annotation = Value.class, before = true)
 public class ValueProcess extends AbstractFieldProcess {
 

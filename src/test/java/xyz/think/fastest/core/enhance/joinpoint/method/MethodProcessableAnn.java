@@ -1,11 +1,13 @@
 package xyz.think.fastest.core.enhance.joinpoint.method;
 
+import xyz.think.fastest.core.annotations.Component;
 import xyz.think.fastest.core.annotations.Pointcut;
 
 /**
  * @author: aruba
  * @date: 2022-02-18
  */
+//@Component
 @Pointcut(annotation = LogPrint.class, before = true, after = true)
 public class MethodProcessableAnn implements MethodProcessable{
     @Override

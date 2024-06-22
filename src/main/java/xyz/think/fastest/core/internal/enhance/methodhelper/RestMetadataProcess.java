@@ -2,6 +2,7 @@ package xyz.think.fastest.core.internal.enhance.methodhelper;
 
 import xyz.think.fastest.common.exceptions.EnhanceException;
 import xyz.think.fastest.common.exceptions.JsonException;
+import xyz.think.fastest.core.annotations.Component;
 import xyz.think.fastest.core.annotations.Pointcut;
 import xyz.think.fastest.core.annotations.RestMetadata;
 import xyz.think.fastest.core.annotations.RestServer;
@@ -20,6 +21,7 @@ import java.util.Objects;
 /**
  * @Date: 2021/11/28
  */
+@Component
 @Pointcut(annotation = RestMetadata.class, before = true)
 public class RestMetadataProcess extends RunHttpRequest {
 

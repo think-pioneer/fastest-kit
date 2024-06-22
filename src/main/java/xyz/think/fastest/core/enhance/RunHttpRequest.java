@@ -4,6 +4,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import xyz.think.fastest.common.exceptions.EnhanceException;
 import xyz.think.fastest.common.exceptions.HttpException;
+import xyz.think.fastest.core.annotations.Component;
 import xyz.think.fastest.core.annotations.HttpLog;
 import xyz.think.fastest.core.internal.enhance.methodhelper.AbstractMethodProcess;
 import xyz.think.fastest.http.*;
@@ -23,6 +24,7 @@ import java.util.regex.Pattern;
 /**
  * @Date: 2021/11/30
  */
+@Component
 public abstract class RunHttpRequest extends AbstractMethodProcess {
     private static final FastestLogger logger = FastestLoggerFactory.getLogger("HttpRequest");
     protected void run(Method method, Object[] args, String url, HttpMethod httpMethod, boolean isAuto, boolean isSync){
@@ -93,7 +95,7 @@ public abstract class RunHttpRequest extends AbstractMethodProcess {
 //                requester.async();
 //            }
             requester.settings().setIsSync(isSync);
-            requester.send();
+            Requester.send(requester);
             if(showResponseLog) {
                 Responder responder = requester.getResponder();
                 if (Objects.isNull(responder)) {

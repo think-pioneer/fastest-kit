@@ -1,5 +1,6 @@
 package xyz.think.fastest.http;
 
+import xyz.think.fastest.core.annotations.Component;
 import xyz.think.fastest.http.metadata.Header;
 import xyz.think.fastest.http.metadata.Headers;
 
@@ -9,7 +10,7 @@ import xyz.think.fastest.http.metadata.Headers;
  * @Date: 2020/11/15
  * @Desc: 请求者,可以理解为一个通用的请求对象(将鉴权信息直接放入body中，每次请求时带入)，也可以理解为不同的请求对象(使用Requester(Map<String, String> authentication)构造方法)
  */
-
+@Component
 public class DefaultRequester extends AbstractDefaultRequester {
 
     /**

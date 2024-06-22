@@ -5,6 +5,7 @@ import xyz.think.fastest.core.enhance.Shutdown;
 import xyz.think.fastest.core.enhance.Shutdownable;
 import xyz.think.fastest.core.internal.enhance.EnhanceFactory;
 import xyz.think.fastest.core.internal.scanner.ReflectionsUnit;
+import xyz.think.fastest.core.internal.tool.AnnotationTool;
 
 import java.util.Comparator;
 import java.util.Set;
@@ -16,7 +17,7 @@ import java.util.Set;
 public final class ShutdownActuator {
     private ShutdownActuator(){}
 
-    public static void execute(){
+    public static void register(){
         Reflections reflections = ReflectionsUnit.INSTANCE.reflections;
         Runtime runtime = Runtime.getRuntime();
         Thread thread = new Thread(() -> {
@@ -28,6 +29,7 @@ public final class ShutdownActuator {
 
     private static <T extends Shutdownable> void executor(Reflections reflections, Class<T> type, Comparator<? super T> comparator) {
         Set<Class<? extends T>> shutdownHookTypes = reflections.getSubTypesOf(type);
-        shutdownHookTypes.stream().map(EnhanceFactory::origin).sorted(comparator).forEach(Shutdownable::executor);
+        shutdownHookTypes.stream().filter(AnnotationTool::hasComponentAnnotation).map(EnhanceFactory::origin).sorted(comparator).forEach(Shutdownable::executor);
     }
+
 }

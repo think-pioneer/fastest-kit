@@ -16,8 +16,8 @@ public class FilterTest {
 
     public void filterTest(){
         Requester requester = RequesterFactory.create();
-        requester.settings().setFilter(new FilterConfig(0, new Filter1())).setFilter(new FilterConfig(1, new Filter2()));
+        requester.settings().setFilterConfigs(new FilterConfig(0, new Filter1())).setFilterConfigs(new FilterConfig(1, new Filter2()));
         requester.metadata().setUrl("http://www.baidu.com").setHttpMethod(HttpMethod.GET);
-        requester.send();
+        Requester.send(requester);
     }
 }

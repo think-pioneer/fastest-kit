@@ -6,13 +6,14 @@ import org.testng.ITestNGMethod;
 import org.testng.ITestResult;
 import xyz.think.fastest.core.enhance.joinpoint.Target;
 import xyz.think.fastest.core.internal.configuration.SystemConfig;
-import xyz.think.fastest.core.internal.enhance.fieldhelper.TestNGProcess;
+import xyz.think.fastest.core.internal.enhance.fieldhelper.TestNGExecutor;
 import xyz.think.fastest.core.internal.initialization.InitializationActuator;
 import xyz.think.fastest.core.internal.shutdown.ShutdownActuator;
 
 import java.util.Objects;
 
 /**
+ * fastest framework starter
  * @Date: 2020/10/30
  */
 public class TestRunListener implements ITestListener {
@@ -30,20 +31,16 @@ public class TestRunListener implements ITestListener {
     public void onStart(ITestContext context){
         SystemConfig.config();
         InitializationActuator.init();
+        ShutdownActuator.register();
         for(ITestNGMethod method:context.getAllTestMethods()){
             Class<?> caseClazz = method.getRealClass();
             // 将测试类托管给本框架
             if(Objects.nonNull(caseClazz)){
                 Target manger = new Target();
                 manger.setInstance(method.getInstance());
-                TestNGProcess process = new TestNGProcess(caseClazz);
-                process.process(manger);
+                TestNGExecutor executor = new TestNGExecutor(caseClazz);
+                executor.execute(manger);
             }
         }
-    }
-
-    @Override
-    public void onFinish(ITestContext context){
-        ShutdownActuator.execute();
     }
 }

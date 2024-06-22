@@ -815,6 +815,7 @@ public @interface LogPrint {
 LogPringImpl.java
 
 ```java
+@Component
 @Pointcut(annotation = LogPrint.class)
 public class LogPrintImpl<T> implements MethodProcessable<T> {
     @Override
@@ -898,6 +899,7 @@ public @interface LogPrint {
 
 ```java
 
+@Component
 @Pointcut(annotation = LogPrint.class)
 public class MyCustomMethodAnnotation implements MethodProcessable {
 
@@ -953,6 +955,7 @@ public class CaseTest {
 当需要在测试前进行初始化操作时，可以继承Initialize实现executor方法。
 
 ```java
+@Component
 public class MyInit implements Initialize{
     @Override
     public int order() {
@@ -978,6 +981,7 @@ public class MyInit implements Initialize{
 当框架完成后退出系统前需要做一些收尾工作时，可以继承Shutdown实现executor方法。
 
 ```java
+@Component
 public class MyShutdown implements Shutdown{
     @Override
     public int order() {
@@ -1005,6 +1009,7 @@ public class MyShutdown implements Shutdown{
 当框架提供的Requester实现无法满足需求时，可自己实现Requester，自己实现时需要在配置文件中指定实现类的完整类名
 
 ```java
+@Component
 public class MyRequester implements Requester{
     //do something
 }
@@ -1025,7 +1030,7 @@ fastest.http.requester=xxx.xxx.MyRequester
 | settings                    | Settings  | 框架提供的request设置项，包含简单的http所需的设置。          |
 | settings(Settings settings) | Requester | 添加设置项                                                   |
 | getResponder                | Responder | 获取框架提供的http响应对象，参考[Responder](#24-responder)   |
-| send                        | Requester | 发送请求，通过settings中的isSync控制时异步还是同步           |
+| send(Requester requester)   | void      | 发送请求，通过settings中的isSync控制时异步还是同步。该方法为静态方法，通过Requester.send(requester)调用。 |
 | asserts                     | Asserts   | 直接通过requester对http响应进行断言                          |
 
 ## 2.4 Responder
@@ -1033,6 +1038,7 @@ fastest.http.requester=xxx.xxx.MyRequester
 自定义实现Http响应解析。需要在配置文件指定实现类的完整类名
 
 ```java
+@Component
 public class MyResponder implements Responder{
     //do something
 }
@@ -1075,6 +1081,7 @@ Step为该框架定义的[测试三层](#10-用例分层思想)中的step层，�
 ```java
 import org.testng.step.Step;
 
+@Component
 public class MyStep implements Step {
     
     public void getAllUsers(){
@@ -1097,7 +1104,33 @@ public class MyStep implements Step {
 | -------- | ------- | ------------------------------------------------------------ |
 | recovery | boolean | 执行用例后用来做一些“恢复操作”，比如：测试完添加订单功能后，删除订单的操作 |
 
-## 2.6 Filter
+## 2.6 RecoveryExecutor
+
+### 方法说明
+
+执行Step.recovery()方法的执行器
+
+```
+@Component
+public class RecoveryExecutor1 implements RecoveryExecutor {
+
+    @Override
+    public boolean execute(long timeOut, boolean forceStop, Step... steps) {
+		// for(Step step:steps){
+		//  dosomething
+		//}
+        return true;
+    }
+}
+```
+
+| 方法名  | 参数                                                         | 返回值  | 说明                                                         |
+| ------- | ------------------------------------------------------------ | ------- | ------------------------------------------------------------ |
+| execute | long timeout:  执行step的超时时间<br>boolean forceStop:  如果step执行异常无法中断worker线程导致无法退出，将会尝试使用Thread.stop()停止线程。<br>Step[] steps:  测试步骤 | boolean | 测试类或者方法指定了@Recovery注解后，将会通过该方法执行所有的步骤中的recovery()方法。需要注意，recovery操作会在一个子线程中进行。 |
+
+
+
+## 2.7 Filter
 
 ### 方法说明
 
@@ -1160,7 +1193,7 @@ after1
 {"id":[1,2,3],"OK":"200"}
 ```
 
-## 2.7 FilterConfig
+## 2.8 FilterConfig
 
 ### 方法说明
 

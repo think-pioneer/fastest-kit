@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 构造器参数元数据。每一个参数都会生成一个ConstructorProperty对象
  * @Date: 2021/11/7
  */
 public class ConstructorProperty {

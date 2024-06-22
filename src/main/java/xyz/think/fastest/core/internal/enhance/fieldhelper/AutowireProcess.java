@@ -2,6 +2,7 @@ package xyz.think.fastest.core.internal.enhance.fieldhelper;
 
 import xyz.think.fastest.common.exceptions.EnhanceException;
 import xyz.think.fastest.core.annotations.Autowired;
+import xyz.think.fastest.core.annotations.Component;
 import xyz.think.fastest.core.annotations.Pointcut;
 import xyz.think.fastest.core.enhance.constructor.ConstructorProperty;
 import xyz.think.fastest.core.enhance.joinpoint.Target;
@@ -19,6 +20,7 @@ import java.lang.reflect.Method;
  * 只有使用了Autowired注解的字段才会进行自动装配
  * @Date: 2021/10/29
  */
+@Component
 @SuppressWarnings("unchecked")
 @Pointcut(annotation = Autowired.class, before = true)
 public class AutowireProcess extends AbstractFieldProcess {

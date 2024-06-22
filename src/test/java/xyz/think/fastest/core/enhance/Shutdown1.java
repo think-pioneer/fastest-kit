@@ -2,12 +2,8 @@ package xyz.think.fastest.core.enhance;
 
 import xyz.think.fastest.core.annotations.Component;
 
-/**
- * @author: aruba
- * @date: 2022-02-10
- */
 @Component
-public class Init1 implements Initialize{
+public class Shutdown1 implements Shutdown{
     @Override
     public int order() {
         return 0;
@@ -15,7 +11,6 @@ public class Init1 implements Initialize{
 
     @Override
     public void executor() {
-        System.out.println("init1");
-        MyObj.INSTANCE.setFlag(MyObj.INSTANCE.getFlag() + 1);
+        System.out.println("shutdown2");
     }
 }

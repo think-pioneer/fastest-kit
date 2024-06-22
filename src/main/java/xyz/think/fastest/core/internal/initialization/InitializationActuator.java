@@ -6,6 +6,7 @@ import xyz.think.fastest.core.enhance.Initialize;
 import xyz.think.fastest.core.internal.enhance.EnhanceFactory;
 import xyz.think.fastest.core.internal.scanner.Reflections;
 import xyz.think.fastest.core.internal.scanner.ReflectionsUnit;
+import xyz.think.fastest.core.internal.tool.AnnotationTool;
 import xyz.think.fastest.core.internal.tool.Banner;
 import xyz.think.fastest.core.internal.tool.poetry.Poetry;
 import xyz.think.fastest.utils.color.ColorPrint;
@@ -66,7 +67,7 @@ public class InitializationActuator {
      */
     private static void systemInit() {
         Set<Class<? extends InitializeInternal>> initializeTypes = reflections.getSubTypesOf(InitializeInternal.class);
-        initializeTypes.stream().map(EnhanceFactory::enhance).sorted(Comparator.comparing(Initializable::order)).forEach(Initializable::executor);
+        initializeTypes.stream().filter(AnnotationTool::hasComponentAnnotation).map(EnhanceFactory::enhance).sorted(Comparator.comparing(Initializable::order)).forEach(Initializable::executor);
     }
 
     /**
@@ -76,7 +77,7 @@ public class InitializationActuator {
      */
     private static void userInit(){
         Set<Class<? extends Initialize>> initializeTypes = reflections.getSubTypesOf(Initialize.class);
-        initializeTypes.stream().map(EnhanceFactory::enhance).sorted(Comparator.comparing(Initialize::order)).forEach(Initialize::executor);
+        initializeTypes.stream().filter(AnnotationTool::hasComponentAnnotation).map(EnhanceFactory::enhance).sorted(Comparator.comparing(Initialize::order)).forEach(Initialize::executor);
     }
 
     /**
